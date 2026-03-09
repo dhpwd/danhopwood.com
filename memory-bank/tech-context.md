@@ -48,4 +48,4 @@ AstroPaper uses CSS custom properties mapped to Tailwind via `@theme inline` in 
 
 ## MCP
 
-Astro docs MCP installed project-scoped (`.mcp.json`). Use for Astro-specific questions – image optimisation, content collections, component patterns.
+Use `astro-docs` MCP for any Astro research.
