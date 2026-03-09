@@ -2,7 +2,7 @@
 
 ## Scope
 
-Personal site at `danhopwood.com` – a public lab notebook. Posts live on the homepage. No "blog" label, no splash page. Design influenced by [steipete.me](https://github.com/steipete/steipete.me).
+Personal site at `danhopwood.com` – a public lab notebook. Posts live on the homepage. No "blog" label, no splash page.
 
 ## Decisions
 
