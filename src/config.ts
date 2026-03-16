@@ -10,7 +10,7 @@ export const SITE = {
   postPerPage: 4,
   scheduledPostMargin: 15 * 60 * 1000, // 15 minutes
   showArchives: true,
-  showBackButton: true,
+  showBackButton: false,
   editPost: {
     enabled: true,
     text: "Edit on GitHub",
