@@ -145,7 +145,7 @@ What I've shown you is the simplest starting point – one folder, one document,
 
 ![Obsidian graph view – nine months of compounding documents](../../assets/images/cc-obsidian-graph.png)
 
-This is my Obsidian vault after nine months of working this way. Every node is a document. Every line is a connection between them. It started with a single file, just like yours.
+This is my Obsidian vault after nine months of working this way. Every node is a document. Every line is a connection between them. The blue circle? That's my Lean Canvas – the first document I created. Still connected to everything.
 
 Where it goes from here: making Claude automatically load your company context at the start of every session. Connecting it to your email, calendar and Slack. Building workflows you run with a single command.
 
