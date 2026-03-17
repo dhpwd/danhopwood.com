@@ -2,14 +2,13 @@
 
 ## Current focus
 
-First post published, site polish in progress. Ready for deploy once remaining items are addressed.
+First post published, branding assets replaced. Deployed to Vercel with `danhopwood.com` custom domain.
 
-1. Replace default OG image (`public/astropaper-og.jpg`) with a site-branded one
-2. Deploy to Vercel + configure `danhopwood.com` and `dhpwd.com` redirect
+1. Configure `dhpwd.com` → `danhopwood.com` redirect (Vercel domain settings)
 
 ## Backlog
 
-- Customise OG image styling to match site brand
+- Customise dynamic OG image styling to match site brand (per-post generated images)
 - Consider adding first name field to newsletter once sending regularly (Buttondown supports `metadata__first-name`)
 
 ## Housekeeping

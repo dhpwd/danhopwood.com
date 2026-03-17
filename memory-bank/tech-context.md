@@ -6,7 +6,7 @@
 - **Styling:** TailwindCSS
 - **Package manager:** pnpm
 - **Search:** Pagefind (static, built-in)
-- **Hosting:** Vercel (not yet configured)
+- **Hosting:** Vercel (deployed, `danhopwood.com` custom domain configured)
 
 ## Project structure
 
@@ -31,7 +31,7 @@ Dark/light mode, RSS + sitemap, pagefind search, draft posts, dynamic OG image g
 ## Images
 
 - **`src/assets/images/`** – optimised by Astro at build time (WebP, cache-busting, CLS prevention). Import and render with `<Image />` from `astro:assets`
-- **`public/`** – served as-is, no processing. Use for favicon, OG images referenced by URL string
+- **`public/`** – served as-is, no processing. Use for favicon, OG images referenced by URL string. Current assets: `favicon.jpeg`, `og-image.png`
 - Avatar lives at `src/assets/images/avatar.jpeg`
 
 ## Buttondown integration
