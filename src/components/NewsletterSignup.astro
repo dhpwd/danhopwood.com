@@ -68,17 +68,18 @@ const { compact = false } = Astro.props;
             msg.textContent = "You're in – check your inbox to confirm.";
             msg.className = "mt-2 text-sm text-green-600 dark:text-green-400";
             email.value = "";
-          } else {
-            msg.textContent = "Something went wrong – please try again.";
-            msg.className = "mt-2 text-sm text-red-600 dark:text-red-400";
+            btn.removeAttribute("disabled");
+            btn.textContent = "Subscribe";
+            return;
           }
         } catch {
-          msg.textContent = "Something went wrong – please try again.";
-          msg.className = "mt-2 text-sm text-red-600 dark:text-red-400";
+          // fall through to native submit
         }
 
         btn.removeAttribute("disabled");
         btn.textContent = "Subscribe";
+        form.target = "_blank";
+        form.submit();
       });
     });
 </script>
