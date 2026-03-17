@@ -18,8 +18,13 @@
 - RSS icon inline with social icons using matching `LinkButton` and `stroke-current`
 - Buttondown newsletter signup component created (`src/components/NewsletterSignup.astro`)
 - Newsletter signup embedded in `PostDetails.astro` (after share links) and `AboutLayout.astro` (after content)
-- "Edit on GitHub" config set – needs verification with first real post
+- "Edit on GitHub" config set and verified working with first post
 - First commit pushed to `origin/main` (GitHub repo created via `gh`)
+- First blog post published: "Claude Code for founders who hate the terminal" with 6 optimised screenshots
+- Back button disabled (`showBackButton: false` in `src/config.ts`)
+- Share links reordered: X, WhatsApp, Telegram, Email, Facebook (Pinterest removed)
+- Newsletter signup upgraded: JS fetch with inline success/error feedback, added missing `embed` hidden input
+- Dark theme updated to warm neutral palette (near-black bg, muted teal accent)
 
 ## Blockers
 

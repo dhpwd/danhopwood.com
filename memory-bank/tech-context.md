@@ -38,6 +38,8 @@ Dark/light mode, RSS + sitemap, pagefind search, draft posts, dynamic OG image g
 
 Implemented as `src/components/NewsletterSignup.astro`. Embedded in `PostDetails.astro` and `AboutLayout.astro`. POST to `https://buttondown.com/api/emails/embed-subscribe/dhpwd`. Tags subscribers with `website` via hidden input. Has `compact` prop for layout variants.
 
+Form submits via JS fetch with inline success/error messages (no page redirect). Hidden `embed=1` input required by Buttondown's embed API. Falls back to standard form POST if JS fails. Metadata fields (e.g. first name) can be added later via `name="metadata__<key>"` inputs.
+
 Buttondown is backend infrastructure – no public-facing Buttondown URLs anywhere on the site.
 
 ## Theme tokens

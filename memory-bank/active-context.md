@@ -2,17 +2,15 @@
 
 ## Current focus
 
-Site skeleton complete – identity, avatar, newsletter signup, about page, hero layout all in place. Needs real content before deploy.
+First post published, site polish in progress. Ready for deploy once remaining items are addressed.
 
-1. Verify Buttondown form against docs: https://docs.buttondown.com/building-your-subscriber-base
-2. Write first blog post (required before launch per project brief)
-3. Replace default OG image (`public/astropaper-og.jpg`) with a site-branded one
-4. Visually review newsletter component in dev server – adjust styling as needed
+1. Replace default OG image (`public/astropaper-og.jpg`) with a site-branded one
+2. Deploy to Vercel + configure `danhopwood.com` and `dhpwd.com` redirect
 
 ## Backlog
 
 - Customise OG image styling to match site brand
-- Deploy to Vercel + configure `danhopwood.com` and `dhpwd.com` redirect
+- Consider adding first name field to newsletter once sending regularly (Buttondown supports `metadata__first-name`)
 
 ## Housekeeping
 
