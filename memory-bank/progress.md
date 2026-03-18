@@ -28,6 +28,7 @@
 - Custom favicon added (`public/favicon.jpeg`), replacing default Astro SVG favicon
 - Custom OG/social share image added (`public/og-image.png`), replacing default AstroPaper image
 - Deployed to Vercel with `danhopwood.com` custom domain
+- Plausible Analytics added to `Layout.astro` (privacy-friendly, no cookie banner, script + init in `<head>`)
 
 ## Blockers
 

@@ -7,6 +7,7 @@
 - **Package manager:** pnpm
 - **Search:** Pagefind (static, built-in)
 - **Hosting:** Vercel (deployed, `danhopwood.com` custom domain configured)
+- **Analytics:** Plausible (cloud-hosted, privacy-friendly, no cookie banner)
 
 ## Project structure
 
@@ -47,6 +48,12 @@ Buttondown is backend infrastructure – no public-facing Buttondown URLs anywhe
 AstroPaper uses CSS custom properties mapped to Tailwind via `@theme inline` in `src/styles/global.css`:
 
 `bg-background`, `text-foreground`, `bg-accent`, `bg-muted`, `border-border`
+
+## Plausible Analytics
+
+Script and init added to `src/layouts/Layout.astro` `<head>`. The `async` attribute on the script tag implies `is:inline` in Astro (any attribute besides `src` triggers this), so the tag renders as-is. No Partytown needed – Plausible's script is ~1KB.
+
+Custom events available via `window.plausible('EventName')` for tracking conversions (e.g. newsletter signups). Vercel proxy not yet configured – add rewrites in `vercel.json` to route the script through `danhopwood.com` and bypass ad blockers.
 
 ## MCP
 
