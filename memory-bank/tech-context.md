@@ -53,7 +53,9 @@ AstroPaper uses CSS custom properties mapped to Tailwind via `@theme inline` in 
 
 Script and init added to `src/layouts/Layout.astro` `<head>`. The `async` attribute on the script tag implies `is:inline` in Astro (any attribute besides `src` triggers this), so the tag renders as-is. No Partytown needed – Plausible's script is ~1KB.
 
-Custom events available via `window.plausible('EventName')` for tracking conversions (e.g. newsletter signups). Vercel proxy not yet configured – add rewrites in `vercel.json` to route the script through `danhopwood.com` and bypass ad blockers.
+Custom events use Title Case with spaces (Plausible convention): e.g. `plausible("Newsletter Signup")`. Newsletter signup conversion tracking implemented via `trackSignup()` helper in `NewsletterSignup.astro` – fires on both Ajax success and native form fallback paths. `plausible` is typed on the `Window` interface in `src/env.d.ts`.
+
+Vercel proxy not yet configured – add rewrites in `vercel.json` to route the script through `danhopwood.com` and bypass ad blockers.
 
 ## MCP
 

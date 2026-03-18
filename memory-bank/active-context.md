@@ -4,14 +4,14 @@
 
 Plausible Analytics added. Site live on Vercel with `danhopwood.com` custom domain.
 
-1. Configure `dhpwd.com` → `danhopwood.com` redirect (Vercel domain settings)
+1. Configure domain redirects in Vercel: `dhpwd.com` → `danhopwood.com` and `www.danhopwood.com` → `danhopwood.com`
 2. Set up Vercel proxy for Plausible to bypass ad blockers (rewrite in `vercel.json`)
+3. Create "Newsletter Signup" custom event goal in Plausible dashboard
 
 ## Backlog
 
 - Customise dynamic OG image styling to match site brand (per-post generated images)
 - Consider adding first name field to newsletter once sending regularly (Buttondown supports `metadata__first-name`)
-- Track newsletter signup conversions via Plausible custom events
 
 ## Housekeeping
 

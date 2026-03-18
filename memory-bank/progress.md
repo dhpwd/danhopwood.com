@@ -29,6 +29,8 @@
 - Custom OG/social share image added (`public/og-image.png`), replacing default AstroPaper image
 - Deployed to Vercel with `danhopwood.com` custom domain
 - Plausible Analytics added to `Layout.astro` (privacy-friendly, no cookie banner, script + init in `<head>`)
+- Newsletter Signup custom event tracking added to `NewsletterSignup.astro` (fires on both Ajax success and native form fallback)
+- `plausible` typed on `Window` interface in `src/env.d.ts`, removing `as any` casts
 
 ## Blockers
 

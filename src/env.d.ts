@@ -6,4 +6,5 @@ interface Window {
     getTheme: () => string;
     setTheme: (val: string) => void;
   };
+  plausible?: (event: string, options?: Record<string, unknown>) => void;
 }

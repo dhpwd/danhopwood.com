@@ -8,7 +8,7 @@ Personal site at `danhopwood.com` – a public lab notebook. Posts live on the h
 
 Final unless explicitly revisited.
 
-- **Domain:** `danhopwood.com` (primary). `dhpwd.com` redirects to it
+- **Domain:** `danhopwood.com` (primary). `dhpwd.com` and `www.danhopwood.com` redirect to it
 - **Stack:** AstroPaper v5.5.1 (Astro + TailwindCSS)
 - **Hosting:** Vercel (existing account). Deploy once site is ready locally
 - **Repo:** `dhpwd/danhopwood.com` on GitHub (personal account)
