@@ -2,7 +2,7 @@ export const SITE = {
   website: "https://danhopwood.com/",
   author: "Dan Hopwood",
   profile: "https://danhopwood.com/",
-  desc: "Notes from building data infrastructure and AI agents.",
+  desc: "Notes from building a company entirely with AI agents.",
   title: "Dan Hopwood",
   ogImage: "og-image.png",
   lightAndDarkMode: true,
