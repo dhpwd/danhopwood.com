@@ -2,7 +2,7 @@
 
 ## Current focus
 
-Plausible Analytics added. Site live on Vercel with `danhopwood.com` custom domain.
+Site live on Vercel with `danhopwood.com` custom domain. Two posts published.
 
 1. Configure domain redirects in Vercel: `dhpwd.com` → `danhopwood.com` and `www.danhopwood.com` → `danhopwood.com`
 2. Set up Vercel proxy for Plausible to bypass ad blockers (rewrite in `vercel.json`)

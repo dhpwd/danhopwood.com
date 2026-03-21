@@ -31,6 +31,7 @@
 - Plausible Analytics added to `Layout.astro` (privacy-friendly, no cookie banner, script + init in `<head>`)
 - Newsletter Signup custom event tracking added to `NewsletterSignup.astro` (fires on both Ajax success and native form fallback)
 - `plausible` typed on `Window` interface in `src/env.d.ts`, removing `as any` casts
+- Second blog post published: "Cowork vs Claude Code: the difference isn't the terminal" with `/new-prospect` screenshot
 
 ## Blockers
 
