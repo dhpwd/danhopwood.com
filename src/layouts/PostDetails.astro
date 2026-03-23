@@ -12,6 +12,7 @@ import BackButton from "@/components/BackButton.astro";
 import BackToTopButton from "@/components/BackToTopButton.astro";
 import { getPath } from "@/utils/getPath";
 import { slugifyStr } from "@/utils/slugify";
+import { calculateReadingTime } from "@/utils/readingTime";
 import IconChevronLeft from "@/assets/icons/IconChevronLeft.svg";
 import IconChevronRight from "@/assets/icons/IconChevronRight.svg";
 import { SITE } from "@/config";
@@ -37,6 +38,7 @@ const {
 } = post.data;
 
 const { Content } = await render(post);
+const readingTime = post.body ? calculateReadingTime(post.body) : undefined;
 
 let ogImageUrl: string | undefined;
 
@@ -98,7 +100,13 @@ const nextPost =
       {title}
     </h1>
     <div class="my-2 flex items-center gap-2">
-      <Datetime {pubDatetime} {modDatetime} {timezone} size="lg" />
+      <Datetime
+        {pubDatetime}
+        {modDatetime}
+        {timezone}
+        {readingTime}
+        size="lg"
+      />
       <span
         aria-hidden="true"
         class:list={[
@@ -123,11 +131,11 @@ const nextPost =
       {tags.map(tag => <Tag tag={slugifyStr(tag)} tagName={tag} size="sm" />)}
     </ul>
 
+    <NewsletterSignup />
+
     <BackToTopButton />
 
-    <ShareLinks />
-
-    <NewsletterSignup />
+    <ShareLinks title={title} />
 
     <hr class="my-6 border-dashed" />
 
@@ -163,7 +171,7 @@ const nextPost =
       }
     </div>
   </main>
-  <Footer />
+  <Footer stealThisPost />
 </Layout>
 
 <script is:inline data-astro-rerun>

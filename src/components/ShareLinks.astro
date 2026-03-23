@@ -2,7 +2,12 @@
 import { SHARE_LINKS } from "@/constants";
 import LinkButton from "./LinkButton.astro";
 
-const URL = Astro.url;
+interface Props {
+  title?: string;
+}
+
+const { title } = Astro.props;
+const pageUrl = Astro.url.href;
 ---
 
 {
@@ -12,7 +17,7 @@ const URL = Astro.url;
       <div class="text-center">
         {SHARE_LINKS.map(social => (
           <LinkButton
-            href={`${social.href + URL}`}
+            href={social.buildHref(pageUrl, title)}
             class="scale-90 p-2 hover:rotate-6 sm:p-1"
             title={social.linkTitle}
           >

@@ -15,6 +15,13 @@ interface Social {
   icon: (_props: Props) => Element;
 }
 
+interface ShareLink {
+  name: string;
+  linkTitle: string;
+  icon: (_props: Props) => Element;
+  buildHref: (pageUrl: string, pageTitle?: string) => string;
+}
+
 export const SOCIALS: Social[] = [
   {
     name: "X",
@@ -36,35 +43,57 @@ export const SOCIALS: Social[] = [
   },
 ] as const;
 
-export const SHARE_LINKS: Social[] = [
+export const SHARE_LINKS: ShareLink[] = [
   {
     name: "X",
-    href: "https://x.com/intent/post?url=",
-    linkTitle: `Share this post on X`,
+    linkTitle: "Share this post on X",
     icon: IconBrandX,
+    buildHref: (url, title) => {
+      const params = new URLSearchParams({ url, via: "dhpwd" });
+      if (title) params.set("text", title);
+      return `https://twitter.com/intent/tweet?${params}`;
+    },
+  },
+  {
+    name: "LinkedIn",
+    linkTitle: "Share this post on LinkedIn",
+    icon: IconLinkedin,
+    buildHref: url =>
+      `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`,
   },
   {
     name: "WhatsApp",
-    href: "https://wa.me/?text=",
-    linkTitle: `Share this post via WhatsApp`,
+    linkTitle: "Share this post via WhatsApp",
     icon: IconWhatsapp,
+    buildHref: (url, title) => {
+      const text = title ? `${title} ${url}` : url;
+      return `https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`;
+    },
   },
   {
     name: "Telegram",
-    href: "https://t.me/share/url?url=",
-    linkTitle: `Share this post via Telegram`,
+    linkTitle: "Share this post via Telegram",
     icon: IconTelegram,
+    buildHref: (url, title) => {
+      const params = new URLSearchParams({ url });
+      if (title) params.set("text", title);
+      return `https://t.me/share/url?${params}`;
+    },
   },
   {
     name: "Mail",
-    href: "mailto:?subject=See%20this%20post&body=",
-    linkTitle: `Share this post via email`,
+    linkTitle: "Share this post via email",
     icon: IconMail,
+    buildHref: (url, title) => {
+      const subject = title || "Check this out";
+      return `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(url)}`;
+    },
   },
   {
     name: "Facebook",
-    href: "https://www.facebook.com/sharer.php?u=",
-    linkTitle: `Share this post on Facebook`,
+    linkTitle: "Share this post on Facebook",
     icon: IconFacebook,
+    buildHref: url =>
+      `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`,
   },
-] as const;
+];

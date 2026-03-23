@@ -6,9 +6,15 @@ const currentYear = new Date().getFullYear();
 
 type Props = {
   noMarginTop?: boolean;
+  stealThisPost?: boolean;
 } & HTMLAttributes<"footer">;
 
-const { noMarginTop = false, class: className, ...attrs } = Astro.props;
+const {
+  noMarginTop = false,
+  stealThisPost = false,
+  class: className,
+  ...attrs
+} = Astro.props;
 ---
 
 <footer
@@ -23,10 +29,23 @@ const { noMarginTop = false, class: className, ...attrs } = Astro.props;
     ]}
   >
     <Socials />
-    <div class="my-2 flex flex-col items-center whitespace-nowrap sm:flex-row">
-      <span>Copyright &#169; {currentYear}</span>
-      <span class="hidden sm:inline">&nbsp;|&nbsp;</span>
-      <span>All rights reserved.</span>
-    </div>
+    {
+      stealThisPost ? (
+        <a
+          href="https://github.com/dhpwd/danhopwood.com"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="my-2 hover:text-accent"
+        >
+          Steal this post → CC BY 4.0 · Code MIT
+        </a>
+      ) : (
+        <div class="my-2 flex flex-col items-center whitespace-nowrap sm:flex-row">
+          <span>Copyright &#169; {currentYear}</span>
+          <span class="hidden sm:inline">&nbsp;|&nbsp;</span>
+          <span>All rights reserved.</span>
+        </div>
+      )
+    }
   </div>
 </footer>

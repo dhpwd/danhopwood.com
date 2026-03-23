@@ -32,6 +32,13 @@
 - Newsletter Signup custom event tracking added to `NewsletterSignup.astro` (fires on both Ajax success and native form fallback)
 - `plausible` typed on `Window` interface in `src/env.d.ts`, removing `as any` casts
 - Second blog post published: "Cowork vs Claude Code: the difference isn't the terminal" with `/new-prospect` screenshot
+- Newsletter signup moved above share links in PostDetails (higher engagement position)
+- Newsletter signup restyled as bordered card (`rounded-lg border p-6`, `dark:border-accent` in dark mode)
+- "Steal this post → CC BY 4.0 · Code MIT" footer on post pages (replaces copyright line, links to repo)
+- Share links refactored: `buildHref` function per platform replacing static URL concatenation. Fixed X endpoint (`/intent/tweet`), WhatsApp (`api.whatsapp.com/send`), Facebook (canonical path). All URLs now `encodeURIComponent`'d. Added `via=dhpwd` on X shares, dynamic `text`/`subject` params using post title
+- LinkedIn share button added (second position after X)
+- Reading time added to post list cards and post headers via `reading-time` package + `src/utils/readingTime.ts` utility. Displayed in Datetime component as "· X min read"
+- `og:type` meta tag added to Layout.astro (`article` for posts, `website` for other pages)
 
 ## Blockers
 

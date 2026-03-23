@@ -9,7 +9,10 @@ const { compact = false } = Astro.props;
 <div
   class:list={[
     "newsletter-signup",
-    { "mt-8 border-t border-border pt-8": !compact },
+    {
+      "mt-8 mb-8 rounded-lg border border-border p-6 dark:border-accent":
+        !compact,
+    },
   ]}
 >
   <h2

@@ -27,7 +27,11 @@ public/                  # Static assets (favicon, OG image)
 
 ## Built-in features (no work needed)
 
-Dark/light mode, RSS + sitemap, pagefind search, draft posts, dynamic OG image generation, reading time, SEO tags, pagination.
+Dark/light mode, RSS + sitemap, pagefind search, draft posts, dynamic OG image generation, SEO tags, pagination.
+
+## Reading time
+
+Computed on-demand from `post.body` (raw markdown) using the `reading-time` npm package. Utility at `src/utils/readingTime.ts` returns formatted string (e.g. "5 min read"). Called in `Card.astro` (post list) and `PostDetails.astro` (post header), passed to `Datetime.astro` via `readingTime` prop. Not stored in schema – computed at build time per page.
 
 ## Images
 
@@ -42,6 +46,14 @@ Implemented as `src/components/NewsletterSignup.astro`. Embedded in `PostDetails
 Form submits via JS fetch with inline success/error messages (no page redirect). Hidden `embed=1` input required by Buttondown's embed API. Falls back to standard form POST if JS fails. Metadata fields (e.g. first name) can be added later via `name="metadata__<key>"` inputs.
 
 Buttondown is backend infrastructure – no public-facing Buttondown URLs anywhere on the site.
+
+## Share links
+
+Defined in `src/constants.ts` as `SHARE_LINKS: ShareLink[]`. Each entry has a `buildHref(pageUrl, pageTitle?)` function that constructs the platform-specific share URL with proper encoding. `ShareLinks.astro` accepts an optional `title` prop passed from the post layout. Platforms: X (with `via=dhpwd`), LinkedIn, WhatsApp, Telegram, Email, Facebook.
+
+## Post page footer
+
+`Footer.astro` accepts `stealThisPost` boolean prop. When true (post pages only), replaces the copyright line with "Steal this post → CC BY 4.0 · Code MIT" linking to the GitHub repo. Blog content is CC BY 4.0; code is MIT.
 
 ## Theme tokens
 
