@@ -1,6 +1,6 @@
 # danhopwood.com
 
-Writing on data infrastructure and AI. Built with [AstroPaper](https://github.com/satnaing/astro-paper) and [Astro](https://astro.build).
+Building a company entirely with AI agents – and writing about what actually works. Built with [AstroPaper](https://github.com/satnaing/astro-paper) and [Astro](https://astro.build).
 
 **Live site:** [danhopwood.com](https://danhopwood.com)
 
@@ -11,6 +11,6 @@ pnpm install
 pnpm dev        # localhost:4321
 ```
 
-## License
+## Licence
 
-Content (posts, images) is copyright Dan Hopwood. Theme code is MIT licensed via [AstroPaper](https://github.com/satnaing/astro-paper/blob/main/LICENSE).
+Content (posts, images) is licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). Code is MIT licensed via [AstroPaper](https://github.com/satnaing/astro-paper/blob/main/LICENSE).

@@ -1,6 +1,7 @@
 ---
 import type { HTMLAttributes } from "astro/types";
 import Socials from "./Socials.astro";
+import { SITE } from "@/config";
 
 const currentYear = new Date().getFullYear();
 
@@ -40,11 +41,9 @@ const {
           Steal this post → CC BY 4.0 · Code MIT
         </a>
       ) : (
-        <div class="my-2 flex flex-col items-center whitespace-nowrap sm:flex-row">
-          <span>Copyright &#169; {currentYear}</span>
-          <span class="hidden sm:inline">&nbsp;|&nbsp;</span>
-          <span>All rights reserved.</span>
-        </div>
+        <span class="my-2">
+          &#169; {currentYear} {SITE.author}
+        </span>
       )
     }
   </div>

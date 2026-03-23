@@ -38,9 +38,13 @@ const recentPosts = sortedPosts.filter(({ data }) => !data.featured);
         />
         <div>
           <p>
-            Building Fidero, a data platform for subscription businesses –
-            entirely with AI agents. Code, audits, strategy, sales. Writing
-            about what actually works.
+            Building <a
+              href="https://fidero.com"
+              class="underline decoration-dashed underline-offset-4 hover:text-accent"
+              >Fidero</a
+            >, a data platform for subscription businesses – entirely with AI
+            agents. Code, audits, strategy, sales. Writing about what actually
+            works.
           </p>
           {
             SOCIALS.length > 0 && (
@@ -87,7 +91,7 @@ const recentPosts = sortedPosts.filter(({ data }) => !data.featured);
     {
       recentPosts.length > 0 && (
         <section id="recent-posts" class="pt-12 pb-6">
-          <h2 class="text-2xl font-semibold tracking-wide">Recent Posts</h2>
+          <h2 class="text-2xl font-semibold tracking-wide">Recent posts</h2>
           <ul>
             {recentPosts.map(
               (data, index) =>
@@ -100,7 +104,7 @@ const recentPosts = sortedPosts.filter(({ data }) => !data.featured);
 
     <div class="my-8 text-center">
       <LinkButton href="/posts/">
-        All Posts
+        All posts
         <IconArrowRight class="inline-block rtl:-rotate-180" />
       </LinkButton>
     </div>

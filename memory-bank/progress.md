@@ -39,6 +39,13 @@
 - LinkedIn share button added (second position after X)
 - Reading time added to post list cards and post headers via `reading-time` package + `src/utils/readingTime.ts` utility. Displayed in Datetime component as "· X min read"
 - `og:type` meta tag added to Layout.astro (`article` for posts, `website` for other pages)
+- Share link click tracking added to `ShareLinks.astro` (`plausible("Share Link", { props: { platform } })`)
+- Newsletter card `not-prose` fix for about page (prose styles were adding unwanted whitespace inside the card)
+- Share links open in new tab (`target="_blank"`)
+- Fidero link added to homepage bio and about page (contextual, same tab, matching style)
+- Default footer updated: "All rights reserved" removed (contradicted CC BY 4.0), now "© {year} {SITE.author}"
+- README updated: description aligned with micro-niche, licence section corrected to CC BY 4.0 + MIT
+- Sentence case applied to headings: "Recent posts", "All posts"
 
 ## Blockers
 

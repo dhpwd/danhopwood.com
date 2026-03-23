@@ -3,7 +3,7 @@ layout: ../layouts/AboutLayout.astro
 title: "About"
 ---
 
-I'm Dan Hopwood. Building Fidero, a data platform for subscription businesses – entirely with AI agents. They do everything: code, audits, strategy, sales.
+I'm Dan Hopwood. Building [Fidero](https://fidero.com), a data platform for subscription businesses – entirely with AI agents. They do everything: code, audits, strategy, sales.
 
 I write about what actually works, sharing the secrets publicly.
 
