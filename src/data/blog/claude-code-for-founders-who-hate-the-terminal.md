@@ -12,6 +12,8 @@ Another person in the same group asked whether Claude Code was even worth the ef
 
 I said "challenge accepted" and wrote this.
 
+If you're weighing up [Cowork vs Claude Code](/posts/cowork-vs-claude-code/), I wrote about that too. This guide is about the how – getting set up in minutes.
+
 I've run my entire business through Claude Code for nine months. Strategy docs, emails, Slack messages, client audits, slides. None of it written manually. There's not a line of code in this guide – just knowledge work, in plain English, through what looks like a chat interface that happens to live in a terminal.
 
 The terminal isn't a skill you need to learn. It's a door you walk through. Four commands and you're on the other side. Everything after that is a conversation.
