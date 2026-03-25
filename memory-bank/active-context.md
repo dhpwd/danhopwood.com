@@ -5,9 +5,9 @@
 Site live on Vercel with `danhopwood.com` custom domain. Two posts published.
 
 1. Configure domain redirects in Vercel: `dhpwd.com` → `danhopwood.com` and `www.danhopwood.com` → `danhopwood.com`
-2. Set up Vercel proxy for Plausible to bypass ad blockers (rewrite in `vercel.json`)
-3. Create "Newsletter Signup" and "Share Link" custom event goals in Plausible dashboard
-4. Verify LinkedIn share preview via [linkedin.com/post-inspector](https://www.linkedin.com/post-inspector/) after next deploy
+3. Set up Vercel proxy for Plausible to bypass ad blockers (rewrite in `vercel.json`)
+4. Create "Newsletter Signup" and "Share Link" custom event goals in Plausible dashboard
+5. Verify LinkedIn share preview via [linkedin.com/post-inspector](https://www.linkedin.com/post-inspector/) after next deploy
 
 ## Backlog
 

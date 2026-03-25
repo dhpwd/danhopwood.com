@@ -51,6 +51,22 @@ Buttondown is backend infrastructure – no public-facing Buttondown URLs anywhe
 
 Defined in `src/constants.ts` as `SHARE_LINKS: ShareLink[]`. Each entry has a `buildHref(pageUrl, pageTitle?)` function that constructs the platform-specific share URL with proper encoding. `ShareLinks.astro` accepts an optional `title` prop passed from the post layout. Platforms: X (with `via=dhpwd`), LinkedIn, WhatsApp, Telegram, Email, Facebook.
 
+Icons use responsive sizing: `size-8` (32px) on mobile for tap targets, `size-6` (24px) on desktop. Padding `p-3 sm:p-2`. Icon row has `md:-ml-2` to left-align the first icon with the "Share this post on:" text on desktop (centred on mobile).
+
+## Post ending layout
+
+Order of elements after article content in `PostDetails.astro`:
+
+1. Newsletter signup card (directly after `<Content />`, above the HR – primary CTA)
+2. HR separator (dashed)
+3. Tags
+4. Share links
+5. Edit on GitHub (footer-only, all screen sizes)
+6. HR separator
+7. Previous/Next post navigation
+
+Back to Top button removed (progress bar sufficient). `addHeadingLinks()` scoped to `#article` to prevent anchor links on non-article headings.
+
 ## Post page footer
 
 `Footer.astro` accepts `stealThisPost` boolean prop. When true (post pages only), replaces the copyright line with "Steal this post → CC BY 4.0 · Code MIT" linking to the GitHub repo. Blog content is CC BY 4.0; code is MIT.

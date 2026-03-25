@@ -46,6 +46,11 @@
 - Default footer updated: "All rights reserved" removed (contradicted CC BY 4.0), now "© {year} {SITE.author}"
 - README updated: description aligned with micro-niche, licence section corrected to CC BY 4.0 + MIT
 - Sentence case applied to headings: "Recent posts", "All posts"
+- Post ending reordered: newsletter card directly after article content (above HR), then tags → share links → edit on GitHub. Aligns with Website → Newsletter signup conversion goal
+- Heading anchor bug fixed: `addHeadingLinks()` scoped to `#article` only, preventing `#` links on non-article headings (e.g. newsletter card h2)
+- Back to Top button removed from post pages (progress bar sufficient, floating circle crowded share links on mobile)
+- Share link icons: responsive sizing (`size-8 sm:size-6`), simplified padding (`p-3 sm:p-2`), removed redundant competing scale transforms. Negative margin (`md:-ml-2`) aligns first icon with text on desktop
+- Edit on GitHub removed from post header, now footer-only on all screen sizes. Icon sized (`size-5`), flex alignment fixed (`items-center` replacing invalid `justify-baseline`)
 
 ## Blockers
 
