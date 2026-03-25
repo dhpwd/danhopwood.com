@@ -51,6 +51,7 @@
 - Back to Top button removed from post pages (progress bar sufficient, floating circle crowded share links on mobile)
 - Share link icons: responsive sizing (`size-8 sm:size-6`), simplified padding (`p-3 sm:p-2`), removed redundant competing scale transforms. Negative margin (`md:-ml-2`) aligns first icon with text on desktop
 - Edit on GitHub removed from post header, now footer-only on all screen sizes. Icon sized (`size-5`), flex alignment fixed (`items-center` replacing invalid `justify-baseline`)
+- Newsletter signup form hardened for View Transitions: init wrapped in `astro:page-load` listener with `data-initialized` guard. Native POST fallback (new tab) shows honest "Complete signup in the new tab" message instead of false success. `form.target` cleaned up after submit
 
 ## Blockers
 

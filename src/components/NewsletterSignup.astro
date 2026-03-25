@@ -55,46 +55,62 @@ const { compact = false } = Astro.props;
     }
   }
 
-  document
-    .querySelectorAll<HTMLFormElement>(".newsletter-signup form")
-    .forEach(form => {
-      form.addEventListener("submit", async e => {
-        e.preventDefault();
-        const btn = form.querySelector("button")!;
-        const msg = form.parentElement!.querySelector("[data-newsletter-msg]")!;
-        const email = form.querySelector<HTMLInputElement>("[name=email]")!;
+  function initNewsletterForms() {
+    document
+      .querySelectorAll<HTMLFormElement>(".newsletter-signup form")
+      .forEach(form => {
+        if (form.dataset.initialized) return;
+        form.dataset.initialized = "true";
 
-        btn.setAttribute("disabled", "");
-        btn.textContent = "Subscribing…";
-        msg.classList.add("hidden");
+        form.addEventListener("submit", async e => {
+          e.preventDefault();
+          const btn = form.querySelector("button")!;
+          const msg = form.parentElement!.querySelector(
+            "[data-newsletter-msg]"
+          )!;
+          const email = form.querySelector<HTMLInputElement>("[name=email]")!;
 
-        try {
-          const res = await fetch(form.action, {
-            method: "POST",
-            body: new FormData(form),
-          });
+          btn.setAttribute("disabled", "");
+          btn.textContent = "Subscribing…";
+          msg.classList.add("hidden");
 
-          if (res.ok) {
+          function showSuccess() {
             msg.textContent = "You're in – check your inbox to confirm.";
             msg.className = "mt-2 text-sm text-green-600 dark:text-green-400";
             email.value = "";
             btn.removeAttribute("disabled");
             btn.textContent = "Subscribe";
             trackSignup();
-            return;
           }
-        } catch {
-          // fall through to native submit
-        }
 
-        btn.removeAttribute("disabled");
-        btn.textContent = "Subscribe";
-        trackSignup();
-        form.target = "_blank";
-        form.submit();
-        email.value = "";
-        msg.textContent = "You're in – check your inbox to confirm.";
-        msg.className = "mt-2 text-sm text-green-600 dark:text-green-400";
+          try {
+            const res = await fetch(form.action, {
+              method: "POST",
+              body: new FormData(form),
+            });
+
+            if (res.ok) {
+              showSuccess();
+              return;
+            }
+          } catch {
+            // CORS or network error — fall through to native POST
+          }
+
+          // Native POST fallback (new tab) — handles verification steps
+          btn.removeAttribute("disabled");
+          btn.textContent = "Subscribe";
+          trackSignup();
+          form.target = "_blank";
+          form.submit();
+          form.removeAttribute("target");
+          email.value = "";
+          msg.textContent = "Complete signup in the new tab.";
+          msg.className = "mt-2 text-sm text-foreground opacity-80";
+        });
       });
-    });
+  }
+
+  // Re-attach on every navigation (View Transitions support)
+  document.addEventListener("astro:page-load", initNewsletterForms);
 </script>

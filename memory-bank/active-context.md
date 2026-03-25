@@ -13,6 +13,7 @@ Site live on Vercel with `danhopwood.com` custom domain. Two posts published.
 
 - Customise dynamic OG image styling to match site brand (per-post generated images)
 - Consider adding first name field to newsletter once sending regularly (Buttondown supports `metadata__first-name`)
+- Harden `ShareLinks.astro` Plausible click tracking for View Transitions (`astro:page-load` pattern)
 
 ## Housekeeping
 
