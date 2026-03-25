@@ -49,9 +49,9 @@ export const SHARE_LINKS: ShareLink[] = [
     linkTitle: "Share this post on X",
     icon: IconBrandX,
     buildHref: (url, title) => {
-      const params = new URLSearchParams({ url, via: "dhpwd" });
-      if (title) params.set("text", title);
-      return `https://twitter.com/intent/tweet?${params}`;
+      let href = `https://twitter.com/intent/tweet?url=${encodeURIComponent(url)}&via=dhpwd`;
+      if (title) href += `&text=${encodeURIComponent(title)}`;
+      return href;
     },
   },
   {
@@ -74,11 +74,7 @@ export const SHARE_LINKS: ShareLink[] = [
     name: "Telegram",
     linkTitle: "Share this post via Telegram",
     icon: IconTelegram,
-    buildHref: (url, title) => {
-      const params = new URLSearchParams({ url });
-      if (title) params.set("text", title);
-      return `https://t.me/share/url?${params}`;
-    },
+    buildHref: url => `https://t.me/share/url?url=${encodeURIComponent(url)}`,
   },
   {
     name: "Mail",
