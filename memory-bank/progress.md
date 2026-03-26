@@ -53,6 +53,7 @@
 - Edit on GitHub removed from post header, now footer-only on all screen sizes. Icon sized (`size-5`), flex alignment fixed (`items-center` replacing invalid `justify-baseline`)
 - Fixed X and Telegram share links encoding spaces as `+` instead of `%20` (`URLSearchParams` replaced with `encodeURIComponent`). Telegram simplified to URL-only (preview card shows title/description)
 - Newsletter signup form hardened for View Transitions: init wrapped in `astro:page-load` listener with `data-initialized` guard. Native POST fallback (new tab) shows honest "Complete signup in the new tab" message instead of false success. `form.target` cleaned up after submit
+- Trailing slash normalisation: `vercel.json` created with `trailingSlash: false` (308 redirects in production), `trailingSlash: "never"` added to `astro.config.ts` (dev parity), `trailingSlash: false` added to RSS feed. Fixes Plausible analytics splitting `/slug/` vs `/slug` into separate entries
 
 ## Blockers
 

@@ -88,6 +88,20 @@ Custom events use Title Case with spaces (Plausible convention). `plausible` is 
 
 Vercel proxy not yet configured – add rewrites in `vercel.json` to route the script through `danhopwood.com` and bypass ad blockers.
 
+## Vercel configuration
+
+`vercel.json` at project root. Key settings:
+
+- **`trailingSlash: false`** – 308 redirects trailing-slash URLs to clean form (e.g. `/posts/slug/` → `/posts/slug`). This is the production-side fix; Astro's `trailingSlash: "never"` only affects the dev server and `Astro.url` for static/prerendered sites (Astro docs: "Trailing slashes on prerendered pages are handled by the hosting platform"). Plausible proxy rewrites to be added here too
+
+## Trailing slash
+
+Three-layer config for consistency:
+
+1. **Vercel** (`vercel.json`): `trailingSlash: false` – creates 308 redirects in production (the load-bearing piece)
+2. **Astro** (`astro.config.ts`): `trailingSlash: "never"` – dev server matches production behaviour
+3. **RSS** (`src/pages/rss.xml.ts`): `trailingSlash: false` – Astro's RSS helper adds trailing slashes by default regardless of Astro config
+
 ## MCP
 
 Use `astro-docs` MCP for any Astro research.
