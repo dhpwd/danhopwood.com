@@ -8,13 +8,13 @@ tags: ["claude-code", "ai", "knowledge-work"]
 
 Someone in a private founders' group I'm in said they went back to ChatGPT because the terminal hurt their eyes. Like, physically. The fonts, the lack of visual hierarchy, the clipboard not working how they expected. They hated it.
 
-Another person in the same group asked whether Claude Code was even worth the effort for non-techies – while watching everyone else rave about it.
+Another person asked whether Claude Code was even worth the effort for non-techies – while watching everyone else rave about it.
 
-I said "challenge accepted" and wrote this.
+So I wrote this.
 
 If you're weighing up [Cowork vs Claude Code](/posts/cowork-vs-claude-code/), I wrote about that too. This guide is about the how – getting set up in minutes.
 
-I've run my entire business through Claude Code for nine months. Strategy docs, emails, Slack messages, client audits, slides. None of it written manually. There's not a line of code in this guide – just knowledge work, in plain English, through what looks like a chat interface that happens to live in a terminal.
+I've run my entire business through Claude Code for nine months. Strategy docs, emails, Slack messages, client audits, slides. None of it written manually. There's not a line of code in this guide – just knowledge work, in plain English, through a chat interface that happens to live in a terminal.
 
 The terminal isn't a skill you need to learn. It's a door you walk through. Four commands and you're on the other side. Everything after that is a conversation.
 
@@ -98,7 +98,7 @@ Paste it in and type something like:
 
 > Here's some information about my company. I want you to create a Lean Canvas. Ask me questions first – one at a time – until you have enough to do a good job. Then save it as Lean Canvas.md
 
-That last part matters. Without it, Claude just takes what you gave it and runs. With it, Claude pushes back on gaps, asks about things you haven't mentioned, challenges assumptions. It acts like a strategist, not a template filler. Answer the questions. This is the good stuff.
+The "ask me questions" part matters. Without it, Claude just takes what you gave it and runs. With it, Claude pushes back on gaps, asks about things you haven't mentioned, challenges assumptions. It acts like a strategist, not a template filler. Answer the questions. This is the good stuff.
 
 When it's done, you have a file called `Lean Canvas.md` in your `my-company` folder. A real document, on your computer. Not trapped in a chat thread that disappears into your conversation history.
 
@@ -125,7 +125,7 @@ The `@` tells Claude to read that file. It responds with a summary of your busin
 
 Every document you create stays in this folder. Next week, you could ask Claude to draft a pitch email and @-reference your Lean Canvas. It already knows your positioning. You could add a messaging document and reference both files in a future session. The context compounds.
 
-This is what everyone's been raving about. Not the terminal. This.
+That's what the fuss is about. Not the terminal.
 
 ![Session 2 – the @-reference in action, Claude responding with company knowledge](../../assets/images/cc-at-reference.png)
 
@@ -147,10 +147,8 @@ What I've shown you is the simplest starting point – one folder, one document,
 
 ![Obsidian graph view – nine months of compounding documents](../../assets/images/cc-obsidian-graph.png)
 
-This is my Obsidian vault after nine months of working this way. Every node is a document. Every line is a connection between them. The blue circle? That's my Lean Canvas – the first document I created. Still connected to everything.
+This is my Obsidian vault after nine months of working this way. Each node is a document, each line a connection. The blue circle? My Lean Canvas – the first document I created, still connected to everything.
 
-Where it goes from here: making Claude automatically load your company context at the start of every session. Connecting it to your email, calendar and Slack. Building workflows you run with a single command.
-
-Next post: how to make Claude remember everything about your company the moment you start a session – no @-referencing needed.
+Next post: making Claude load your company context automatically, so you never @-reference again.
 
 <!-- Newsletter CTA: "I'm writing the complete series. Subscribe to get the next one." -->

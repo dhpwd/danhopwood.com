@@ -1,28 +1,20 @@
 ---
 title: "Cowork vs Claude Code: the difference isn't the terminal"
-description: "Both tools are capable. The real question is whether your instructions, templates and processes can talk to each other."
+description: "The real difference isn't features. It's whether your instructions, context and processes talk to each other."
 pubDatetime: 2026-03-21T14:00:00Z
 draft: false
 tags: ["claude-code", "cowork", "ai", "knowledge-work"]
 ---
 
-I was discussing this with some founder friends recently. Half of them use Cowork and love it. The other half keep hearing about Claude Code and wondering if they're missing something.
+Half the founders I talk to use Cowork and love it. The other half keep hearing about Claude Code and wondering if they're missing something.
 
-The conversation kept circling the same question: is Claude Code just the technical version of Cowork?
+Same question keeps coming up: is Claude Code just the technical version of Cowork?
 
-No. And feature comparisons miss the bigger difference.
+No. And feature comparisons miss the actual difference.
 
 ## What Cowork does
 
-Cowork runs in the Claude Desktop app. It can:
-
-- Break complex work into sub-tasks and run them in parallel
-- Access any files you grant it permission to
-- Connect to Google Drive, Gmail, Calendar and Slack
-- Install plugins with pre-built skills for sales, finance, legal, marketing
-- Run code and commands on your computer in a sandboxed environment
-
-It has project-level instructions that persist between sessions. It has skills that define repeatable processes. It creates and edits files on your computer. It's a capable tool.
+Cowork runs in the Claude Desktop app. It breaks work into parallel sub-tasks, connects to Google Drive, Gmail, Calendar and Slack, and comes with pre-built skills for common workflows. Project-level instructions persist between sessions. It creates and edits files on your computer. Solid tool.
 
 ## What Claude Code adds
 
@@ -34,13 +26,13 @@ That alone is useful. But the real difference is what happens when you start bui
 
 A skill (a reusable command) already has everything in your CLAUDE.md – every convention, correction and process you've defined. It can hand off research to a separate agent that works independently and brings back a summary. It can write output back into your project that another skill reads from tomorrow.
 
-Everything connects. Each piece draws from and feeds back into the others.
+Everything connects. Each piece feeds the next.
 
-Cowork has instructions. It has skills. It has files. But the instructions live on your machine alone, you can't define your own agents and it's harder to wire the pieces together.
+Cowork has instructions. It has skills. It has files. But the instructions live on your machine alone, you can't define your own agents, and it's harder to wire the pieces together.
 
 ## What this looks like in practice
 
-I have a command called `/new-prospect`. I type it with a company name and an email address and Claude runs our entire first-mile sales process:
+I have a command called `/new-prospect`. I type it with a company name and an email address. Claude runs our entire first-mile sales process:
 
 1. Searches Gmail for prior history with that contact
 2. Scrapes and researches the company website
@@ -59,9 +51,7 @@ That's the difference. Not just features. Not the terminal. Whether the pieces c
 
 ## The team dimension
 
-This is where it gets interesting.
-
-Your CLAUDE.md captures how you work. Your skills capture your processes. Every correction you make to CLAUDE.md ripples through every skill and agent that builds on it. Each week, the whole system gets sharper.
+Your CLAUDE.md captures how you work. Your skills capture your processes. Every correction to CLAUDE.md ripples through every skill and agent that builds on it. The system compounds.
 
 When someone new joins, they start a Claude Code session and immediately inherit everything you've built. Your qualification criteria, your discovery framework, your follow-up style – all loaded automatically, from day one.
 
@@ -69,8 +59,8 @@ Cowork can't do this. Each person's instructions are local, invisible to everyon
 
 ## The honest answer
 
-If Cowork does what you need and your work doesn't require the pieces to connect, stick with it. It's a solid tool.
+If Cowork does what you need and your work doesn't require the pieces to connect, stick with it.
 
 If you find yourself re-explaining context, rebuilding prompts you've written before, or wishing one process could draw from another – the terminal is a door, not a skill. Four commands and you're through it.
 
-Full setup guide: [Claude Code for founders who hate the terminal](https://danhopwood.com/posts/claude-code-for-founders-who-hate-the-terminal/)
+Full setup guide: [Claude Code for founders who hate the terminal](/posts/claude-code-for-founders-who-hate-the-terminal/)
