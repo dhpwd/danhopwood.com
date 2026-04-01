@@ -2,7 +2,7 @@
 
 ## Current focus
 
-Site live on Vercel with `danhopwood.com` custom domain. Two posts published.
+Site live on Vercel with `danhopwood.com` custom domain. Three posts published.
 
 1. Configure domain redirects in Vercel: `dhpwd.com` → `danhopwood.com` and `www.danhopwood.com` → `danhopwood.com`
 2. Set up Vercel proxy for Plausible to bypass ad blockers (add rewrites to `vercel.json`)
@@ -11,7 +11,8 @@ Site live on Vercel with `danhopwood.com` custom domain. Two posts published.
 
 ### Recently completed
 
-- Trailing slash normalisation: `vercel.json` (`trailingSlash: false`) for 308 redirects in production, `astro.config.ts` (`trailingSlash: "never"`) for dev parity, RSS `trailingSlash: false` to match. Fixes split Plausible analytics
+- Third blog post published: "I used Claude Code to read its own source code" – exploring the leaked Claude Code source via 10 parallel agents
+- Cross-link added from Cowork post to new post's "five layers of context management" section
 
 ## Backlog
 
