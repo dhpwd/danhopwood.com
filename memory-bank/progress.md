@@ -56,6 +56,7 @@
 - Trailing slash normalisation: `vercel.json` created with `trailingSlash: false` (308 redirects in production), `trailingSlash: "never"` added to `astro.config.ts` (dev parity), `trailingSlash: false` added to RSS feed. Fixes Plausible analytics splitting `/slug/` vs `/slug` into separate entries
 - Third blog post published: "I used Claude Code to read its own source code" (slug: `i-used-claude-code-to-read-its-own-source-code`)
 - Cross-link added in Cowork post referencing new post's "five layers of context management" section
+- "Read the latest issue" link added to `NewsletterSignup.astro` — links to Buttondown archive (`buttondown.com/dhpwd/archive`), opens in new tab, styled with dashed underline + `hover:text-accent` (muted by parent `opacity-80`, intentionally subordinate to Subscribe button)
 
 ## Blockers
 

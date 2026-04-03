@@ -11,6 +11,7 @@ Site live on Vercel with `danhopwood.com` custom domain. Three posts published.
 
 ### Recently completed
 
+- "Read the latest issue" archive link added to newsletter signup card (below form, all placements)
 - Third blog post published: "I used Claude Code to read its own source code" – exploring the leaked Claude Code source via 10 parallel agents
 - Cross-link added from Cowork post to new post's "five layers of context management" section
 

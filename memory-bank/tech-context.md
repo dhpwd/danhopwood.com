@@ -45,7 +45,7 @@ Implemented as `src/components/NewsletterSignup.astro`. Embedded in `PostDetails
 
 Form submits via JS fetch with inline success/error messages (no page redirect). Hidden `embed=1` input required by Buttondown's embed API. Falls back to native form POST in a new tab when fetch fails (e.g. Buttondown human verification step returns non-200). Init wrapped in `astro:page-load` for View Transitions support, with `data-initialized` guard to prevent double-attaching. Metadata fields (e.g. first name) can be added later via `name="metadata__<key>"` inputs.
 
-Buttondown is backend infrastructure – no public-facing Buttondown URLs anywhere on the site.
+"Read the latest issue" link below the form points to the Buttondown archive (`buttondown.com/dhpwd/archive`). Styled with `opacity-80` parent, dashed underline, `hover:text-accent` — intentionally muted relative to the Subscribe button to maintain CTA hierarchy.
 
 ## Share links
 

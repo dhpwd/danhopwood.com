@@ -17,7 +17,7 @@ Final unless explicitly revisited.
 ## Design spec
 
 - **Homepage = post list.** Avatar, short bio, social links, straight into posts. No splash page, no hero *(implemented)*
-- **Build Notes signup on every post and about page.** Embedded Buttondown form (same component everywhere). One-line anti-sell: frequency + "zero fluff". Buttondown is backend infrastructure – no public-facing Buttondown URLs *(implemented)*
+- **Build Notes signup on every post and about page.** Embedded Buttondown form (same component everywhere). One-line anti-sell: frequency + "zero fluff". "Read the latest issue" link to Buttondown archive below form *(implemented)*
 - **One-line post hooks.** Every post needs a strong description/subtitle for the index, RSS, and social sharing previews
 - **Read time on posts.** *(implemented – post list cards and post headers)*
 - **"Edit on GitHub" links.** Open-source the blog content. Link to `dhpwd/danhopwood.com` repo *(implemented and verified)*
