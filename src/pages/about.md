@@ -3,11 +3,11 @@ layout: ../layouts/AboutLayout.astro
 title: "About"
 ---
 
-I'm Dan Hopwood. Building [Fidero](https://fidero.com), a data platform for subscription businesses – entirely with AI agents. They do everything: code, audits, strategy, sales.
+I'm Dan Hopwood. I run [Fidero](https://fidero.com), a data platform for subscription businesses. The entire company runs on AI agents – code, audits, strategy, sales.
 
-I write about what actually works, sharing the secrets publicly.
+That claim tends to get a reaction. Fair enough. This site is where I show my working and share the secrets publicly.
 
-I also work as a fractional CDO and AI advisor. Practitioner first, advisor second.
+Practitioner first, advisor second. I also work as a fractional CDO and AI advisor – everything I advise on, I've built with first.
 
 Background: 12+ years in data and analytics. Seedcamp mentor. Built data infrastructure for B2C subscription companies from seed to scale-up.
 
