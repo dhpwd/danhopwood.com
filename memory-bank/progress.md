@@ -57,6 +57,7 @@
 - Third blog post published: "I used Claude Code to read its own source code" (slug: `i-used-claude-code-to-read-its-own-source-code`)
 - Cross-link added in Cowork post referencing new post's "five layers of context management" section
 - "Read the latest issue" link added to `NewsletterSignup.astro` — links to Buttondown archive (`buttondown.com/dhpwd/archive`), opens in new tab, styled with dashed underline + `hover:text-accent` (muted by parent `opacity-80`, intentionally subordinate to Subscribe button)
+- Post 1 rewritten for Techie plugin: one-command `curl` installer replaces four terminal commands, `/first-steps` guided flow replaces manual Lean Canvas session, "one-thread trap" section added (context window framing), all 5 screenshots replaced, `modDatetime` added, description updated. Cowork post cross-reference updated to match ("one command")
 
 ## Blockers
 

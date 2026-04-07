@@ -1,154 +1,139 @@
 ---
 title: "Claude Code for founders who hate the terminal"
-description: "You don't need to learn the terminal. You need four commands, and then you'll never have to re-explain your company to AI again."
+description: "Paste one command and you'll never have to re-explain your company to AI again."
 pubDatetime: 2026-03-16T12:00:00Z
+modDatetime: 2026-04-07T15:00:00Z
 draft: false
 tags: ["claude-code", "ai", "knowledge-work"]
 ---
 
-Someone in a private founders' group I'm in said they went back to ChatGPT because the terminal hurt their eyes. Like, physically. The fonts, the lack of visual hierarchy, the clipboard not working how they expected. They hated it.
+_Updated April 2026: the original guide had four terminal commands. I've since built a plugin called Techie that replaces them. Rewritten end-to-end._
+
+Someone in a private founders' group I'm in said they went back to ChatGPT because the terminal hurt their eyes. The fonts, the lack of visual hierarchy, the clipboard not working how they expected. They hated it.
 
 Another person asked whether Claude Code was even worth the effort for non-techies – while watching everyone else rave about it.
 
-So I wrote this.
+Honestly? Claude Code is built for developers. It assumes you want to write code, know what a "working directory" is and understand technical jargon. So I built a plugin called [Techie](https://github.com/dhpwd/techie) that replaces all of that with plain English. Same power underneath (persistent memory, connected documents, custom workflows) minus the developer assumptions.
 
-If you're weighing up [Cowork vs Claude Code](/posts/cowork-vs-claude-code/), I wrote about that too. This guide is about the how – getting set up in minutes.
+I had them both introduce themselves:
 
-I've run my entire business through Claude Code for nine months. Strategy docs, emails, Slack messages, client audits, slides. None of it written manually. There's not a line of code in this guide – just knowledge work, in plain English, through a chat interface that happens to live in a terminal.
+![Claude Code without Techie vs with Techie – same tool, different interface](../../assets/images/cc-theme-before-after.png)
 
-The terminal isn't a skill you need to learn. It's a door you walk through. Four commands and you're on the other side. Everything after that is a conversation.
+## The one-thread trap
 
-## The re-explaining problem
+If you use ChatGPT or Claude, you probably have one long conversation thread for each project. You keep going back because each one has all the history and starting fresh means explaining everything again.
 
-If you use ChatGPT or Claude chat, you know the drill.
+Those threads quietly get worse. AI chats have a 'context window': a limit on how much the model holds at once. As the conversation grows, older messages get silently dropped. The things you told it three weeks ago? Gone. And the longer the thread, the worse it handles everything. Including what you said five minutes ago.
 
-Paste your company context. Get a decent output. Start a new conversation next week. Paste it all again. And again. And again.
-
-Claude Code works with files on your computer. You create a strategy document once and reference it in any future session. Your AI starts every conversation already knowing your business – your positioning, your audience, your channels, your metrics.
+Claude Code works differently. Your company context lives in files on your computer, not in a chat thread. A memory file loads at the start of every session. Close a conversation, start fresh, lose nothing. Starting fresh is _better_ – clean reasoning, full context, every time.
 
 No more re-explaining. That's the reason to bother.
 
-## Install Claude Code
+If you're weighing up [Cowork vs Claude Code](/posts/cowork-vs-claude-code/), I wrote about that too. This guide is about getting set up.
 
-You need a Claude Pro ($20/month) or Max subscription. If you've got that, you're a couple of minutes away.
+## What you'll have in 15 minutes
 
-**Mac:**
+Paste one command, answer a few questions about your business and walk away with:
 
-Open Terminal (press Cmd+Space, type "Terminal", hit enter) and paste this:
+- A strategy document on your computer (not trapped in a chat thread)
+- A memory system so every future session starts knowing your business
+- A checkpoint system for saving your work
+- An assistant that remembers where you left off
 
-```
-curl -fsSL https://claude.ai/install.sh | bash
-```
+The terminal is a door, not a skill. One command and you're on the other side. Everything after that is a conversation.
 
-**Windows:**
+## Install
 
-First, install [Git for Windows](https://git-scm.com/downloads/win). Download it, run the installer, accept all the defaults.
+You need a Claude Pro ($20/month), Max, Team or Enterprise subscription. If you don't have one yet, create an account at claude.ai. It'll ask you to choose between Chat, Cowork and Code – skip this step. Claude Code authenticates through your subscription regardless.
 
-Then open PowerShell (Start menu, type "PowerShell", hit enter) and paste this:
-
-```
-irm https://claude.ai/install.ps1 | iex
-```
-
-If PowerShell blocks it, paste this first and try again:
+Open Terminal (Cmd+Space, type "Terminal", hit enter), paste this and hit enter:
 
 ```
-Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+curl -fsSL https://raw.githubusercontent.com/dhpwd/techie/main/install.sh | bash
 ```
 
-Once it finishes, close PowerShell and open a new window. Windows needs this to recognise the new command.
+This installs Claude Code and Techie, creates a Workspace folder and pre-configures the settings so common actions (reading files, saving work) don't need approval every time.
 
-**Both:**
+After running, if Claude Code wasn't already on your machine, the installer will tell you to open a fresh terminal window – your computer needs a new window to recognise the new command.
 
-Type `claude` and hit enter. A browser window opens. Log in with your Claude account. That's it.
+![Installer output](../../assets/images/cc-techie-install.png)
 
-If you've never opened a terminal before, this will feel odd. That's fine. You're about to learn four commands, and then you'll never need to think about the terminal again.
+**Windows:** The installer is Mac and Linux only. Install Claude Code via PowerShell (`irm https://claude.ai/install.ps1 | iex`), then <a href="https://github.com/dhpwd/techie?tab=readme-ov-file#install" target="_blank">install the Techie plugin manually</a>. Same experience once it's running.
 
-![Terminal after successful install](../../assets/images/cc-install.png)
+## Your first session
 
-## Four commands
-
-This is every terminal command in this guide. Probably every terminal command you'll need for a while.
-
-| Command  | What it does                 |
-| -------- | ---------------------------- |
-| `pwd`    | Shows which folder you're in |
-| `mkdir`  | Creates a new folder         |
-| `cd`     | Moves into a folder          |
-| `claude` | Starts Claude Code           |
-
-Here's the sequence:
+Type these two commands, pressing enter after each:
 
 ```
-pwd
-mkdir my-company
-cd my-company
+cd Workspace
 claude
 ```
 
-`pwd` shows you where you are. `mkdir my-company` creates a folder. `cd my-company` moves into it. `claude` starts a session.
+The first time you launch Claude Code, four setup prompts appear. They go fast:
 
-That's it. Everything from here is plain English.
+1. **Theme** – pick light or dark text. Whichever looks better
+2. **Login** – select your Claude subscription
+3. **Security** – press enter to continue
+4. **Terminal setup** – say yes
 
-## Your first session – create a strategy document
+Once you're in, type `/first-steps`.
 
-Grab whatever you have about your company. Pitch deck bullets, an about page, notes from your last strategy session, a rambling Google Doc. Anything that gives Claude something to work with.
+What follows is a conversation. Techie asks what you're working on – a business, a project, an idea. Then asks focused questions, one at a time: who's it for? What's the biggest thing you're trying to figure out? What's already working? What keeps getting stuck?
 
-Paste it in and type something like:
+Answer the questions. This is the good stuff – like working through a brief with a strategist, not filling in a template.
 
-> Here's some information about my company. I want you to create a Lean Canvas. Ask me questions first – one at a time – until you have enough to do a good job. Then save it as Lean Canvas.md
+![Techie asking questions during /first-steps](../../assets/images/cc-first-steps-questions.png)
 
-The "ask me questions" part matters. Without it, Claude just takes what you gave it and runs. With it, Claude pushes back on gaps, asks about things you haven't mentioned, challenges assumptions. It acts like a strategist, not a template filler. Answer the questions. This is the good stuff.
+When it has enough, it creates your document – a strategy file, project brief or idea capture, depending on what you described. A real file, on your computer.
 
-When it's done, you have a file called `Lean Canvas.md` in your `my-company` folder. A real document, on your computer. Not trapped in a chat thread that disappears into your conversation history.
+Then it sets up two things behind the scenes: a memory file so it remembers this conversation next time, and a checkpoint system so you can save your work.
 
-![Claude Code mid-conversation, creating the Lean Canvas](../../assets/images/cc-lean-canvas-session-1.png)
-
-![Claude Code continuing the Lean Canvas conversation](../../assets/images/cc-lean-canvas-session-2.png)
+![Strategy document created, memory set up](../../assets/images/cc-first-steps-complete.png)
 
 ## The moment it clicks
 
-Close the session. Type `/exit` or just close the window.
-
-Next time you open the terminal, type:
+Type `/exit`. Open a fresh terminal. Then:
 
 ```
-cd my-company
+cd Workspace
 claude
 ```
 
-Now type:
+Say hello.
 
-> @Lean Canvas.md What do you know about my company?
+> Welcome back. Last time we created your strategy document.
 
-The `@` tells Claude to read that file. It responds with a summary of your business – your problem, your solution, your audience, your channels – without you telling it anything.
+No pasting. No re-explaining. It picks up where you left off and suggests what to do next.
 
-Every document you create stays in this folder. Next week, you could ask Claude to draft a pitch email and @-reference your Lean Canvas. It already knows your positioning. You could add a messaging document and reference both files in a future session. The context compounds.
+![Returning session – Techie remembers everything](../../assets/images/cc-returning-session.png)
 
-That's what the fuss is about. Not the terminal.
-
-![Session 2 – the @-reference in action, Claude responding with company knowledge](../../assets/images/cc-at-reference.png)
+That's what the fuss is about. Not the terminal. The compound memory. Each session builds on the last. Each document feeds the next.
 
 ## See your work
 
-The documents Claude creates are markdown files – plain text with simple formatting. You can open them in any text editor, but there's a nicer way.
+The documents Techie creates are known as markdown files – plain text with simple formatting. You can open them in any text editor, but there's a nicer way.
 
-Download [Obsidian](https://obsidian.md) (free). Open it, choose "Open folder as vault", and point it at your `my-company` folder.
+Download [Obsidian](https://obsidian.md) (free). Open it, choose "Open folder as vault" and point it at your **Workspace** folder (the folder itself, not a file inside it).
 
-Your Lean Canvas shows up, cleanly formatted, instantly browsable. As you create more documents, they all appear here. Obsidian becomes the visual home for everything you build.
+Your strategy document shows up, cleanly formatted, instantly browsable. As you create more documents, they all appear here.
 
-![Lean Canvas rendered in Obsidian](../../assets/images/cc-obsidian-canvas.png)
+![Strategy document rendered in Obsidian](../../assets/images/cc-obsidian-strategy.png)
 
 ## The hump is behind you
 
-That was it. The terminal is a door, not a skill. You walked through it.
+The terminal is a door. You just walked through it.
 
-What I've shown you is the simplest starting point – one folder, one document, one reference.
+If you want to learn your way around the terminal, type `/learn terminal basics` and Techie will teach you interactively.
+
+If the window still looks ugly, `/setup-theme` will sort it out: fonts, colours, the lot. That screenshot at the top? That's the result.
+
+A few more commands worth knowing:
+
+- `/consult` – describe what you need and Techie will ask the right questions before starting
+- `/save` – checkpoint your work any time
+- `/learn` – pick up new skills interactively
+- `/commands` – see everything that's available
 
 ![Obsidian graph view – nine months of compounding documents](../../assets/images/cc-obsidian-graph.png)
 
-This is my Obsidian vault after nine months of working this way. Each node is a document, each line a connection. The blue circle? My Lean Canvas – the first document I created, still connected to everything.
-
-Next post: making Claude load your company context automatically, so you never @-reference again.
-
-<!-- Newsletter CTA: "I'm writing the complete series. Subscribe to get the next one." -->
+This is my Obsidian vault after nine months of working this way. Each node is a document, each line a connection. That blue circle? The first document I created, still connected to everything.

@@ -61,6 +61,6 @@ Cowork can't do this. Each person's instructions are local, invisible to everyon
 
 If Cowork does what you need and your work doesn't require the pieces to connect, stick with it.
 
-If you find yourself re-explaining context, rebuilding prompts you've written before, or wishing one process could draw from another – the terminal is a door, not a skill. Four commands and you're through it.
+If you find yourself re-explaining context, rebuilding prompts you've written before, or wishing one process could draw from another – the terminal is a door, not a skill. One command and you're through it.
 
 Full setup guide: [Claude Code for founders who hate the terminal](/posts/claude-code-for-founders-who-hate-the-terminal/)
