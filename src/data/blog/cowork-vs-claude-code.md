@@ -20,7 +20,7 @@ Cowork runs in the Claude Desktop app. It breaks work into parallel sub-tasks, c
 
 Claude Code can also do all of that. But it adds something Cowork doesn't have: the pieces talk to each other.
 
-In Claude Code, you create a file called CLAUDE.md – a plain text file that Claude reads at the start of every session. (It's actually [one of five layers of context management](/posts/i-used-claude-code-to-read-its-own-source-code/#five-layers-of-context-management) happening behind the scenes.) It contains your business context, your conventions and a map to everything else. It lives in your project folder. Anyone on your team can see it, edit it and track what changed.
+In Claude Code, you create a file called CLAUDE.md – a plain text file that Claude reads at the start of every session. (It's actually [one of five layers of context management](/posts/i-used-claude-code-to-read-its-own-source-code#five-layers-of-context-management) happening behind the scenes.) It contains your business context, your conventions and a map to everything else. It lives in your project folder. Anyone on your team can see it, edit it and track what changed.
 
 That alone is useful. But the real difference is what happens when you start building on top of it.
 
@@ -63,4 +63,6 @@ If Cowork does what you need and your work doesn't require the pieces to connect
 
 If you find yourself re-explaining context, rebuilding prompts you've written before, or wishing one process could draw from another – the terminal is a door, not a skill. One command and you're through it.
 
-Full setup guide: [Claude Code for founders who hate the terminal](/posts/claude-code-for-founders-who-hate-the-terminal/)
+Full setup guide: [Claude Code for founders who hate the terminal](/posts/claude-code-for-founders-who-hate-the-terminal)
+
+The coding-specific version: [The memory bank framework](/posts/the-memory-bank-framework)

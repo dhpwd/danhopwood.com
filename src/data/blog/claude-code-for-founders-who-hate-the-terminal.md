@@ -27,9 +27,11 @@ Those threads quietly get worse. AI chats have a 'context window': a limit on ho
 
 Claude Code works differently. Your company context lives in files on your computer, not in a chat thread. A memory file loads at the start of every session. Close a conversation, start fresh, lose nothing. Starting fresh is _better_ – clean reasoning, full context, every time.
 
+For the technical deep version (a structured 6-file memory system I use on coding projects) see [the memory bank framework](/posts/the-memory-bank-framework).
+
 No more re-explaining. That's the reason to bother.
 
-If you're weighing up [Cowork vs Claude Code](/posts/cowork-vs-claude-code/), I wrote about that too. This guide is about getting set up.
+If you're weighing up [Cowork vs Claude Code](/posts/cowork-vs-claude-code), I wrote about that too. This guide is about getting set up.
 
 ## What you'll have in 15 minutes
 

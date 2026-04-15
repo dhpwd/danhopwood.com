@@ -96,6 +96,8 @@ Vercel proxy not yet configured – add rewrites in `vercel.json` to route the s
 
 ## Trailing slash
 
+Writer convention: omit trailing slashes on internal `/posts/...` links in markdown, including anchor links (`/posts/slug#heading`, not `/posts/slug/#heading`).
+
 Three-layer config for consistency:
 
 1. **Vercel** (`vercel.json`): `trailingSlash: false` – creates 308 redirects in production (the load-bearing piece)

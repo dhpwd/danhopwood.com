@@ -44,6 +44,8 @@ This is the most useful thing I found for anyone who uses Claude Code daily. The
 
 If you've ever wondered why Claude Code stays coherent across long sessions while other tools lose the plot after 20 minutes, this is why. Five layers, each handling a different failure mode.
 
+(These layers exist because most users don't bring a structured memory layer of their own. If you have one – [here's the 6-file system I use](/posts/the-memory-bank-framework) – most of them become unnecessary scaffolding.)
+
 ## No test suite
 
 The repository contains zero Jest, Vitest, Mocha or Playwright test files. None.
