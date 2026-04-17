@@ -28,9 +28,9 @@ Why? Hardware-accelerated scrolling via terminal escape sequences. Damage-aware 
 
 ## The cache trick that makes parallel agents work
 
-This one matters if you use agents. When Claude Code forks sub-agents, every child gets a byte-identical API prefix. Same system prompt, same placeholder tool results – only the final directive differs, telling each agent what to focus on.
+This one matters if you use agents. When Claude Code forks sub-agents, every child gets a byte-identical API prefix: same system prompt, same placeholder tool results. Only the final directive differs and each agent gets its own focus.
 
-They share the cached portion, each only paying for their unique instructions. This is why spinning up 8 agents doesn't cost 8x.
+They share the cached portion and each pays only for its unique instructions. This is why spinning up 8 agents doesn't cost 8x.
 
 ## Five layers of context management
 
@@ -70,7 +70,7 @@ It's date-gated to April 2026 but still behind a feature flag – present in the
 
 **Undercover mode.** An environment variable strips all Anthropic attribution from commits and PRs. The system prompt explicitly warns the model: "You are operating UNDERCOVER... Do not blow your cover." Anthropic uses Claude Code for public open-source contributions without disclosure.
 
-**Bash security.** Every command is parsed into an abstract syntax tree. Unknown node types trigger a permission prompt – fail-closed. Command substitutions, subshells, loops, function definitions. All classified as dangerous. A separate secret scanner checks for AWS, GCP, Stripe and Anthropic credentials before anything leaves your machine.
+**Bash security.** Every command is parsed into an abstract syntax tree. Unknown node types trigger a permission prompt – fail-closed. Command substitutions, subshells, loops and function definitions are all classified as dangerous. A separate secret scanner checks for AWS, GCP, Stripe and Anthropic credentials before anything leaves your machine.
 
 **Pricing.** Opus 4.6 in fast mode costs 6x standard: $30/$150 per million tokens versus $5/$25. The auto-compact circuit breaker exists because bugs at this scale get expensive fast.
 

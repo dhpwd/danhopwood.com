@@ -23,7 +23,7 @@ I had them both introduce themselves:
 
 If you use ChatGPT or Claude, you probably have one long conversation thread for each project. You keep going back because each one has all the history and starting fresh means explaining everything again.
 
-Those threads quietly get worse. AI chats have a 'context window': a limit on how much the model holds at once. As the conversation grows, older messages get silently dropped. The things you told it three weeks ago? Gone. And the longer the thread, the worse it handles everything. Including what you said five minutes ago.
+Those threads quietly get worse. AI chats have a 'context window': a limit on how much the model holds at once. As the conversation grows, older messages get silently dropped. The things you told it three weeks ago? Gone. And the longer the thread, the worse it handles everything, including what you said five minutes ago.
 
 Claude Code works differently. Your company context lives in files on your computer, not in a chat thread. A memory file loads at the start of every session. Close a conversation, start fresh, lose nothing. Starting fresh is _better_ – clean reasoning, full context, every time.
 
@@ -80,7 +80,7 @@ The first time you launch Claude Code, four setup prompts appear. They go fast:
 
 Once you're in, type `/first-steps`.
 
-What follows is a conversation. Techie asks what you're working on – a business, a project, an idea. Then asks focused questions, one at a time: who's it for? What's the biggest thing you're trying to figure out? What's already working? What keeps getting stuck?
+What follows is a conversation. Techie asks what you're working on – a business, a project, an idea. Then it asks focused questions, one at a time: who's it for? What's the biggest thing you're trying to figure out? What's already working? What keeps getting stuck?
 
 Answer the questions. This is the good stuff – like working through a brief with a strategist, not filling in a template.
 
