@@ -9,7 +9,7 @@ That claim tends to get a reaction. Fair enough. This site is where I show my wo
 
 Practitioner first, advisor second. I also work as a fractional CDO and AI advisor – everything I advise on, I've built with first.
 
-Background: 12+ years in data and analytics. Seedcamp mentor. Built data infrastructure for B2C subscription companies from seed to scale-up.
+I've spent 12+ years in data and analytics, building infrastructure for B2C subscription companies from seed to scale-up. I also mentor at Seedcamp.
 
 ## Get in touch
 
