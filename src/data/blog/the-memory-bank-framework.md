@@ -98,8 +98,4 @@ Install it because you're sick of re-explaining your project.
 
 Keep it because it stops your codebase drifting.
 
-The longer argument (why this matters past the forgetting fix) lands next week.
-
-<!-- Uncomment when "Forgetting isn't the problem" ships:
-(Why "drifting" matters more than "forgetting" is a longer argument – I wrote it up separately: [Forgetting isn't the problem](/posts/forgetting-isnt-the-problem).)
--->
+Why "drifting" matters more than "forgetting" is a longer argument – I wrote it up separately: [Forgetting isn't the problem](/posts/forgetting-isnt-the-problem).
