@@ -8,7 +8,7 @@ tags: ["claude-code", "ai"]
 
 Claude Code's source code leaked yesterday. A source map file got included in an npm release by accident, and within hours the entire TypeScript codebase was [mirrored across GitHub and analysed by thousands of developers](https://venturebeat.com/technology/claude-codes-source-code-appears-to-have-leaked-heres-what-we-know).
 
-I've been [running my business through Claude Code](/posts/claude-code-for-founders-who-hate-the-terminal) for nine months. So I did the obvious thing: I pointed it at its own source code.
+I've been [running my business through Claude Code](/posts/claude-code-for-founders-who-hate-the-terminal) for nine months – everything from sales workflows to [building my own SaaS replacements](/posts/i-replaced-granola-in-2-hours). So I did the obvious thing: I pointed it at its own source code.
 
 ## Eight agents, one codebase
 

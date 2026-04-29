@@ -9,17 +9,7 @@ Backlog of potential topics. Not all will become posts – the bar is: would thi
 - How to remain focused – deep work and AI/phone addiction
 - Managing AI agent memory across projects – naming decisions, DRY config, diff verification for memory updates
 - Memory bank failure modes – stale context misleads harder than empty (silent decay creates false orientation), and bloat is the parallel failure mode (over-distribution across files). Both cut from the memory bank framework draft for space – worth a standalone follow-up. Source: [[Agentic Coding Best Practices]]
-
-### I built Granola in 2 hours (`~/dev/recall-recorder`)
-
-Open source repo first, then blog post walks through the build with repo as proof. Angle: "replaced a SaaS tool in 2 hours with AI agents".
-
-Notes (Feb):
-
-- **5 improvements over Granola:** (1) all meeting triggers worked reliably, (2) async recording (records locally, no streaming, uploads at end) → model gets whole recording → noticeably better transcription, (3) separates attendees by name vs Granola's "Me vs Them" – critical for 3+ person calls, (4) full control over transcript deployment (webhook or local folder), (5) agent workflow processes each transcript through existing account context, auto-edits frontmatter for filtering (e.g. training tag), archives
-- **Buy vs build reasoning:** used Recall desktop SDK rather than building call detection/recording from scratch. Speaker separation worked out the box. "Super cheap". Trade-off: requires Recall API key (not fully self-contained)
-- **Key detail from 8 Feb:** "context7 doc is key" – shared a doc covering gotchas and how it works. Also: "key thing is it handles multiple participants (and separating them out) vs Granola's Me vs Them, which is confusing"
-- Platforms: web (blog post) + tw + li + wa seed ("wrote up the granola replacement: [link]")
+- Old problems in fresh clothes – AI agent infrastructure is rediscovering data engineering. The parallels (speaker attribution / identity stitching, context bloat / schema design, agent state / persistence, agent observability / pipeline observability) deserve a direct treatment. The recording-was-the-easy-bit post plants the flag inside a worked example; a standalone post could expand the inventory and name the territory more directly. Watch-out: easy to come across as too academic – needs at least one fresh worked example beyond the call-transcript pipeline
 
 ### Rebuilding fidero.com with an AI agent – the reference-doc-driven workflow
 
