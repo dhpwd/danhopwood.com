@@ -92,4 +92,4 @@ The repo is at [github.com/dhpwd/recall-recorder](https://github.com/dhpwd/recal
 
 If you find a bug that's not in the known issues list, open one. If you fix it, send a PR.
 
-The recording itself turned out to be the easy bit. What happens after the transcript lands in the inbox is what actually made replacing Granola worth doing – more on that next week.
+The recording itself turned out to be the easy bit. What happens after the transcript lands in the inbox is what actually made replacing Granola worth doing – [wrote that up here](/posts/the-recording-was-the-easy-bit).
