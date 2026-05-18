@@ -32,7 +32,7 @@ It's easier to believe that if I show you the parts. None of these were designed
 
 **Two agents and a document.** Last week I wanted slides for a talk to match my website. I pointed Claude Design at my site and it built a reusable design system. Then I had it write a plain summary of the templates it had created – the constraints, the limits, what each template was for. That document became the brief for Claude _Code_, which had the talk content and wrote the slides against those constraints. Neither agent could have done it alone. The interesting part isn't the slides. It's that the bridging document now lives in my vault, so the next talk skips the whole process. Capture once, reuse forever. That's the codification principle, and it's the engine underneath all of this.
 
-<!-- ![A vault of markdown files and folders – the whole setup is just this](../../assets/images/cc-vault-structure.png) -->
+![A vault of markdown files and folders – the whole setup is just this](../../assets/images/cc-vault-structure.png)
 
 ## The one question that builds the whole thing
 
