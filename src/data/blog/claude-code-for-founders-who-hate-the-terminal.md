@@ -139,3 +139,5 @@ A few more commands worth knowing:
 ![Obsidian graph view – nine months of compounding documents](../../assets/images/cc-obsidian-graph.png)
 
 This is my Obsidian vault after nine months of working this way. Each node is a document, each line a connection. That blue circle? The first document I created, still connected to everything.
+
+It looks like a lot. It's really the same idea as day one, just [further along](/posts/maturity-not-complexity).

@@ -61,7 +61,7 @@ Your CLAUDE.md captures how you work. Your skills capture your processes. Every 
 
 When someone new joins, they start a Claude Code session and immediately inherit everything you've built. Your qualification criteria, your discovery framework, your follow-up style – all loaded automatically, from day one.
 
-Cowork stays a personal assistant no matter how many people use it. Claude Code becomes a company operating system – and one person can start building it today.
+Cowork stays a personal assistant no matter how many people use it. Claude Code becomes a company operating system – and [one person can start building it today](/posts/maturity-not-complexity).
 
 ## The honest answer
 
