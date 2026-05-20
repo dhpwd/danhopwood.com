@@ -34,6 +34,7 @@ Threads to pull on in the post:
 - **Bottleneck migration:** each layer reveals the next. "How do I know it works?" → "agent keeps adding the wrong pattern" → "agent built the wrong thing" → "I have 8 PRs and no time"
 - **The ambient-vs-per-task distinction** sharpens the verification-first principle. Ambient capacity is the prerequisite; per-task criteria live in the spec
 - **Background-vs-interactive task patterns** – three modes: background from start, interactive-then-background, interactive throughout. Useful framing for the operator's loop
+- **A → B → Z orientation** – three reference points the operator and agents both need: A (existing memory + codebase state), B (this task's spec), Z (strategic north star). Memory bank = A, spec = B, strategy docs = Z. Frames why each factory artefact exists, and why drift on any one corrupts the others at scale
 - **The operator's loop:** choose what to do → write the spec (collaborative) → approve the agent's plan → agent executes, verifies, opens PR → auto-review → human review of green PRs → merge
 
 Source: [[Agentic Coding Best Practices#The software factory investment order]]. Anchors advisory positioning around how to actually scale agent throughput rather than the generic "agents are great" framing already saturating the space
