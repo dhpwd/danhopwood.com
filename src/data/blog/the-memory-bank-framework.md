@@ -44,13 +44,13 @@ First time on a project, attach whatever foundation you have: a lean canvas, an 
 
 The agent creates the `memory-bank/` folder, writes all six files and comes back with questions where the input was thin. Five minutes of back-and-forth and the project has a spine.
 
-For multi-repo workflows, don't copy-paste the instructions into each project's CLAUDE.md. Put them in one place and import. Mine live at `~/cli-agents/shared/coding.md` and every project's CLAUDE.md has this as the first line:
+For multi-repo workflows, don't copy-paste the instructions into each project's CLAUDE.md. Put them in one place and import. Mine live alongside other coding conventions in `~/cli-agents/shared/coding.md` and every project's CLAUDE.md has this as the first line:
 
 ```
 @~/cli-agents/shared/coding.md
 ```
 
-Need to tweak the instructions? Update the shared file once and every project picks it up automatically.
+Need to tweak the instructions? Update the shared file once and every project picks it up automatically. The gist below is the focused memory-bank-only snapshot if you want the framework on its own.
 
 ## The session loop
 
