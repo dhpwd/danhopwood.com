@@ -6,15 +6,15 @@ draft: false
 tags: ["claude-code", "ai", "knowledge-work"]
 ---
 
-A founder watched me walk through how I run my company on AI agents and messaged afterwards: "amazed and also quite daunted". The first word is fine. The second one is the problem, because it's built on something that isn't true.
+You look at someone else's AI setup – the skills, the agents, the folder structure – and quietly conclude it's a level of complexity you'll never reach. So you don't start. Or you start and abandon it the first time it gets messy. That feeling does the damage long before the complexity would have.
 
-You look at someone else's setup, see the skills and the agents and the folder structure, and quietly conclude it's a level of complexity you'll never reach. So you don't start, or you start and abandon it the first time it gets messy. That feeling does the damage long before the complexity would have.
+The conclusion is built on something that isn't true.
 
-I run a data platform entirely with AI agents – strategy, sales, delivery, ops, code. I've worked this way for ten months, since I moved the company's documents out of Notion and a chatbot and into plain files the AI reads directly. So the setup probably qualifies as one of the intimidating ones. Here's the thing it took me a while to realise, and longer to articulate.
+I've been running my company entirely with AI agents for ten months (strategy, sales, delivery, ops, code) ever since I moved the documents out of Notion and a chatbot and into plain files the AI reads directly. That's long enough for the setup to be well past day one. Here's the thing it took me a while to realise, and longer to articulate.
 
 ## It's the same idea, it's just had longer to grow
 
-My company operating system is a folder on my machine. Inside it are markdown documents organised into subfolders. An AI reads them and does things. That is the entire concept. It is conceptually identical to the simplest version anyone could build on day one.
+My company operating system is a folder on my machine, full of markdown documents organised into subfolders that an AI reads. That's the entire concept – conceptually identical to the simplest version anyone could build on day one.
 
 ![A vault of markdown files and folders – the whole setup is just this](../../assets/images/cc-vault-structure.png)
 
@@ -34,7 +34,7 @@ It's easier to believe that if I show you the parts. None of these were designed
 
 **A rulebook for accounts.** For prospects and customers I built something I call the account context framework. It's a single document that defines the same folder structure for every account – the same files in the same places, just different content, obviously. Once the agent knows the framework, I can point it at any account folder and it already knows how to work with it. I have a one-line command that loads the framework, reads the relevant account files, and pulls in nothing else from the vault. Hundreds of files on disk, and the only thing in the agent's head is what the task needs. That's what context maturity looks like in practice: the agent doesn't need me to re-explain who an account is, because it's all in the files.
 
-**Two agents and a document.** Last week I wanted slides for a talk to match my website. I pointed Claude Design at my site and it built a reusable design system. Then I had it write a plain summary of the templates it had created – the constraints, the limits, what each template was for. That document became the brief for Claude _Code_, which had the talk content and wrote the slides against those constraints. Neither agent could have done it alone. The interesting part isn't the slides. It's that the bridging document now lives in my vault, so the next talk skips the whole process. Capture once, reuse forever. That's the codification principle, and it's the engine underneath all of this.
+**Two agents and a document.** Last week I wanted slides for a talk to match my website. I pointed Claude Design at my site and it built a reusable design system. Then I had it write a plain summary of the templates it had created – the constraints, the limits, what each template was for. That document became the brief for Claude _Code_, which had the talk content and wrote the slides against those constraints. Neither agent could have done it alone. The interesting part isn't the slides: it's that the bridging document now lives in my vault, so the next talk skips the whole process. Capture once, reuse forever. That's the codification principle, and it's the engine underneath all of this.
 
 ## The one question that builds the whole thing
 
