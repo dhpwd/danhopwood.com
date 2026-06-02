@@ -2,7 +2,7 @@ export const SITE = {
   website: "https://danhopwood.com/",
   author: "Dan Hopwood",
   profile: "https://danhopwood.com/",
-  desc: "Notes from building a company entirely with AI agents.",
+  desc: "Notes from building Fidero, a data platform for companies whose customer data breaks across domains and systems, entirely with AI agents.",
   title: "Dan Hopwood",
   ogImage: "og-image.png",
   lightAndDarkMode: true,
