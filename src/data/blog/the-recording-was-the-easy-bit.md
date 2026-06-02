@@ -26,7 +26,7 @@ Every call transcript that lands in `~/call-transcripts/inbox/` goes through thr
 
 **Layer 2: the account-aware agent.** When I prompt my account assistant to "check call inbox" after a call with a prospect/customer, it reads the raw transcript with the full account strategy already loaded into context. It classifies the call (`call_type: "discovery"`, `"audit-readout"`, `"check-in"`, and so on), tags it with the account name and domain, and resolves the generic Zoom-default title into the readable `{Account} – {Call type}` format. The output is a distilled interaction note in the account folder.
 
-**Layer 3: the archive.** The raw transcript moves from `inbox/` to `archive/`. The interaction note (a structured summary keyed to the account) becomes the historical record. Action items extracted from the call go into the account's working notes, where they surface the next time I load the account to continue where I left off.
+**Layer 3: the archive.** The raw transcript moves from `inbox/` to `archive/`. The interaction note (a structured summary keyed to the account) becomes the historical record. Action items extracted from the call go into [the account's working notes](/posts/i-run-my-ai-customer-notes-like-a-database), where they surface the next time I load the account to continue where I left off.
 
 Same transcript file, four fields richer:
 
@@ -74,7 +74,7 @@ If this sounds like a warehouse pattern (source data, conformed model, semantic 
 
 ## Same problem, different scale
 
-The thing I keep noticing is that most of the unsolved problems in working with AI agents are old problems with new branding.
+The thing I keep noticing is that most of the unsolved problems in working with AI agents are problems data teams solved years ago.
 
 Speaker attribution in AI tooling is the same identity-stitching problem data engineers have wrestled with for a decade. Context bloat is schema design under another name. [Agents losing track between sessions](/posts/forgetting-isnt-the-problem) is the textbook stateless-system problem. Every one of these has been solved before in data infrastructure, and every one is being solved again by AI tooling vendors who haven't read the previous decade's lessons.
 
