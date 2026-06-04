@@ -38,3 +38,7 @@ Threads to pull on in the post:
 
 Source: [[Agentic Coding Best Practices#The software factory investment order]]. Anchors advisory positioning around how to actually scale agent throughput rather than the generic "agents are great" framing already saturating the space
 
+### Build tools that scale with intelligence, not ones that compensate for its absence
+
+A frame for customising agentic harnesses (two-kinds-of-tools heuristic → nudge-don't-block → zero-overhead abstraction), drawn out of a Daisy Holman (Anthropic, Claude Code team) talk. Full capture: `/Users/dhpwd/Vaults/Fidero/Strategy/Content/Captures/26.06.04 - Tools That Scale With Intelligence.md`
+
