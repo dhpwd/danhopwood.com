@@ -25,7 +25,7 @@ If you use ChatGPT or Claude, you probably have one long conversation thread for
 
 Those threads quietly get worse. AI chats have a 'context window': a limit on how much the model holds at once. As the conversation grows, older messages get silently dropped. The things you told it three weeks ago? Gone. And the longer the thread, the worse it handles everything, including what you said five minutes ago.
 
-Claude Code works differently. Your company context lives in files on your computer, not in a chat thread. A memory file loads at the start of every session. Close a conversation, start fresh, lose nothing. Starting fresh is _better_ – clean reasoning, full context, every time.
+Claude Code works differently. Your company context lives in files on your computer, not in a chat thread. A memory file loads at the start of every session. Close a conversation, open a new one, lose nothing. Starting fresh is _better_ – clean reasoning, full context, every time.
 
 For the technical deep version (a structured 6-file memory system I use on coding projects) see [the memory bank framework](/posts/the-memory-bank-framework).
 

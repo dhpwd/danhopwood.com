@@ -30,7 +30,7 @@ memory-bank/
 
 Four are stable: project-brief, product-context, tech-context, system-patterns. They describe the shape of the project and only change on pivots, refactors or significant lessons. Two are live: active-context and progress. The agent updates them every session to reflect what's happening right now.
 
-The full content boundaries, size limits and audit rules are <a href="https://gist.github.com/dhpwd/e2fe8d507c1778da19f24c9455dc46f1" target="_blank">in this gist</a> for you to copy and adapt.
+The exact content boundaries and size limits are <a href="https://gist.github.com/dhpwd/e2fe8d507c1778da19f24c9455dc46f1" target="_blank">in this gist</a>.
 
 ![A memory bank folder open in Ghostty – six files visible in the sidebar, system-patterns.md open](../../assets/images/mb-folder-ghostty.png)
 
@@ -79,7 +79,7 @@ My sessions tend to run 150–300k tokens. That's plenty of work, and still a lo
 
 ![git diff of a memory bank update after a feature commit](../../assets/images/mb-update-diff.png)
 
-What this buys you: `/compact` becomes dead weight. Every session starts clean, loads the same structured context, finishes short. There's no long-running conversation to summarise because you didn't let one form. Claude Code ships with [five layers of context management](/posts/i-used-claude-code-to-read-its-own-source-code#five-layers-of-context-management) for exactly the failure modes the memory bank prevents. Once the loop is in place, most of those layers stop earning their keep.
+What this buys you: `/compact` becomes dead weight. Every session starts clean, loads the same structured context, finishes short. There's no long-running conversation to summarise because you didn't let one form. Claude Code comes with [five layers of context management](/posts/i-used-claude-code-to-read-its-own-source-code#five-layers-of-context-management) for exactly the failure modes the memory bank prevents. Once the loop is in place, most of those layers stop earning their keep.
 
 ## Discipline that keeps the files honest
 
@@ -88,7 +88,7 @@ The memory bank works as long as the files don't rot. Four rules keep them hones
 - **Lessons live once.** When the agent learns something – a pattern, a gotcha, an architectural decision – it goes in system-patterns.md with full context. progress.md gets a one-line bullet with a pointer. Two copies of anything will drift apart
 - **Active-context migrates to progress within the same session.** Work that finished this session moves out of active-context (current work) into progress (what's done). active-context stays tight: 2–3 items, 150–250 lines max. It's about right now, not last week
 - **Size limits as staleness control.** When a file grows past its limit, audit it. The test I use: "if an agent searched for X, would this help or overwhelm?" One-off "patterns" that got documented as reusable get cut. So does anything the codebase no longer has
-- **Agent-written, human-reviewed.** The agent updates the files, I read the diff. The `git diff` ritual before exiting takes thirty seconds. It catches the almost-right updates before they stick
+- **Agent-written, human-reviewed.** The agent does the writing, but whether a lesson is actually true about your project is yours to judge. Don't outsource that. Read every update before it lands
 
 Full content boundaries, size thresholds and audit triggers are in <a href="https://gist.github.com/dhpwd/e2fe8d507c1778da19f24c9455dc46f1" target="_blank">the gist</a>. Copy it, import it, adapt it.
 

@@ -18,17 +18,17 @@ The real difference is how deep it goes. Cowork is a personal assistant. Claude 
 
 Cowork runs Claude inside a sandboxed virtual computer. It can write output to folders you share with it, but otherwise stays isolated from the rest of your system.
 
-It breaks work into parallel sub-tasks, connects to Google Drive, Gmail, Calendar and Slack, and comes with pre-built skills for common workflows. Project-level instructions persist between sessions. It's a solid product that does exactly what it's designed to do.
+It breaks work into parallel sub-tasks, connects to Google Drive, Gmail, Calendar and Slack, and comes with pre-built skills for common workflows. Project-level instructions persist between sessions. It's a genuinely good personal assistant.
 
 ## What Claude Code adds
 
 Claude Code runs directly on your machine. That one architectural choice cascades into three things Cowork can't match.
 
-**You can wire your own agents together.** Both Cowork and Claude Code read a CLAUDE.md file at the start of every session – your business context, your conventions, a map to everything else. (It's actually [one of five layers of context management](/posts/i-used-claude-code-to-read-its-own-source-code#five-layers-of-context-management) happening behind the scenes.) Both run skills on top of that context.
+**You can wire your own agents together.** Both Cowork and Claude Code read a CLAUDE.md file at the start of every session: your business context, your conventions, a map to everything else. (It's actually [one of five layers of context management](/posts/i-used-claude-code-to-read-its-own-source-code#five-layers-of-context-management) happening behind the scenes.) Both run skills on top of that context.
 
 The difference is what you can build with the skills. Claude Code lets you define custom sub-agents – each with its own system prompt, its own tools, its own persistent memory. A skill can delegate to one of them and come back with a summary. You can also configure 'hooks' that trigger automatically at specific points: auto-format documents after every edit, block risky commands before they run, or check the agent's work before a session ends. Cowork has skills and folder instructions but no custom sub-agents and no hooks – compound workflows are possible, just harder to build and much shallower.
 
-**You can give Claude a specific identity.** Claude Code lets you replace the default system prompt entirely. Build an executive assistant with your operating principles, a strategist with a particular tone, or a copywriter with your brand voice baked in. Cowork has its own knowledge-work system prompt you can't replace – folder instructions only add context on top.
+**You can give Claude a specific identity.** Claude Code lets you replace the default system prompt entirely. Build an executive assistant with your operating principles, a strategist with a particular tone, or a copywriter with your brand voice baked in. Cowork has its own knowledge-work system prompt you can't replace. Folder instructions only add context on top.
 
 **You can run many sessions in parallel.** Cowork's single-chat UI leans toward one task at a time. Claude Code lets you kick off a task in one terminal, immediately start another, then another – I typically run 3-5 at once. When one finishes, I exit and launch a new session with a new task. And round it goes.
 
@@ -61,7 +61,7 @@ Your CLAUDE.md captures how you work. Your skills capture your processes. Every 
 
 When someone new joins, they start a Claude Code session and immediately inherit everything you've built. Your qualification criteria, your discovery framework, your follow-up style – all loaded automatically, from day one.
 
-Cowork stays a personal assistant no matter how many people use it. Claude Code becomes a company operating system – and [one person can start building it today](/posts/maturity-not-complexity).
+Cowork stays a personal assistant no matter how many people use it. Claude Code becomes a company operating system, and [one person can start building it today](/posts/maturity-not-complexity).
 
 ## The honest answer
 

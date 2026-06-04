@@ -8,7 +8,7 @@ tags: ["ai", "tools", "open-source"]
 
 Granola is fine on a 1:1, but the moment a third person joins the call, the transcript stops being useful.
 
-You get "Me" and "Them" so if there are two people on their side, both get labelled "Them". You have to go through the transcript manually to try and figure out who said what, which sort of defeats the whole point of automating it in the first place.
+You get "Me" and "Them", so if there are two people on their side, both get labelled "Them". You have to go through the transcript manually to try and figure out who said what, which sort of defeats the whole point of automating it in the first place.
 
 Most calls I run have two or three people on the other side. Knowing who said what isn't optional. So I built a replacement.
 
@@ -33,7 +33,7 @@ Recall.ai sells a desktop SDK that does the part I would never have built well. 
 
 Built from scratch, that's weeks of work, but using it costs pennies per call. That's what made the 2-hour build possible – the hard parts were already done.
 
-What I actually built: an Electron menu bar app that wraps the SDK and turns each call's transcript into a markdown file with 'YAML frontmatter' (see example below). There's a tray menu for stopping recordings and opening the inbox folder, plus a preferences panel for the API key and the inbox path.
+What I actually built: an Electron menu bar app that wraps the SDK and turns each call's transcript into a markdown file with YAML frontmatter (see example below). There's a tray menu for stopping recordings and opening the inbox folder, plus a preferences panel for the API key and the inbox path.
 
 ![Recall Recorder Preferences window – Recall API key field, transcript inbox folder picker, and auto-record on meeting detection toggle](../../assets/images/recall-recorder-preferences.png)
 

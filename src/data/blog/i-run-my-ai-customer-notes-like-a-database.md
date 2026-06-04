@@ -42,7 +42,7 @@ The list catches bad input before it lands. A validation constraint does the sam
 
 Each file has a size limit. The main per-account file is capped at around 300 lines. When it gets close, the rule forces an audit: old detail moves to an archive document, while the key dates and the last couple of weeks stay. The live file is there to answer "where are we now?", not "everything that ever happened".
 
-Databases call this lifecycle management. The current stuff stays in the file you read every day, the history moves to cold storage, and an explicit rule decides what gets shifted. Same goal as a warehouse: keep the thing you query daily small and fast, and don't lose the history, just move it somewhere it isn't in the way.
+Databases call this lifecycle management. The current stuff stays in the file that's read every day, the history moves to cold storage, and an explicit rule decides what gets shifted. Same goal as a warehouse: keep the thing you query daily small and fast, and don't lose the history, just move it somewhere it isn't in the way.
 
 ## Fields graduate to their own table
 
@@ -58,10 +58,10 @@ That's a data quality check: not "is this value valid?" but "is this record stil
 
 ## Context is data
 
-I didn't set out to port data governance onto markdown. I just wanted my AI to remember my customers between conversations. The disciplines I reached for (by reflex) were ones I'd spent years applying to customer data. The reflex is the point.
+I didn't set out to port data governance onto markdown. I just wanted my AI to remember my customers between conversations. The disciplines I reached for, by reflex, were the same ones I use on customer data. The reflex is the point.
 
 The context an AI holds isn't _like_ data. It **is** data. It has owners, it goes stale, it duplicates, it needs checking at the edges and pruning when it bloats. [Manage it like data](/posts/maturity-not-complexity) and the agent stays sharp. Let it rot and the agent gets confused, slow and confidently wrong, the same way a neglected warehouse does.
 
-And it's the same customers. The data I keep trustworthy for them and the memory my AI holds of them are the same problem, one layer up. The data about your customers and your agent's memory of them are the same engineering problem.
+And it's the same customers. The data I keep trustworthy for them and the memory my AI holds of them are the same engineering problem, one layer up.
 
 A lot of the hard problems of working with AI agents are like this. They're [problems data teams cracked years ago](/posts/the-recording-was-the-easy-bit), being solved from scratch by a new generation of AI tooling. If you've done the data work, you already know the answers. You just have to notice you're being asked the question again.

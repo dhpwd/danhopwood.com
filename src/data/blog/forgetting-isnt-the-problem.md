@@ -6,9 +6,11 @@ draft: false
 tags: ["claude-code", "ai", "agentic-coding"]
 ---
 
-Six months into a project you've been building with your AI agent, you notice something: every piece of code looks fine but the overall codebase doesn't.
+At the end of [the memory bank post](/posts/the-memory-bank-framework), I said you keep one because it stops your codebase drifting. That's the reason that matters more, and it deserves more than a closing line.
 
-You can't quite name what's wrong. Then you open a file and find a helper function that should have been extended – except the agent rewrote it from scratch, in a slightly different style, in a file you'd never have found on your own. The same pattern shows up elsewhere. Logic gets duplicated across files that don't know about each other. The same abstraction turns up three times, each with a slightly different signature.
+Six months into a project you've been building with an agent, every file looks fine but the codebase as a whole doesn't.
+
+You can't quite name what's wrong. Then you open a file and find a helper function that should have been extended – except the agent rewrote it from scratch, in a slightly different style, in a file you'd never have found on your own. Once you notice it, it's everywhere. Logic gets duplicated across files that don't know about each other. The same abstraction turns up three times, each with a slightly different signature.
 
 None of it is 'wrong'. But none of it fits either.
 
@@ -29,19 +31,15 @@ There are two dimensions of code quality, and they get conflated:
 
 It doesn't even register consistency as a concern. Every new task becomes a new file with a new abstraction and a new pattern. Logic gets duplicated, responsibilities drift between files, and helper functions get rewritten instead of extended. Six months later your codebase is a patchwork of quietly incompatible decisions – each one was made in a single session.
 
-Every new task adds another piece to the patchwork.
-
 ## The fix everyone reaches for
 
 When people start noticing the issue, they often reach for the same fix: bigger context windows, auto-compaction, custom summarisation instructions. All variations on the same idea: cram more history into one session.
 
-Why? FOLC – fear of losing context.
-
-Here's the part most people miss.
+Why? One instinct drives all of it: FOLC – the fear of losing context.
 
 **The continuity problem has a counter. The coherence problem doesn't.**
 
-The continuity problem is that "your AI forgets what happened yesterday". This problem gets smaller every month as context windows grow and compaction gets smarter. Give it a year or two and long-running sessions will feel fine for most work. "Session continuity" will become automatic.
+The continuity problem is that "your AI forgets what happened yesterday". This problem shrinks every month as context windows grow and compaction gets smarter. Give it a year or two and long-running sessions will feel fine for most work. "Session continuity" will become automatic.
 
 The coherence problem doesn't shrink though. In fact it gets worse as your codebase grows. A longer context window lets the agent forget less of the current session, but it doesn't teach the agent to care about where its work fits. Bigger models don't fix incoherence, they produce more incoherent code faster.
 
@@ -76,4 +74,4 @@ Install a memory bank because you're sick of re-explaining your project.
 
 Keep it because it stops your codebase drifting.
 
-One is the obvious reason. The other is why it matters more every month, not less.
+Forgetting is the problem that shrinks. Drift is the problem that grows.

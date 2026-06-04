@@ -14,7 +14,7 @@ The recorder I wrote about [last week](/posts/i-replaced-granola-in-2-hours) dro
 
 When I tell people I auto-record my calls, the next question is usually "where do they go?" For most people, the honest answer is: nowhere useful. The transcript gets dropped into a Notion page, an Apple Notes scratch file or the bottom of an email thread – on the assumption that they'll come back to it. They almost never do.
 
-It's information that was true once, parked in a place where nothing reads it.
+It's data that was true once, parked in a place where nothing reads it.
 
 The problem isn't the transcript. The problem is the absence of a pipeline.
 
@@ -70,16 +70,14 @@ Step back and you'll see a familiar pattern.
 
 The same agent does all three steps, but the artefacts are distinct. Each layer has a different shelf life and a different purpose. Confuse them and the pipeline collapses back into the Notion-page graveyard.
 
-If this sounds like a warehouse pattern (source data, conformed model, semantic layer), it's because it is. The same discipline, applied at a different scale.
+If this sounds like a warehouse pattern (source data, conformed model, semantic layer), it's because it is.
 
 ## Same problem, different scale
 
 The thing I keep noticing is that most of the unsolved problems in working with AI agents are problems data teams solved years ago.
 
-Speaker attribution in AI tooling is the same identity-stitching problem data engineers have wrestled with for a decade. Context bloat is schema design under another name. [Agents losing track between sessions](/posts/forgetting-isnt-the-problem) is the textbook stateless-system problem. Every one of these has been solved before in data infrastructure, and every one is being solved again by AI tooling vendors who haven't read the previous decade's lessons.
+Speaker attribution in AI tooling is the same identity-stitching problem data engineers have wrestled with. Context bloat is schema design under another name. [Agents losing track between sessions](/posts/forgetting-isnt-the-problem) is the textbook stateless-system problem. Every one of these has been solved before in data infrastructure, and every one is being solved again by AI tooling vendors who haven't read the previous decade's lessons.
 
 The pipeline I run on call transcripts isn't novel. It's the cheapest version of a discipline that has run in every well-built data team I've ever worked with: capture cleanly, classify at source, archive deliberately, surface what changed.
 
 The recorder was easy because Recall's SDK does most of the work. The pipeline is harder but only because most people skip it.
-
-Build the pipeline. The tool is replaceable.
