@@ -16,6 +16,8 @@ Working notes in [`_fidero-rebuild.md`](./_fidero-rebuild.md). Likely splits int
 
 ### The software factory – investment order for 10x build throughput with agents
 
+**Committed as the next post** – teased as the follow-up at the end of [the writing-loops post](./writing-loops-is-a-ladder-not-a-command.md).
+
 Six-step sequencing claim for actually 10x'ing software build throughput with agents. Mis-sequencing wastes investment (elaborate specs against a codebase agents can't navigate; parallel agents with no way to verify their work).
 
 The order:
@@ -37,10 +39,6 @@ Threads to pull on in the post:
 - **The operator's loop:** choose what to do → write the spec (collaborative) → approve the agent's plan → agent executes, verifies, opens PR → auto-review → human review of green PRs → merge
 
 Source: [[Agentic Coding Best Practices#The software factory investment order]]. Anchors advisory positioning around how to actually scale agent throughput rather than the generic "agents are great" framing already saturating the space
-
-### Writing loops is an abstraction ladder – not the /loop command
-
-The move Boris Cherny describes ("I don't prompt Claude anymore. My job is to write loops") is an abstraction level, not a feature. `/loop` the command is the weakest rung – a poller that re-fires a prompt you already wrote. The ladder climbs from there: `loop.md` standing instructions, `/goal` (condition-driven, not clock-driven), dynamic workflows (Claude writes the orchestration as code), up to SDK fleets that choose their own work. Each rung hands more of the "what next" decision to the system. The precondition most people miss: every rung only pays off if the work hands back a verification signal on return – without it, autonomy collapses into manual re-review and the asynchrony stops compounding. Maps directly to the operator's-loop thesis (human climbs from doing the task → specifying it → designing the system that specifies and verifies). Full capture: `/Users/dhpwd/Vaults/Fidero/Strategy/Content/Captures/26.06.08 - Writing Loops Is An Abstraction Ladder.md`
 
 ### Build tools that scale with intelligence, not ones that compensate for its absence
 

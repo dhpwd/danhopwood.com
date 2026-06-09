@@ -36,7 +36,7 @@ There's a list in the framework of phrases the AI isn't allowed to write into th
 
 ![The banned-phrases list in the framework itself, with the source-of-truth rule above it](../../assets/images/cc-account-framework-rules.png)
 
-The list catches bad input before it lands. A validation constraint does the same job: it sits at the edge of the table and refuses any write that doesn't fit. It's cheaper to block it at the door than to clean it up later.
+The list catches bad input before it lands. A validation constraint does the same job: it sits at the edge of the table and refuses any write that doesn't fit. It's cheaper to block it at the door than to clean it up later. The same habit of checking at the edge is what lets you [hand work to an agent and trust what comes back](/posts/writing-loops-is-a-ladder-not-a-command).
 
 ## Old detail ages out
 
