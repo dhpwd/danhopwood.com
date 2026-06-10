@@ -34,7 +34,7 @@ There's a ladder here, and each rung hands more of the 'what do I do next' decis
 
 ![A five-rung ladder from /loop at the bottom to the Agent SDK at the top, ordered by how much of the next-step decision leaves your hands](../../assets/images/cc-writing-loops-ladder.png)
 
-Read the quote back with that in front of you. "My job is to write loops" lives in rungs three to five, where you design the orchestration and the verification, and the system owns the prompting. `/loop` on its own is the first rung of a ladder Boris is standing near the top of. Taking one for the other is the easy mistake.
+Read the quote back with that in front of you. "My job is to write loops" lives in rungs three to five, where you design the orchestration and the verification, and the system owns the prompting. `/loop` on its own is the first rung of a ladder Boris is standing near the top of. Confusing one for the other is the easy mistake.
 
 ## The part the quote leaves out
 
@@ -50,6 +50,6 @@ Step back from Claude Code for a moment, because the ladder isn't a coding thing
 
 The shift is from doing the task, to specifying the task, to designing the system that specifies and verifies the task for you. That last step is where 'writing loops' lives.
 
-Work that out, and the quote stops being about Claude Code. I run my company by building the systems that do the work, instead of doing the work myself. Boris's line is the coding version of it, with a better term than mine. The same climb is there anywhere you can define an outcome and check whether it's been hit.
+Work that out, and the quote stops being about Claude Code. I run my company by building the systems that do the work, instead of doing the work myself. Boris's line is the coding version of it, and 'writing loops' is a better name than any I had. The same climb is there anywhere you can define an outcome and check whether it's been hit.
 
 So the real question was never 'what is a loop'. It's what you put in place to climb, and in what order. Verification capacity before orchestration, the same way you don't build a factory before you can test what comes off the line. You climb it a rung at a time, over months, the way you [build any of this](/posts/maturity-not-complexity). The order is its own piece, and I'll write it next.
