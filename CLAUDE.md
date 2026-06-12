@@ -2,7 +2,7 @@
 
 Personal site for Dan Hopwood. Built with AstroPaper (Astro theme).
 
-@~/cli-agents/shared/coding.md
+@~/Workspace/cli-agents/shared/coding.md
 
 ## Commands
 
