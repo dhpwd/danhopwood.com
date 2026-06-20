@@ -89,6 +89,13 @@ const structuredData = {
   "@context": "https://schema.org",
   "@graph": [...siteIdentity, ...(blogPosting ? [blogPosting] : [])],
 };
+
+// JSON.stringify escapes quotes/backslashes but not `<`, so a value
+// containing `</script>` could close the inline tag early. Escape it.
+const structuredDataJSON = JSON.stringify(structuredData).replace(
+  /</g,
+  "\\u003c"
+);
 ---
 
 <!doctype html>
@@ -154,7 +161,7 @@ const structuredData = {
     <script
       type="application/ld+json"
       is:inline
-      set:html={JSON.stringify(structuredData)}
+      set:html={structuredDataJSON}
     />
 
     <!-- Enable RSS feed auto-discovery  -->
