@@ -56,7 +56,7 @@
 - Trailing-slash normalisation across Vercel, Astro config, and RSS feed (see `tech-context.md` "Trailing slash"). Fixes Plausible analytics splitting `/slug/` vs `/slug` into separate entries
 - Third blog post published: "I used Claude Code to read its own source code" (slug: `i-used-claude-code-to-read-its-own-source-code`)
 - Cross-link added in Cowork post referencing new post's "five layers of context management" section
-- "Read the latest issue" link added to `NewsletterSignup.astro` — links to Buttondown archive (`buttondown.com/dhpwd/archive`), opens in new tab, styled with dashed underline + `hover:text-accent` (muted by parent `opacity-80`, intentionally subordinate to Subscribe button)
+- "Read the latest issue" link added to `NewsletterSignup.astro` – links to Buttondown archive (`buttondown.com/dhpwd/archive`), opens in new tab, styled with dashed underline + `hover:text-accent` (muted by parent `opacity-80`, intentionally subordinate to Subscribe button)
 - Post 1 rewritten for Techie plugin: one-command `curl` installer replaces four terminal commands; `/first-steps` guided flow replaces manual Lean Canvas; "one-thread trap" section added; all 5 screenshots replaced; `modDatetime` added. Cowork post cross-reference updated to match
 - Fourth blog post published: "The memory bank framework" (slug: `the-memory-bank-framework`). Practical guide to the 6-file memory system. Images: `mb-folder-ghostty.png`, `mb-update-diff.png`
 - Fifth blog post published: "Forgetting isn't the problem" (slug: `forgetting-isnt-the-problem`). Argument follow-up to Post 4, originally part of Post 4's long-form draft, split into two cross-linked posts. Post 4's "lands next week" teaser replaced with a permanent forward-link aside to Post 5
@@ -67,6 +67,9 @@
 
 - `llms.txt` endpoint added (`src/pages/llms.txt.ts`) per the llmstxt.org spec, listing all published posts plus About and RSS links (see `tech-context.md` "llms.txt"). Addresses the aiaudit.run "AI Discovery Files" gap
 - JSON-LD enriched to a Schema.org `@graph` in `Layout.astro` (`WebSite` + `Person` + Fidero `Organization` site-wide, `BlogPosting` on posts). Fixes the prior malformed always-`BlogPosting` block flagged by aiaudit.run "Structured Data" (see `tech-context.md` "JSON-LD structured data")
+
+- Sitemap `<lastmod>` added via `@astrojs/sitemap` `serialize` hook on post URLs, sourced from frontmatter `modDatetime ?? pubDatetime` (see `tech-context.md` "Sitemap lastmod"). New util `src/utils/getPostModDates.ts` parses blog markdown directly since `astro.config.ts` can't use `getCollection`. Non-post routes left without `lastmod`. Adopted from old fidero.com SEO work, but using frontmatter dates instead of its git-based approach (git collapses to build time on shallow-clone deploys)
+- `og:image:width`/`og:image:height` (1200×630) added to `Layout.astro`, matching the default OG image, the dynamic generator output, and the standard for any per-post `ogImage`. Also from the old-site SEO review
 
 - Verification documented in `CLAUDE.md` (`## Verification`: preflight `lint` + `check`, full verify `build`). Added a standalone `check` script (`astro check`) for fast preflight typecheck, mirroring fidero.com; `build` still runs `astro check` for the CI gate. Previously `pnpm build` was the only local check, so ESLint never ran locally and CI (PR-only) first exposed accumulated violations on the first PR. Fixed the baseline: eslint-disabled the Plausible vendor snippet's two rule violations, Prettier-formatted `package.json` and two draft blog notes
 

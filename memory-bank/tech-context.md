@@ -45,7 +45,7 @@ Implemented as `src/components/NewsletterSignup.astro`. Embedded in `PostDetails
 
 Form submits via JS fetch with inline success/error messages (no page redirect). Hidden `embed=1` input required by Buttondown's embed API. Falls back to native form POST in a new tab when fetch fails (e.g. Buttondown human verification step returns non-200). Init wrapped in `astro:page-load` for View Transitions support, with `data-initialized` guard to prevent double-attaching. Metadata fields (e.g. first name) can be added later via `name="metadata__<key>"` inputs.
 
-"Read the latest issue" link below the form points to the Buttondown archive (`buttondown.com/dhpwd/archive`). Styled with `opacity-80` parent, dashed underline, `hover:text-accent` — intentionally muted relative to the Subscribe button to maintain CTA hierarchy.
+"Read the latest issue" link below the form points to the Buttondown archive (`buttondown.com/dhpwd/archive`). Styled with `opacity-80` parent, dashed underline, `hover:text-accent` – intentionally muted relative to the Subscribe button to maintain CTA hierarchy.
 
 ## Share links
 
@@ -103,6 +103,16 @@ Three-layer config for consistency:
 1. **Vercel** (`vercel.json`): `trailingSlash: false` – creates 308 redirects in production (the load-bearing piece)
 2. **Astro** (`astro.config.ts`): `trailingSlash: "never"` – dev server matches production behaviour
 3. **RSS** (`src/pages/rss.xml.ts`): `trailingSlash: false` – Astro's RSS helper adds trailing slashes by default regardless of Astro config
+
+## Sitemap lastmod
+
+`@astrojs/sitemap`'s `serialize` hook (in `astro.config.ts`) stamps `<lastmod>` on post URLs as a freshness signal. Dates come from each post's frontmatter (`modDatetime ?? pubDatetime`, matching `getSortedPosts`), not git commit dates. Frontmatter lives in the checked-out file content, so it survives Vercel's shallow clone (`--depth=10`, which truncates commit history, not the working tree) and is identical locally and in production. Git-based `lastmod` does not: `git log` sees only the last ~10 commits, so stable pages return an empty date (or, worse, a fabricated build-time fallback), exactly where a freshness signal matters most. Do not reintroduce git dates without a deep-clone setting (e.g. `VERCEL_DEEP_CLONE=true`).
+
+The map is built by `src/utils/getPostModDates.ts`, which reads the blog markdown directly: `astro.config.ts` can't import `astro:content` (no `getCollection`), so the util parses the frontmatter block and reconstructs each post URL with a faithful mirror of `getPath` – directory segments slugified via `slugifyStr` with `_`-prefixed segments dropped (as `getPath` does), filename used verbatim as the slug (the schema has no `slug` override). It walks all directories and excludes only `_`-prefixed filenames, matching the loader glob `**/[^_]*.md`. Each candidate date is validated before use, so an empty, null or unparseable `modDatetime` (the field is `.nullable()`) falls back to `pubDatetime` rather than dropping the post. Drift from `getPath` only costs a missing `<lastmod>`, never a broken build. Non-post routes (home, listing, pagination, tags) get no `lastmod` – an absent hint beats a false one.
+
+## Open Graph image dimensions
+
+`Layout.astro` declares `og:image:width`/`og:image:height` as `1200`/`630`. Every OG image is that size: the static default (`public/og-image.png`), the dynamic per-post generator (`src/utils/og-templates/site.js` + `post.js`), and any future per-post `ogImage` should follow the same standard.
 
 ## llms.txt
 
