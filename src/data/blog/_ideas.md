@@ -43,4 +43,3 @@ Source: [[Agentic Coding Best Practices#The software factory investment order]].
 ### Build tools that scale with intelligence, not ones that compensate for its absence
 
 A frame for customising agentic harnesses (two-kinds-of-tools heuristic → nudge-don't-block → zero-overhead abstraction), drawn out of a Daisy Holman (Anthropic, Claude Code team) talk. Full capture: `{Fidero vault}/Strategy/Content/Captures/26.06.04 - Tools That Scale With Intelligence.md`
-
