@@ -10,6 +10,10 @@ import {
 } from "@shikijs/transformers";
 import { transformerFileName } from "./src/utils/transformers/fileName";
 import { SITE } from "./src/config";
+import { getPostModDates } from "./src/utils/getPostModDates";
+
+// Post URL path -> last-modified date, for sitemap <lastmod> freshness signals.
+const postModDates = getPostModDates();
 
 // https://astro.build/config
 export default defineConfig({
@@ -18,6 +22,12 @@ export default defineConfig({
   integrations: [
     sitemap({
       filter: page => SITE.showArchives || !page.endsWith("/archives"),
+      serialize(item) {
+        const path = new URL(item.url).pathname.replace(/\/$/, "") || "/";
+        const lastmod = postModDates.get(path);
+        if (lastmod) item.lastmod = lastmod.toISOString();
+        return item;
+      },
     }),
   ],
   markdown: {
