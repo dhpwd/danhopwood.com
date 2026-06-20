@@ -19,7 +19,7 @@ Run preflight after every change. Full verify runs at completion (`/ship` gates 
 ### Preflight (every change)
 
 - `pnpm run lint`
-- `pnpm run check` – Astro typecheck (fast fail; `build` also runs it)
+- `pnpm run check` – Astro typecheck
 
 ### Full verify (at completion)
 
