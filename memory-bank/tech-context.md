@@ -104,6 +104,14 @@ Three-layer config for consistency:
 2. **Astro** (`astro.config.ts`): `trailingSlash: "never"` – dev server matches production behaviour
 3. **RSS** (`src/pages/rss.xml.ts`): `trailingSlash: false` – Astro's RSS helper adds trailing slashes by default regardless of Astro config
 
+## llms.txt
+
+Dynamic endpoint at `src/pages/llms.txt.ts`, served at `/llms.txt` (per the llmstxt.org spec). Mirrors `rss.xml.ts`: `getCollection("blog")` → `getSortedPosts` (drafts and future-scheduled posts excluded for free via `postFilter`), then `getPath(id, filePath)` wrapped in `new URL(..., site)` for absolute, trailing-slash-free URLs. Output is markdown: H1 title, blockquote summary, then `## Posts` / `## About` / `## Optional` (RSS) link lists. Returned as `text/plain; charset=utf-8`. File-extension endpoints are always served without a trailing slash regardless of `trailingSlash` config, so no Vercel/Astro change needed. `llms-full.txt` and per-page `.md` variants intentionally not implemented.
+
+## JSON-LD structured data
+
+`src/layouts/Layout.astro` emits a single `<script type="application/ld+json">` built as a `@graph` array. Site-identity nodes are emitted on every page: `WebSite`, `Person` (with `sameAs` from `SOCIALS`), and an `Organization` node for Fidero (`worksFor` on the Person). Post pages additionally push a `BlogPosting` node, gated on `pubDatetime` presence (the same signal that drives `og:type`); author/publisher reference the Person by `@id` rather than inlining. This replaced an earlier single always-`BlogPosting` object that serialised `"datePublished": "undefined"` on non-post pages, which schema validators rejected as a typeless block.
+
 ## MCP
 
 Use `astro-docs` MCP for any Astro research.

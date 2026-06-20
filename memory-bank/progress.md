@@ -65,6 +65,9 @@
 - Sixth blog post published: "I replaced Granola in 2 hours" (slug: `i-replaced-granola-in-2-hours`). Concrete build piece launching `dhpwd/recall-recorder` (macOS Electron menu-bar app wrapping Recall.ai's Desktop SDK + AssemblyAI Universal-3-Pro). Image: `recall-recorder-preferences.png`. Cross-link added in Post 3 intro framing it as a "building my own SaaS replacements" example
 - Seventh blog post published: "The recording was the easy bit" (slug: `the-recording-was-the-easy-bit`). Pipeline argument follow-up to Post 6: data → information → intelligence. Same-day release rather than the planned one-week stagger; tags `ai`, `tools`, `agentic-coding`. Cross-link to Post 5 ("Forgetting isn't the problem") added on the stateless-agents line. Post 6's "more on that next week" forward-link teaser replaced with a direct link to Post 7
 
+- `llms.txt` endpoint added (`src/pages/llms.txt.ts`) per the llmstxt.org spec, listing all published posts plus About and RSS links (see `tech-context.md` "llms.txt"). Addresses the aiaudit.run "AI Discovery Files" gap
+- JSON-LD enriched to a Schema.org `@graph` in `Layout.astro` (`WebSite` + `Person` + Fidero `Organization` site-wide, `BlogPosting` on posts). Fixes the prior malformed always-`BlogPosting` block flagged by aiaudit.run "Structured Data" (see `tech-context.md` "JSON-LD structured data")
+
 ## Blockers
 
 None

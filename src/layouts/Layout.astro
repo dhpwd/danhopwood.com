@@ -3,6 +3,7 @@ import { Font } from "astro:assets";
 import { ClientRouter } from "astro:transitions";
 import { PUBLIC_GOOGLE_SITE_VERIFICATION } from "astro:env/client";
 import { SITE } from "@/config";
+import { SOCIALS } from "@/constants";
 import "@/styles/global.css";
 
 type Props = {
@@ -31,20 +32,54 @@ const {
 
 const socialImageURL = new URL(ogImage, Astro.url);
 
+const personId = `${SITE.website}#person`;
+const websiteId = `${SITE.website}#website`;
+const orgId = "https://fidero.com#organization";
+
+const siteIdentity = [
+  {
+    "@type": "WebSite",
+    "@id": websiteId,
+    url: SITE.website,
+    name: SITE.title,
+    description: SITE.desc,
+    inLanguage: SITE.lang ?? "en",
+    publisher: { "@id": personId },
+  },
+  {
+    "@type": "Person",
+    "@id": personId,
+    name: author,
+    url: profile,
+    sameAs: SOCIALS.map(social => social.href),
+    worksFor: { "@id": orgId },
+  },
+  {
+    "@type": "Organization",
+    "@id": orgId,
+    name: "Fidero",
+    url: "https://fidero.com",
+  },
+];
+
+const blogPosting = pubDatetime
+  ? {
+      "@type": "BlogPosting",
+      headline: title,
+      description,
+      image: `${socialImageURL}`,
+      datePublished: pubDatetime.toISOString(),
+      ...(modDatetime && { dateModified: modDatetime.toISOString() }),
+      url: `${canonicalURL}`,
+      mainEntityOfPage: `${canonicalURL}`,
+      author: { "@id": personId },
+      publisher: { "@id": personId },
+    }
+  : null;
+
 const structuredData = {
   "@context": "https://schema.org",
-  "@type": "BlogPosting",
-  headline: `${title}`,
-  image: `${socialImageURL}`,
-  datePublished: `${pubDatetime?.toISOString()}`,
-  ...(modDatetime && { dateModified: modDatetime.toISOString() }),
-  author: [
-    {
-      "@type": "Person",
-      name: `${author}`,
-      ...(profile && { url: profile }),
-    },
-  ],
+  "@graph": [...siteIdentity, ...(blogPosting ? [blogPosting] : [])],
 };
 ---
 
