@@ -3,7 +3,10 @@ import { slugifyStr } from "./slugify";
 
 /**
  * Build a map of post URL path -> last-modified Date, sourced from each post's
- * frontmatter (`modDatetime ?? pubDatetime`, mirroring getSortedPosts).
+ * frontmatter using the same `modDatetime ?? pubDatetime` precedence as
+ * getSortedPosts (it does not replicate postFilter's scheduled-post exclusion;
+ * an orphan entry for a future-dated post is never read, as the serialize hook
+ * only stamps URLs the sitemap already emits).
  *
  * Consumed by the sitemap `serialize` hook in astro.config.ts to emit
  * `<lastmod>` freshness signals. It lives here, parsing markdown directly,
