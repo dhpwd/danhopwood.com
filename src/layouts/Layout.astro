@@ -34,7 +34,15 @@ const socialImageURL = new URL(ogImage, Astro.url);
 
 const personId = `${SITE.website}#person`;
 const websiteId = `${SITE.website}#website`;
-const orgId = "https://fidero.com#organization";
+const fideroURL = "https://fidero.com";
+const orgId = `${fideroURL}#organization`;
+
+// On post pages `title` arrives suffixed with the site title (see PostDetails);
+// schema headline wants the bare article title.
+const titleSuffix = ` | ${SITE.title}`;
+const headline = title.endsWith(titleSuffix)
+  ? title.slice(0, -titleSuffix.length)
+  : title;
 
 const siteIdentity = [
   {
@@ -58,14 +66,14 @@ const siteIdentity = [
     "@type": "Organization",
     "@id": orgId,
     name: "Fidero",
-    url: "https://fidero.com",
+    url: fideroURL,
   },
 ];
 
 const blogPosting = pubDatetime
   ? {
       "@type": "BlogPosting",
-      headline: title,
+      headline,
       description,
       image: `${socialImageURL}`,
       datePublished: pubDatetime.toISOString(),
