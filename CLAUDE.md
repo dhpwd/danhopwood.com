@@ -19,10 +19,11 @@ Run preflight after every change. Full verify runs at completion (`/ship` gates 
 ### Preflight (every change)
 
 - `pnpm run lint`
+- `pnpm run check` – Astro typecheck (fast fail; `build` also runs it)
 
 ### Full verify (at completion)
 
 1. Preflight
-2. `pnpm run build` – `astro check` (typecheck) then the production build
+2. `pnpm run build` – `astro check` then the production build
 
-Fix any issues before reporting completion. (Prettier runs automatically on edit, so `format:check` isn't part of the local loop.)
+Fix any issues before reporting completion.

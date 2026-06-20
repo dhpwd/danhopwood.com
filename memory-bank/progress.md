@@ -68,7 +68,7 @@
 - `llms.txt` endpoint added (`src/pages/llms.txt.ts`) per the llmstxt.org spec, listing all published posts plus About and RSS links (see `tech-context.md` "llms.txt"). Addresses the aiaudit.run "AI Discovery Files" gap
 - JSON-LD enriched to a Schema.org `@graph` in `Layout.astro` (`WebSite` + `Person` + Fidero `Organization` site-wide, `BlogPosting` on posts). Fixes the prior malformed always-`BlogPosting` block flagged by aiaudit.run "Structured Data" (see `tech-context.md` "JSON-LD structured data")
 
-- Verification documented in `CLAUDE.md` (`## Verification`: preflight `lint`, full verify `build`; Prettier runs on edit via a global hook so `format:check` stays out of the local loop). Previously `pnpm build` was the only local check, so ESLint never ran locally and CI (PR-only) first exposed accumulated violations on the first PR. Fixed the baseline: eslint-disabled the Plausible vendor snippet's two rule violations, Prettier-formatted `package.json` and two draft blog notes
+- Verification documented in `CLAUDE.md` (`## Verification`: preflight `lint` + `check`, full verify `build`). Added a standalone `check` script (`astro check`) for fast preflight typecheck, mirroring fidero.com; `build` still runs `astro check` for the CI gate. Previously `pnpm build` was the only local check, so ESLint never ran locally and CI (PR-only) first exposed accumulated violations on the first PR. Fixed the baseline: eslint-disabled the Plausible vendor snippet's two rule violations, Prettier-formatted `package.json` and two draft blog notes
 
 ## Blockers
 
