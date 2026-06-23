@@ -64,7 +64,7 @@ Give it the blueprints first, so it can orient itself. Then give it the spec to 
 
 When the agent adds a feature, it doesn't invent an architecture. It reads system-patterns.md and follows the pattern already in use. When it needs a utility, it checks what's already there instead of creating a parallel version. When it faces a design decision, it consults product-context.md for the direction that serves the actual user.
 
-None of these files are long. The stable ones are measured in hundreds of lines across a whole project, not thousands. But they're the difference between an agent that writes code and an agent that writes _your_ code.
+None of these files are long. The stable ones are measured in hundreds of lines across a whole project, not thousands. But they're the difference between an agent that writes code and an agent that writes _your_ code. They're also one of the [early investments that scale agent work](/posts/the-order-you-build-a-software-factory-in).
 
 The full practical guide (how to initialise one, the session loop, the discipline that keeps the files honest) is in [the memory bank framework post](/posts/the-memory-bank-framework).
 

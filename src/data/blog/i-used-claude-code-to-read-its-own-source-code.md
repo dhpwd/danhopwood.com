@@ -52,7 +52,7 @@ The repository contains zero Jest, Vitest, Mocha or Playwright test files. None.
 
 Testing is built into the agent system itself. A verification agent whose persona is "try to break it" runs adversarial probes: concurrency, boundary conditions, idempotency, orphan operations. It demands actual command execution with captured output. Claims without evidence are rejected.
 
-Anti-patterns are explicit in the agent's prompt: "code looks correct", "tests pass", "probably fine", "would take too long" – all rejected as valid verification. Whether this is genius or terrifying depends on your relationship with traditional testing.
+Anti-patterns are explicit in the agent's prompt: "code looks correct", "tests pass", "probably fine", "would take too long" – all rejected as valid verification. Whether this is genius or terrifying depends on your relationship with traditional testing. Either way, it's a working example of [why verification comes first](/posts/the-order-you-build-a-software-factory-in).
 
 ## The hidden digital pet
 
