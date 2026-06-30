@@ -34,7 +34,7 @@ Two fixes, both permanent multipliers. Tidy the code so an agent can find its wa
 
 Next bottleneck: the agent builds the wrong thing, because the spec was a guess. It didn't know enough about where the work was landing.
 
-So give whoever writes the spec what they need. For the parts you keep building on (like your component library or an internal API) keep a stable reference doc describing the 'contract'. For one-offs, like integrating some third-party API once, send a research sub-agent to go and find out just in time. Either way the spec is written from facts, not guesses.
+So give whoever writes the spec what they need. For the parts you keep building on (like your component library or an internal API) keep a stable reference doc describing the 'contract'. I did exactly this when I [rebuilt fidero.com](/posts/rebuilding-fidero-com-with-an-ai-agent) – a contract doc for every component. For one-offs, like integrating some third-party API once, send a research sub-agent to go and find out just in time. Either way the spec is written from facts, not guesses.
 
 ## 4. The spec itself
 
