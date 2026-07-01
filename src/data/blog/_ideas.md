@@ -10,9 +10,9 @@ Backlog of potential topics. Not all will become posts – the bar is: would thi
 - Managing AI agent memory across projects – naming decisions, DRY config, diff verification for memory updates
 - Memory bank failure modes – stale context misleads harder than empty (silent decay creates false orientation), and bloat is the parallel failure mode (over-distribution across files). Both cut from the memory bank framework draft for space – worth a standalone follow-up. Source: [[Agentic Coding Best Practices]]
 
-### Rebuilding fidero.com with an AI agent – the reference-doc-driven workflow
+### Rebuilding fidero.com with an AI agent (series)
 
-Working notes in [`_fidero-rebuild.md`](./_fidero-rebuild.md). Likely splits into 3–4 posts at draft time: (1) four-attempts narrative + reference-doc method; (2) agent-steering beats + dark corollary (recurrence essay); (3) "a build pass is not a render pass" (verification loops); (4) editing AI-authored reference docs. Write after homepage + remaining pages land + Lovable cutover
+Working notes in [`_fidero-rebuild.md`](./_fidero-rebuild.md). Piece 1 (four-attempts narrative + reference-doc method) is published: `rebuilding-fidero-com-with-an-ai-agent`. Remaining to draft from the working notes: (2) agent-steering beats + dark corollary (recurrence essay); (3) "a build pass is not a render pass" (verification loops); (4) editing AI-authored reference docs
 
 ### Build tools that scale with intelligence, not ones that compensate for its absence
 
