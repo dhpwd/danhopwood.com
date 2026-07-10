@@ -2,6 +2,7 @@
 title: "Forgetting isn't the problem"
 description: "Bigger context windows fix the wrong half of the AI codebase problem. The half they don't fix gets worse as your codebase grows."
 pubDatetime: 2026-04-21T09:00:00Z
+modDatetime: 2026-07-10T20:04:17Z
 draft: false
 tags: ["claude-code", "ai", "agentic-coding"]
 ---
@@ -49,16 +50,15 @@ You can't solve a blueprint problem by buying a sharper pencil.
 
 The fix isn't a better memory of the last session. It's a structured brief the agent reads before it touches any code.
 
-The structure I use is called the memory bank. Six files at the root of every project:
+The structure I use is called the memory bank. Five files at the root of every project:
 
 - **project-brief.md** – what are we building?
 - **product-context.md** – why does it exist, who's it for?
 - **tech-context.md** – what are we building it with, what are the constraints?
 - **system-patterns.md** – how do we build things here, what patterns do we reuse?
-- **active-context.md** – what am I working on right now?
-- **progress.md** – what's done, what's left, what's stuck?
+- **active-context.md** – what am I working on right now, what's blocked, what's undecided?
 
-The first four are the blueprints. They tell the agent what the system is, why it exists, how the pieces fit together, and what conventions apply. The last two are the spec – current work and current progress. The agent loads all six at the start of every session.
+The first four are the blueprints. They tell the agent what the system is, why it exists, how the pieces fit together, and what conventions apply. The fifth is the spec – the current work. The agent loads all five at the start of every session.
 
 Give it the blueprints first, so it can orient itself. Then give it the spec to execute against.
 
