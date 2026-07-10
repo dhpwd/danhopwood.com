@@ -17,3 +17,14 @@
 **Anti-pattern:** Using `is:inline data-astro-rerun` – loses TypeScript, import resolution, and deduplication. Only use for pre-paint state (e.g. dark mode via `astro:after-swap`).
 
 **When to use:** Any component with client-side event listeners that appears on pages using View Transitions. Known gap: `ShareLinks.astro` Plausible click tracking doesn't use this pattern yet.
+
+## Public memory bank
+
+This repo is public (required for "Edit on GitHub" links), so the memory bank is committed and world-readable – eating our own dog food.
+
+**Content rules – what may go in memory-bank files:**
+
+- No marketing strategy, positioning details or competitive context
+- Keep only what's pertinent to building the website
+
+Business and strategy context lives outside this repo.
