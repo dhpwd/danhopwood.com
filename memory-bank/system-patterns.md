@@ -18,6 +18,20 @@
 
 **When to use:** Any component with client-side event listeners that appears on pages using View Transitions. Known gap: `ShareLinks.astro` Plausible click tracking doesn't use this pattern yet.
 
+## Satori OG templates
+
+Three constraints bite when editing `src/utils/og-templates/`. All three fail quietly – the build succeeds and the image is wrong.
+
+**Satori resolves no CSS custom properties.** The theme tokens in `global.css` are invisible to it, so the palette is mirrored as literals in `og-templates/shared.js`. Changing `--accent` (or any mirrored token) means editing that file too. `shared.js` names each entry after the token it mirrors and flags the deliberate deviations – `--muted` and `--border` are too faint to survive a feed thumbnail, so the dot grid and dashed rule use darker greys.
+
+**The font subset must contain every glyph you render, including ones you never wrote.** Fonts load from the Google Fonts API with `&text=`, which returns only the requested characters. Satori appends U+2026 when `lineClamp` truncates, so an ellipsis absent from the subset renders as a missing-glyph box. `CHROME_GLYPHS` in `shared.js` carries the ellipsis and the other fixed characters – concatenate it into every `loadGoogleFonts` call.
+
+**Resolve asset paths from `process.cwd()`, not `import.meta.url`.** Astro bundles these templates into `dist/chunks/` at build time, so a module-relative path lands outside the project and throws ENOENT. Standalone scripts run directly by node (`scripts/generate-static-og.mjs`) are the opposite case and correctly use `import.meta.url`.
+
+**Post descriptions have a 200-character budget** – the card's three-line limit, enforced by `.max(200)` in the content schema so a gross overrun fails the build instead of truncating the card. The cap is approximate: packing depends on where words wrap, so a description in the 190s can still truncate. Above ~185, check the rendered card.
+
+**When to use:** any edit to the OG templates, the palette, or the text they render.
+
 ## Public memory bank
 
 This repo is public (required for "Edit on GitHub" links), so the memory bank is committed and world-readable – eating our own dog food.

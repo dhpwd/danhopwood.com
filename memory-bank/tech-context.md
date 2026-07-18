@@ -22,7 +22,7 @@ src/
 ├── config.ts            # Site configuration
 ├── constants.ts         # Constants
 └── content.config.ts    # Content collection schema
-public/                  # Static assets (favicon, OG image)
+public/                  # Static assets (favicon)
 ```
 
 ## Built-in features (no work needed)
@@ -36,7 +36,7 @@ Computed on-demand from `post.body` (raw markdown) using the `reading-time` npm 
 ## Images
 
 - **`src/assets/images/`** – optimised by Astro at build time (WebP, cache-busting, CLS prevention). Import and render with `<Image />` from `astro:assets`
-- **`public/`** – served as-is, no processing. Use for favicon, OG images referenced by URL string. Current assets: `favicon.jpeg`, `og-image.png`
+- **`public/`** – served as-is, no processing. Use for assets referenced by URL string. Current assets: `favicon.jpeg`
 - Avatar lives at `src/assets/images/avatar.jpeg`
 
 ## Buttondown integration
@@ -112,7 +112,9 @@ The map is built by `src/utils/getPostModDates.ts`, which reads the blog markdow
 
 ## Open Graph image dimensions
 
-`Layout.astro` declares `og:image:width`/`og:image:height` as `1200`/`630`. Every OG image is that size: the static default (`public/og-image.png`), the dynamic per-post generator (`src/utils/og-templates/site.js` + `post.js`), and any future per-post `ogImage` should follow the same standard.
+`Layout.astro` declares `og:image:width`/`og:image:height` as `1200`/`630`. Every OG image is that size and generated at build time by satori: `/og.png` for non-post pages (`src/utils/og-templates/site.js`) and `/posts/<slug>/index.png` per post (`post.js`), sharing constants via `shared.js`. `SITE.ogImage` is deliberately empty – setting it would point every non-post page at a static file instead of `/og.png`. Any future per-post `ogImage` should follow the same size standard.
+
+The per-post card renders title, description, author, domain and tagline. See `system-patterns.md` "Satori OG templates" for the constraints that govern edits to it.
 
 ## llms.txt
 

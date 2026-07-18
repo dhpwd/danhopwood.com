@@ -11,7 +11,6 @@ Site live on Vercel with `danhopwood.com` custom domain. Remaining setup is exte
 
 ## Open follow-ups
 
-- Customise dynamic OG image styling to match site brand (per-post generated images)
 - Harden `ShareLinks.astro` Plausible click tracking for View Transitions (`astro:page-load` pattern – see `system-patterns.md` "View Transitions and script re-execution")
 
 ## Blockers

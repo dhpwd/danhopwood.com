@@ -1,6 +1,6 @@
 ---
 title: "I run my AI's customer notes like a database"
-description: "The framework that keeps my AI's knowledge of each customer trustworthy is just data governance under another name – source-of-truth rules, validation constraints, retention limits, schemas that grow on demand."
+description: "The framework that keeps my AI's customer knowledge trustworthy is data governance under another name – source-of-truth rules, validation constraints, schemas that grow on demand."
 pubDatetime: 2026-06-02T21:27:08Z
 draft: false
 tags: ["ai", "knowledge-work", "data-engineering"]
