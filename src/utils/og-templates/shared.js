@@ -11,15 +11,27 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { SITE } from "@/config";
 
-// Resolved from cwd, not import.meta.url: Astro bundles this module into
-// dist/chunks/ at build time, so a module-relative path lands outside the
-// project. Safe because the site is a static build – these templates only
-// ever run from the project root, never in a serverless runtime.
-const avatarBase64 = readFileSync(
-  join(process.cwd(), "src/assets/images/avatar.jpeg")
-).toString("base64");
+let cachedAvatar;
 
-export const avatarSrc = `data:image/jpeg;base64,${avatarBase64}`;
+/**
+ * Read lazily, not at module scope: importing this module must not do I/O,
+ * so a build with dynamicOgImage off never touches the file and a missing
+ * avatar fails where it is used rather than on import.
+ *
+ * Resolved from cwd, not import.meta.url: Astro bundles this module into
+ * dist/chunks/ at build time, so a module-relative path lands outside the
+ * project. Safe because the site is a static build – these templates only
+ * ever run from the project root, never in a serverless runtime.
+ */
+export function avatarSrc() {
+  if (!cachedAvatar) {
+    const data = readFileSync(
+      join(process.cwd(), "src/assets/images/avatar.jpeg")
+    ).toString("base64");
+    cachedAvatar = `data:image/jpeg;base64,${data}`;
+  }
+  return cachedAvatar;
+}
 
 export const hostname = new URL(SITE.website).hostname;
 
@@ -42,8 +54,9 @@ export const dotGrid = {
   backgroundSize: "32px 32px",
 };
 
-/** Accent bar across the top edge. */
-export const accentBar = {
+/** Accent bar across the top edge. A factory, so no element object is
+ * shared between render trees. */
+export const accentBar = () => ({
   type: "div",
   props: {
     style: {
@@ -52,7 +65,7 @@ export const accentBar = {
       background: palette.accent,
     },
   },
-};
+});
 
 /**
  * Text the font subset must cover. Satori appends U+2026 when lineClamp

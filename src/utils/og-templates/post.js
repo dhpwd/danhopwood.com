@@ -25,7 +25,7 @@ export default async post => {
           fontFamily: "Google Sans Code",
         },
         children: [
-          accentBar,
+          accentBar(),
           {
             type: "div",
             props: {
@@ -91,7 +91,7 @@ export default async post => {
                       {
                         type: "img",
                         props: {
-                          src: avatarSrc,
+                          src: avatarSrc(),
                           width: 72,
                           height: 72,
                           style: {
