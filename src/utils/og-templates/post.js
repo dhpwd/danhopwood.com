@@ -44,6 +44,7 @@ export default async post => {
                       flexDirection: "column",
                       justifyContent: "center",
                       flexGrow: 1,
+                      paddingBottom: "40px",
                     },
                     children: [
                       {
