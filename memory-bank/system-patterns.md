@@ -28,6 +28,8 @@ Three constraints bite when editing `src/utils/og-templates/`. All three fail qu
 
 **Resolve asset paths from `process.cwd()`, not `import.meta.url`.** Astro bundles these templates into `dist/chunks/` at build time, so a module-relative path lands outside the project and throws ENOENT. Standalone scripts run directly by node (`scripts/generate-static-og.mjs`) are the opposite case and correctly use `import.meta.url`.
 
+**The gap above the post card's footer rule is reserved, not emergent.** The title/description block is centred in a flexGrow container, so without the centring wrapper's `paddingBottom: 40px` the space above the dashed rule is leftover flex space – it collapses towards zero as title and description approach their line limits. The padding looks redundant on short posts; don't remove it.
+
 **Post descriptions have a 200-character budget** – the card's three-line limit, enforced by `.max(200)` in the content schema so a gross overrun fails the build instead of truncating the card. The cap is approximate: packing depends on where words wrap, so a description in the 190s can still truncate. Above ~185, check the rendered card.
 
 **When to use:** any edit to the OG templates, the palette, or the text they render.
