@@ -1,6 +1,6 @@
 ---
 title: "Writing loops is a ladder, not a command"
-description: "Boris Cherny says his job now is writing loops, not prompts. There's a Claude Code command literally called /loop – and assuming that's what he means is the mistake. It's the bottom rung of a much taller ladder."
+description: "Boris Cherny says his job now is writing loops, not prompts. There's a Claude Code command called /loop – assuming that's what he means is the mistake. It's the bottom rung of a taller ladder."
 pubDatetime: 2026-06-09T22:36:51Z
 draft: false
 tags: ["claude-code", "agentic-coding", "ai"]
