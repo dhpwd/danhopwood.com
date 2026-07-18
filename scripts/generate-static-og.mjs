@@ -119,4 +119,5 @@ const png = new Resvg(svg, {
 }).render().asPng();
 
 fs.writeFileSync(path.join(root, "public/og-image.png"), png);
+// eslint-disable-next-line no-console
 console.log("Written public/og-image.png");
