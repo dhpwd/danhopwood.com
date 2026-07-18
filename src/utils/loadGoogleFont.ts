@@ -45,7 +45,7 @@ async function loadGoogleFonts(
       name: "Google Sans Code",
       font: "Google+Sans+Code",
       weight: 700,
-      style: "bold",
+      style: "normal",
     },
   ];
 

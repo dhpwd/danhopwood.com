@@ -1,16 +1,14 @@
-import { readFileSync } from "node:fs";
-import { join } from "node:path";
 import satori from "satori";
-import { SITE } from "@/config";
 import loadGoogleFonts from "../loadGoogleFont";
-
-const avatarBase64 = readFileSync(
-  join(process.cwd(), "src/assets/images/avatar.jpeg")
-).toString("base64");
-const avatarSrc = `data:image/jpeg;base64,${avatarBase64}`;
-
-const hostname = new URL(SITE.website).hostname;
-const tagline = "Showing my working.";
+import {
+  CHROME_GLYPHS,
+  accentBar,
+  avatarSrc,
+  dotGrid,
+  hostname,
+  palette,
+  tagline,
+} from "./shared";
 
 export default async post => {
   return satori(
@@ -22,23 +20,12 @@ export default async post => {
           height: "100%",
           display: "flex",
           flexDirection: "column",
-          background: "#fdfdfd",
-          backgroundImage:
-            "radial-gradient(circle at 16px 16px, #d8d8d8 6%, transparent 6%)",
-          backgroundSize: "32px 32px",
+          background: palette.background,
+          ...dotGrid,
           fontFamily: "Google Sans Code",
         },
         children: [
-          {
-            type: "div",
-            props: {
-              style: {
-                height: "12px",
-                width: "100%",
-                background: "#006cac",
-              },
-            },
-          },
+          accentBar,
           {
             type: "div",
             props: {
@@ -68,7 +55,7 @@ export default async post => {
                             fontSize: 60,
                             fontWeight: 700,
                             lineHeight: 1.2,
-                            color: "#282728",
+                            color: palette.foreground,
                           },
                           children: post.data.title,
                         },
@@ -80,10 +67,10 @@ export default async post => {
                             display: "block",
                             lineClamp: 3,
                             marginTop: "28px",
-                            fontSize: 30,
+                            fontSize: 26,
                             fontWeight: 400,
                             lineHeight: 1.5,
-                            color: "#57565a",
+                            color: palette.body,
                           },
                           children: post.data.description,
                         },
@@ -98,7 +85,7 @@ export default async post => {
                       display: "flex",
                       alignItems: "center",
                       paddingTop: "36px",
-                      borderTop: "3px dashed #d9d6d6",
+                      borderTop: `3px dashed ${palette.rule}`,
                     },
                     children: [
                       {
@@ -119,7 +106,7 @@ export default async post => {
                           style: {
                             fontSize: 27,
                             fontWeight: 700,
-                            color: "#282728",
+                            color: palette.foreground,
                           },
                           children: post.data.author,
                         },
@@ -130,7 +117,7 @@ export default async post => {
                           style: {
                             fontSize: 27,
                             margin: "0 14px",
-                            color: "#b0adad",
+                            color: palette.separator,
                           },
                           children: "·",
                         },
@@ -141,7 +128,7 @@ export default async post => {
                           style: {
                             fontSize: 27,
                             fontWeight: 400,
-                            color: "#006cac",
+                            color: palette.accent,
                           },
                           children: hostname,
                         },
@@ -153,7 +140,7 @@ export default async post => {
                             marginLeft: "auto",
                             fontSize: 24,
                             fontWeight: 400,
-                            color: "#8a8a8a",
+                            color: palette.faint,
                           },
                           children: tagline,
                         },
@@ -175,9 +162,7 @@ export default async post => {
         post.data.title +
           post.data.description +
           post.data.author +
-          hostname +
-          tagline +
-          "·"
+          CHROME_GLYPHS
       ),
     }
   );
