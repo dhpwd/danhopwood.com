@@ -20,6 +20,7 @@ Run preflight after every change. Full verify runs at completion (`/ship` gates 
 
 - `pnpm run lint`
 - `pnpm run check` – Astro typecheck
+- `pnpm run format:check` – Prettier (CI enforces it, so preflight must too)
 
 ### Full verify (at completion)
 
