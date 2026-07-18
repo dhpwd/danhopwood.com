@@ -112,7 +112,9 @@ The map is built by `src/utils/getPostModDates.ts`, which reads the blog markdow
 
 ## Open Graph image dimensions
 
-`Layout.astro` declares `og:image:width`/`og:image:height` as `1200`/`630`. Every OG image is that size: the static default (`public/og-image.png`), the dynamic per-post generator (`src/utils/og-templates/site.js` + `post.js`), and any future per-post `ogImage` should follow the same standard.
+`Layout.astro` declares `og:image:width`/`og:image:height` as `1200`/`630`. Every OG image is that size: the static default (`public/og-image.png`), the dynamic per-post generator (`src/utils/og-templates/site.js` + `post.js`, sharing constants via `shared.js`), and any future per-post `ogImage` should follow the same standard.
+
+The per-post card renders title, description, author, domain and tagline. See `system-patterns.md` "Satori OG templates" for the constraints that govern edits to it.
 
 ## llms.txt
 
