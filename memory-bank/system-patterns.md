@@ -28,6 +28,8 @@ Three constraints bite when editing `src/utils/og-templates/`. All three fail qu
 
 **Resolve asset paths from `process.cwd()`, not `import.meta.url`.** Astro bundles these templates into `dist/chunks/` at build time, so a module-relative path lands outside the project and throws ENOENT. Standalone scripts run directly by node (`scripts/generate-static-og.mjs`) are the opposite case and correctly use `import.meta.url`.
 
+**Post descriptions have a 200-character budget** – the card's three-line limit, enforced by `.max(200)` in the content schema so a gross overrun fails the build instead of truncating the card. The cap is approximate: packing depends on where words wrap, so a description in the 190s can still truncate. Above ~185, check the rendered card.
+
 **When to use:** any edit to the OG templates, the palette, or the text they render.
 
 ## Public memory bank
