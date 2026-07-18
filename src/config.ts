@@ -4,7 +4,7 @@ export const SITE = {
   profile: "https://danhopwood.com/",
   desc: "Notes from building Fidero entirely with AI agents. Fidero is a data platform for companies whose customer data breaks across domains and systems.",
   title: "Dan Hopwood",
-  ogImage: "og-image.png",
+  ogImage: "", // empty = dynamic /og.png (src/utils/og-templates/site.js)
   lightAndDarkMode: true,
   postPerIndex: 4,
   postPerPage: 4,
