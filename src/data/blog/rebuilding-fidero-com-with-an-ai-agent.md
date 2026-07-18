@@ -32,7 +32,7 @@ I've written before about [keeping the reference doc, the spec and the skill sep
 
 From there the work splits across two agents:
 
-- **The copywriter** (an agent I call Mia) reads the reference doc, picks a layout and writes the page spec – the exact components to use, with copy already written to fit their limits
+- **The copywriter** ([an agent I call Mia](/posts/two-ways-to-change-claudes-personality)) reads the reference doc, picks a layout and writes the page spec – the exact components to use, with copy already written to fit their limits
 - **The developer** (a separate agent) reads that spec plus the reference doc and builds the page. Where a section genuinely needs something new, the spec says so, and it gets built rather than forced into a component that doesn't fit
 
 The copy drops straight in, because it was written against the constraints instead of discovered halfway through the build. The move most "AI builds my website" demos skip is exactly this: spending an hour or two on the reference doc up front. Skip it and the output comes out generic, so you spend the time you saved re-prompting it into shape.
