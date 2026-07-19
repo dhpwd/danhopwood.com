@@ -76,7 +76,7 @@ export default defineConfig({
         cssVariable: "--font-geist",
         provider: fontProviders.google(),
         fallbacks: ["sans-serif"],
-        weights: [300, 400, 500, 600, 700],
+        weights: [400, 500, 600, 700],
         styles: ["normal"],
       },
       {
