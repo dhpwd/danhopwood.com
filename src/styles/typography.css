@@ -25,6 +25,10 @@
 
     a {
       @apply wrap-break-word text-foreground decoration-dashed underline-offset-4 hover:text-accent focus-visible:no-underline;
+      /* Full-strength 1px dashes read as noise at body size – mute the
+         decoration, not the dash count (thickness doesn't change frequency
+         in Chrome, and background-image dashes lose ink-skipping). */
+      text-decoration-color: color-mix(in srgb, currentcolor 45%, transparent);
     }
 
     ul {
