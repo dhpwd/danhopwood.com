@@ -40,7 +40,7 @@ The exact content boundaries and size limits are <a href="https://gist.github.co
 
 The original layout had one more live file: progress.md – what's done, what's left, blockers. I retired it in June.
 
-What sent me in was merge conflicts. I'd started running parallel worktrees on the same repo and the live files kept colliding when branches landed close together. So I measured how often those files actually changed: 3 commits out of the last 23. Conflicts weren't the real cost. The real cost was at the end of every ticket: a separate "update memory bank" step that mostly re-wrote what the commit message already said.
+What sent me in was merge conflicts. I'd started running parallel worktrees on the same repo and the live files kept colliding when branches landed close together. So I measured how often those files actually changed: in my most active repo, 18 of the last 41 commits touched the memory bank. The collisions were real. But half of those 18 commits changed nothing else – they were standalone "update memory bank" passes that re-wrote what the commit message already said. One ticket racked up five of them. That was the bigger cost.
 
 Then I pulled the last 20 commit messages from two repos. Each one was agent-written and they were genuinely good: the why behind the change, the review findings, what was verified. I put one ticket's progress.md entry next to its commit message – same content and the commit was the better-written version. My repos squash-merge, so each ticket lands on main as a single curated commit. So progress.md was essentially a hand-maintained copy of `git log main`.
 
