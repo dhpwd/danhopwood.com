@@ -26,11 +26,24 @@ Three constraints bite when editing `src/utils/og-templates/`. All three fail qu
 
 **The font subset must contain every glyph you render, including ones you never wrote.** Fonts load from the Google Fonts API with `&text=`, which returns only the requested characters. Satori appends U+2026 when `lineClamp` truncates, so an ellipsis absent from the subset renders as a missing-glyph box. `CHROME_GLYPHS` in `shared.js` carries the ellipsis and the other fixed characters – concatenate it into every `loadGoogleFonts` call.
 
+**Every (fontFamily, fontWeight) pair a template sets must be loaded in `loadGoogleFont.ts`.** Satori matches loaded fonts by family name and weight; a pair that isn't loaded falls back silently to whatever is. Currently loaded: Geist 400, Geist Mono 400 and 700 – adding a new weight or family to a template means adding it to `fontsConfig` too.
+
 **Resolve asset paths from `process.cwd()`, not `import.meta.url`.** Astro bundles these templates into `dist/chunks/` at build time, so a module-relative path lands outside the project and throws ENOENT. Standalone scripts run directly by node (`scripts/generate-static-og.mjs`) are the opposite case and correctly use `import.meta.url`.
 
 **Post descriptions have a 200-character budget** – the card's three-line limit, enforced by `.max(200)` in the content schema so a gross overrun fails the build instead of truncating the card. The cap is approximate: packing depends on where words wrap, so a description in the 190s can still truncate. Above ~185, check the rendered card.
 
 **When to use:** any edit to the OG templates, the palette, or the text they render.
+
+## Type registers
+
+**Problem:** With two typefaces in play (Geist prose, Geist Mono chrome), per-component font choices drift – a new component that hand-picks a face or link style breaks the visual system silently.
+
+**Solution:** Two registers, each with a fixed treatment:
+
+- **Content** (prose, post furniture): Geist; links use dashed underlines (`decoration-dashed underline-offset-4`) – the site's signature
+- **Chrome** (headings, metadata, labels, nav): Geist Mono via the global `h1–h6` base rule or `font-mono`; UI state markers (e.g. `.active-nav`) use solid underlines, not dashed
+
+**When to use:** any new component or restyle. Pick the register, inherit its treatment; don't invent per-component font/underline combinations. Canonical build facts (faces, weights, tokens) live in `tech-context.md` "Type system".
 
 ## Public memory bank
 

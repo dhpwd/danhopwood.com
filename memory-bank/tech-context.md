@@ -71,11 +71,24 @@ Back to Top button removed (progress bar sufficient). `addHeadingLinks()` scoped
 
 `Footer.astro` accepts `stealThisPost` boolean prop. When true (post pages only), replaces the copyright line with "Steal this post → CC BY 4.0 · Code MIT" linking to the GitHub repo. Blog content is CC BY 4.0; code is MIT.
 
+## Type system
+
+Two faces, two registers, loaded via Astro's experimental fonts API (Google provider, config in `astro.config.ts`, `<Font>` preloads in `Layout.astro`):
+
+- **Geist** (`--font-app`) – prose and general UI. Weights 400/500/600/700
+- **Geist Mono** (`--font-mono`) – headings (global `h1–h6` base rule in `global.css`), dates/metadata, breadcrumb, code, UI labels (e.g. copy button). Weights 400/500/600/700
+
+No italic faces exist for Geist – semantic emphasis (`em`, blockquotes) renders as browser-synthesised oblique, which is accepted; decorative italics were removed instead. Don't hand-set font families per component – use the registers (see `system-patterns.md` "Type registers").
+
+Code blocks highlight with shiki themes `vitesse-light` / `vitesse-dark` (set in `astro.config.ts`), chosen for neutral grounds that sit with the theme palettes.
+
 ## Theme tokens
 
 AstroPaper uses CSS custom properties mapped to Tailwind via `@theme inline` in `src/styles/global.css`:
 
 `bg-background`, `text-foreground`, `bg-accent`, `bg-muted`, `border-border`
+
+Accent is teal: `#0f766e` (light) / `#6fb3a8` (dark).
 
 ## Plausible Analytics
 
