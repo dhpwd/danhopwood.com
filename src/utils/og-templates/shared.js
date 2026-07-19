@@ -40,7 +40,7 @@ export const tagline = "Showing my working.";
 export const palette = {
   background: "#fdfdfd", // --background
   foreground: "#282728", // --foreground
-  accent: "#006cac", // --accent
+  accent: "#0f766e", // --accent
   body: "#57565a", // no token – between --foreground and --muted, for body copy
   grid: "#d8d8d8", // no token – --muted (#e6e6e6) is invisible at thumbnail scale
   rule: "#d9d6d6", // no token – --border (#ece9e9) is invisible at thumbnail scale

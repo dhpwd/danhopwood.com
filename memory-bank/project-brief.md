@@ -23,3 +23,4 @@ Final unless explicitly revisited.
 - **"Edit on GitHub" links.** Open-source the blog content. Link to `dhpwd/danhopwood.com` repo *(implemented and verified)*
 - **About page** *(implemented in `src/pages/about.md`)*
 - **Tags** for categorisation once there's enough content
+- **Visual identity:** Geist prose + Geist Mono headings/metadata, teal accent, dashed underlines as the content-link signature *(implemented – see `tech-context.md` "Type system")*

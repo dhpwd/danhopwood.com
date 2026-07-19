@@ -13,10 +13,6 @@
       @apply mb-3 text-foreground;
     }
 
-    h3 {
-      @apply italic;
-    }
-
     p,
     strong,
     ol,
@@ -29,6 +25,9 @@
 
     a {
       @apply wrap-break-word text-foreground decoration-dashed underline-offset-4 hover:text-accent focus-visible:no-underline;
+      /* Prose links get dashed via @apply, so the a[class~="decoration-dashed"]
+         base rule in global.css can't reach them – same token, stated here. */
+      text-decoration-color: var(--dashed-decoration);
     }
 
     ul {
@@ -44,7 +43,7 @@
     }
 
     img {
-      @apply mx-auto border border-border;
+      @apply mx-auto rounded-md border border-border;
     }
 
     figcaption {
@@ -66,8 +65,13 @@
       }
     }
 
+    code,
+    pre {
+      @apply font-mono;
+    }
+
     code {
-      @apply rounded bg-muted/75 p-1 wrap-break-word text-foreground before:content-none after:content-none;
+      @apply rounded bg-muted/75 px-1 py-0.5 wrap-break-word text-foreground before:content-none after:content-none;
     }
 
     .astro-code code {
