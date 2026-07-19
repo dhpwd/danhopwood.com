@@ -43,7 +43,7 @@
     }
 
     img {
-      @apply mx-auto border border-border;
+      @apply mx-auto rounded-md border border-border;
     }
 
     figcaption {
