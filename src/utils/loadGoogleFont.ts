@@ -36,14 +36,20 @@ async function loadGoogleFonts(
 > {
   const fontsConfig = [
     {
-      name: "Google Sans Code",
-      font: "Google+Sans+Code",
+      name: "Geist",
+      font: "Geist",
       weight: 400,
       style: "normal",
     },
     {
-      name: "Google Sans Code",
-      font: "Google+Sans+Code",
+      name: "Geist Mono",
+      font: "Geist+Mono",
+      weight: 400,
+      style: "normal",
+    },
+    {
+      name: "Geist Mono",
+      font: "Geist+Mono",
       weight: 700,
       style: "normal",
     },

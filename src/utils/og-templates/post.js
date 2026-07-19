@@ -22,7 +22,7 @@ export default async post => {
           flexDirection: "column",
           background: palette.background,
           ...dotGrid,
-          fontFamily: "Google Sans Code",
+          fontFamily: "Geist Mono",
         },
         children: [
           accentBar(),
@@ -71,6 +71,7 @@ export default async post => {
                             fontWeight: 400,
                             lineHeight: 1.5,
                             color: palette.body,
+                            fontFamily: "Geist",
                           },
                           children: post.data.description,
                         },

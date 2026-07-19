@@ -15,12 +15,12 @@ const { title, description, ...props } = data;
 const readingTime = body ? calculateReadingTime(body) : undefined;
 ---
 
-<li class="my-6">
+<li class="my-8">
   <a
     href={getPath(id, filePath)}
     class:list={[
-      "inline-block text-lg font-medium text-accent",
-      "decoration-dashed underline-offset-4 hover:underline",
+      "inline-block text-lg font-semibold text-foreground",
+      "decoration-dashed underline-offset-4 hover:text-accent hover:underline",
       "focus-visible:no-underline focus-visible:underline-offset-0",
     ]}
   >
@@ -30,6 +30,6 @@ const readingTime = body ? calculateReadingTime(body) : undefined;
       {title}
     </Heading>
   </a>
-  <Datetime {...props} {readingTime} />
-  <p>{description}</p>
+  <Datetime {...props} {readingTime} class="mt-1" />
+  <p class="mt-2">{description}</p>
 </li>

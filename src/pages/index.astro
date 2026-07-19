@@ -79,7 +79,9 @@ const recentPosts = sortedPosts.filter(({ data }) => !data.featured);
             { "border-b border-border": recentPosts.length > 0 },
           ]}
         >
-          <h2 class="text-2xl font-semibold tracking-wide">Featured</h2>
+          <h2 class="text-sm font-medium tracking-widest uppercase opacity-60">
+            Featured
+          </h2>
           <ul>
             {featuredPosts.map(data => (
               <Card variant="h3" {...data} />
@@ -92,7 +94,9 @@ const recentPosts = sortedPosts.filter(({ data }) => !data.featured);
     {
       recentPosts.length > 0 && (
         <section id="recent-posts" class="pt-12 pb-6">
-          <h2 class="text-2xl font-semibold tracking-wide">Recent posts</h2>
+          <h2 class="text-sm font-medium tracking-widest uppercase opacity-60">
+            Recent posts
+          </h2>
           <ul>
             {recentPosts.map(
               (data, index) =>

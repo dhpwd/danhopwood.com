@@ -13,10 +13,6 @@
       @apply mb-3 text-foreground;
     }
 
-    h3 {
-      @apply italic;
-    }
-
     p,
     strong,
     ol,
@@ -64,6 +60,11 @@
       code {
         @apply break-all sm:break-normal;
       }
+    }
+
+    code,
+    pre {
+      @apply font-mono;
     }
 
     code {
