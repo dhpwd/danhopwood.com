@@ -25,10 +25,9 @@
 
     a {
       @apply wrap-break-word text-foreground decoration-dashed underline-offset-4 hover:text-accent focus-visible:no-underline;
-      /* Full-strength 1px dashes read as noise at body size – mute the
-         decoration, not the dash count (thickness doesn't change frequency
-         in Chrome, and background-image dashes lose ink-skipping). */
-      text-decoration-color: color-mix(in srgb, currentcolor 45%, transparent);
+      /* Prose links get dashed via @apply, so the a[class~="decoration-dashed"]
+         base rule in global.css can't reach them – same token, stated here. */
+      text-decoration-color: var(--dashed-decoration);
     }
 
     ul {

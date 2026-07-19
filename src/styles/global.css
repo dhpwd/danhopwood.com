@@ -20,6 +20,13 @@ html[data-theme="dark"] {
   --border: #383838;
 }
 
+/* Resting colour for dashed link underlines – full-strength 1px dashes read
+   as noise, so the register mutes decoration rather than dash count.
+   currentcolor resolves per element, so hover accent tints it too. */
+:root {
+  --dashed-decoration: color-mix(in srgb, currentcolor 45%, transparent);
+}
+
 @theme inline {
   --font-app: var(--font-geist);
   --font-mono: var(--font-geist-mono);
@@ -53,6 +60,9 @@ html[data-theme="dark"] {
   a,
   button {
     @apply outline-offset-1 outline-accent focus-visible:no-underline focus-visible:outline-2 focus-visible:outline-dashed;
+  }
+  a[class~="decoration-dashed"] {
+    text-decoration-color: var(--dashed-decoration);
   }
   button:not(:disabled),
   [role="button"]:not(:disabled) {
