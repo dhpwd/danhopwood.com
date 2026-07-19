@@ -8,6 +8,7 @@
     "check": "astro check",
     "preview": "astro preview",
     "sync": "astro sync",
+    "generate:favicons": "node scripts/generate-favicons.mjs",
     "astro": "astro",
     "format:check": "prettier --check .",
     "format": "prettier --write .",
