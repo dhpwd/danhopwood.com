@@ -9,6 +9,7 @@ Backlog of potential topics. Not all will become posts – the bar is: would thi
 - How to remain focused – deep work and AI/phone addiction
 - Managing AI agent memory across projects – naming decisions, DRY config, diff verification for memory updates
 - Memory bank failure modes – stale context misleads harder than empty (silent decay creates false orientation), and bloat is the parallel failure mode (over-distribution across files). Both cut from the memory bank framework draft for space – worth a standalone follow-up. Source: [[Agentic Coding Best Practices]]
+- The data-infrastructure self-audit – destination-side evidence over setup review: what's actually arriving in Meta (EMQ, parameter coverage), GA4 (paid traffic filed as direct) and Google Ads (conversion diagnostics), and why a correctly-configured setup still fails silently. Doubles as the "audit framework" lead magnet from `{Fidero vault}/Strategy/KPOI.md` (LinkedIn Featured + Build Notes funnel) and balances the agentic-coding skew with a data piece
 
 ### Rebuilding fidero.com with an AI agent (series)
 
