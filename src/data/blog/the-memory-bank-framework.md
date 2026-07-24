@@ -40,7 +40,7 @@ The exact content boundaries and size limits are <a href="https://gist.github.co
 
 The original layout had one more live file: progress.md – what's done, what's left, blockers. I retired it in June.
 
-What sent me in was merge conflicts. I'd started running parallel worktrees on the same repo and the live files kept colliding when branches landed close together. So I measured how often those files actually changed: in my most active repo, 18 of the last 41 commits touched the memory bank. The collisions were real. But half of those 18 commits changed nothing else – they were standalone "update memory bank" passes that re-wrote what the commit message already said. One ticket racked up five of them. That was the bigger cost.
+What sent me looking was merge conflicts. I'd started running parallel worktrees on the same repo and the live files kept colliding when branches landed close together. So I measured how often those files actually changed: in my most active repo, 18 of the last 41 commits touched the memory bank. The collisions were real. But half of those 18 commits changed nothing else – they were standalone "update memory bank" passes that re-wrote what the commit message already said. One ticket racked up five of them. That was the bigger cost.
 
 Then I pulled the last 20 commit messages from two repos. Each one was agent-written and they were genuinely good: the why behind the change, the review findings, what was verified. I put one ticket's progress.md entry next to its commit message – same content and the commit was the better-written version. My repos squash-merge, so each ticket lands on main as a single curated commit. So progress.md was essentially a hand-maintained copy of `git log main`.
 
@@ -66,7 +66,7 @@ For multi-repo workflows, don't copy-paste the instructions into each project's 
 @~/cli-agents/shared/coding.md
 ```
 
-Need to tweak the instructions? Update the shared file once and every project picks it up automatically. The gist below is the focused memory-bank-only snapshot if you want the framework on its own.
+To tweak the instructions, update the shared file once and every project picks it up automatically. The memory bank instructions are the part of that file I publish – they're in the gist linked below.
 
 ## The session loop
 
@@ -95,7 +95,7 @@ My sessions tend to run 250–400k tokens. That's plenty of work, and still a lo
 
 ![git diff of a memory bank update after a feature commit](../../assets/images/mb-update-diff.png)
 
-What this buys you: `/compact` becomes dead weight. Every session starts clean, loads the same structured context, finishes short. There's no long-running conversation to summarise because you didn't let one form. Claude Code comes with [five layers of context management](/posts/i-used-claude-code-to-read-its-own-source-code#five-layers-of-context-management) for exactly the failure modes the memory bank prevents. Once the loop is in place, most of those layers stop earning their keep.
+What this buys you: `/compact` becomes dead weight. Every session starts clean, loads the same structured context and finishes short. There's no long-running conversation to summarise because you didn't let one form. Claude Code comes with [five layers of context management](/posts/i-used-claude-code-to-read-its-own-source-code#five-layers-of-context-management) for exactly the failure modes the memory bank prevents. Once the loop is in place, most of those layers stop earning their keep.
 
 ## Discipline that keeps the files current
 

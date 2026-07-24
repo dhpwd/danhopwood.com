@@ -5,7 +5,7 @@ title: "About"
 
 I'm Dan Hopwood, a founder in London. I've spent 12+ years building data infrastructure for startups – the plumbing that decides whether a company can trust its own numbers.
 
-Now I'm building [Fidero](https://fidero.com), a server-first data platform (a CDP) that makes customer data trustworthy: attribution you can prove, identity that holds together across systems, and quality that doesn't silently decay. It's focused on consumer subscription businesses, where every decision rides on accurate CAC, activation and retention.
+Now I'm building [Fidero](https://fidero.com), a server-first data platform (a CDP) that makes customer data trustworthy: attribution you can prove, identity that holds together across systems, and quality that doesn't drift when things change. It's focused on consumer subscription businesses, where every decision rides on accurate CAC, activation and retention.
 
 I build it entirely with AI agents – the code, the audits, the strategy, the sales. That claim tends to get a reaction. Fair enough. What started as a way to move faster became the thesis behind most of what I write: the same discipline that makes customer data trustworthy makes AI agents reliable. Garbage in, garbage out, whether it's an event pipeline or an agent's context.
 

@@ -20,18 +20,18 @@ It's a macOS app called Recall Recorder, and the repo is public: [github.com/dhp
 
 Four things:
 
-- **Reliable triggers.** Recording starts when a call starts, so no menu bar clicks to remember and no missing the first three minutes
+- **Reliable triggers.** Recording starts when a call starts, so there's no menu bar click to remember and I don't miss the first three minutes
 - **Async transcription on the whole recording.** If the model has the whole call to work with before it transcribes anything, the result is noticeably more accurate than streaming line by line
 - **Speaker separation by name.** Zoom, Meet and Teams all expose participant names, so the transcription tool just has to use them
 - **Control over where the file lands.** Granola's transcript lives in Granola, but I want a markdown file in a local folder I own, ready to be picked up by everything else I work with
 
-Once I had that list, the question wasn't "should I build this", it was "what do I have to build, and what can I rent?".
+Once I had that list, the question was what I had to build and what I could rent.
 
 ## Buy what's hard, build what's mine
 
 Recall.ai sells a desktop SDK that does the part I would never have built well. It detects calls on Zoom, Meet, Teams and Webex, handles recording, uploads to Recall after the call ends, and orchestrates async transcription via AssemblyAI's Universal-3-Pro model. Speaker diarisation works out of the box.
 
-Built from scratch, that's weeks of work, but using it costs pennies per call. That's what made the 2-hour build possible – the hard parts were already done.
+Building that from scratch would be weeks of work, but using it costs pennies per call. That's what made the 2-hour build possible – the hard parts were already done.
 
 What I actually built: an Electron menu bar app that wraps the SDK and turns each call's transcript into a markdown file with YAML frontmatter (see example below). There's a tray menu for stopping recordings and opening the inbox folder, plus a preferences panel for the API key and the inbox path.
 
@@ -39,7 +39,7 @@ What I actually built: an Electron menu bar app that wraps the SDK and turns eac
 
 There's no bot in the meeting and no "are you happy for me to record this?" pop-up – the SDK records natively from the host's machine, the same way Granola does.
 
-The bit nobody tells you about working with a new SDK is that the docs are a starting point, not a contract. There are always gotchas they don't quite cover. Using Context7 to query Recall's docs gave the agent a live reference it could check whenever its first guess was wrong, and that search-and-verify loop is what made an imperfect set of docs workable.
+With any new SDK the docs have gotchas they don't quite cover. Using Context7 to query Recall's docs gave the agent a live reference it could check whenever its first guess was wrong.
 
 Each transcript looks like this:
 
@@ -66,9 +66,9 @@ In daily use:
 
 1. **Triggers fire across all four platforms.** Zoom, Meet, Teams, Webex – no more "did Granola catch this one?"
 2. **Whole-recording transcription is markedly better.** Universal-3-Pro on a complete file outperforms streaming transcription on the same call, especially on accented speech, numbers and proper nouns
-3. **Real names in the speaker column.** When the platform exposes participant names (which Zoom, Meet and Teams do) the transcript shows "Sarah Cohen" not "Speaker 2". Edge cases exist on phone dial-ins and duplicate display names, but the major platforms work
+3. **Real names in the speaker column.** When the platform exposes participant names (which Zoom, Meet and Teams do) the transcript shows "Sarah Cohen" not "Speaker 2"
 4. **Transcript files in a folder I own.** `~/call-transcripts/inbox/` by default, configurable in preferences. They're markdown, so anything else I work with can read them
-5. **Frontmatter that makes downstream processing trivial.** Date, platform, meeting title, participants, duration and the Recall upload ID. Filterable, searchable, machine-readable on day one
+5. **Frontmatter that makes downstream processing trivial.** Date, platform, meeting title, participants, duration and the Recall upload ID. Whatever picks the files up can filter on those fields without parsing the transcript
 
 ## What it doesn't do
 
@@ -82,6 +82,7 @@ A few known issues:
 
 - Teams occasionally fails to auto-stop after a call ends – the tray menu has a manual stop as fallback
 - Anyone who dials in by phone instead of joining from the app gets a `Speaker 0`-style label rather than their name
+- Two participants with the same display name can't be told apart in the transcript
 - The packaged app doesn't write its logs to a file yet
 
 I left them in. The app I have works for the calls I run, and releasing it with the rough edges visible feels more honest than polishing them away.
@@ -92,4 +93,4 @@ The repo is at [github.com/dhpwd/recall-recorder](https://github.com/dhpwd/recal
 
 If you find a bug that's not in the known issues list, open one. If you fix it, send a PR.
 
-The recording itself turned out to be the easy bit. What happens after the transcript lands in the inbox is what actually made replacing Granola worth doing – [wrote that up here](/posts/the-recording-was-the-easy-bit).
+The recording itself turned out to be the easy bit. What happens after the transcript lands in the inbox is what made replacing Granola worth doing – [I've written that up here](/posts/the-recording-was-the-easy-bit).

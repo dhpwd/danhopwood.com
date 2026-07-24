@@ -1,6 +1,6 @@
 ---
-title: "Two ways to change Claude's personality: output styles and main-agent custom agents"
-description: "An output style fixes Claude's grating default voice in five minutes. And the trick almost nobody knows: you can run a custom agent as the main agent and replace Claude's persona entirely."
+title: "Two ways to change Claude's personality: output styles and custom agents as the main agent"
+description: "An output style fixes Claude's grating default voice in five minutes. Or go further: run a custom agent as the main agent and replace Claude's persona entirely."
 pubDatetime: 2026-07-18T21:40:33Z
 draft: false
 tags: ["claude-code", "agentic-coding", "ai"]
@@ -12,7 +12,7 @@ The first was a complaint about Claude's writing style. You know the one: word s
 
 The second came a week later from someone who'd built a tone-of-voice doc for their content, watched the AI-isms creep back in anyway, and wanted to know whether it was worth going further and building a dedicated agent.
 
-Both are really the same question: how much of Claude's default identity do you want to keep? I told the group I'd write up how I handle both ends of it, so here it is.
+How much of Claude's default identity do you want to keep? I told the group I'd write up how I handle both ends of it, so here it is.
 
 ## It all comes back to the system prompt
 
@@ -28,7 +28,7 @@ The two levers that actually move the identity are output styles and custom agen
 
 A custom output style _replaces_ the system prompt. That was originally the whole point – before you could run a custom agent as your main agent, output styles were how you turned Claude Code into something else entirely.
 
-Later Anthropic added a `keep-coding-instructions` flag, which defaults to false for backwards compatibility. Set it to true and you keep all of Anthropic's coding instructions and swap only the communication layer. That's exactly what you want when the complaint is the voice, not the work.
+Later Anthropic added a `keep-coding-instructions` flag, which defaults to false for backwards compatibility. Set it to true and you keep all of Anthropic's coding instructions and swap only the communication layer. That's what you want when the complaint is the voice, not the work.
 
 Here's mine, in full:
 
@@ -66,7 +66,7 @@ To install it:
 
 Custom agents are mostly known as sub-agents: you define a code reviewer and the main session dispatches it when review comes up. That's useful, but it's the less interesting half.
 
-The bit most people don't know: you can run a custom agent as the _main_ agent.
+You can also run a custom agent as the _main_ agent.
 
 ```bash
 claude --agent toby
@@ -88,7 +88,7 @@ None of these jobs should sit on top of a software-developer persona. Emma doesn
 
 ## Building your own
 
-An agent is one markdown file in `~/.claude/agents/` (or `.claude/agents/` inside a project). Frontmatter for configuration and the body is the system prompt. Here's `toby.md`, heavily trimmed:
+An agent is one markdown file in `~/.claude/agents/` (or `.claude/agents/` inside a project). The frontmatter holds the configuration and the body is the system prompt. Here's `toby.md`, heavily trimmed:
 
 ```markdown
 ---
@@ -113,7 +113,7 @@ You are Toby, Dan's ghostwriter for public content. You know Dan's voice deeply 
 
 ## Critical failures to prevent
 
-[The mistakes that keep coming back written as a checklist to run against every draft before delivering]
+[The mistakes that keep coming back, written as a checklist to run against every draft before delivering]
 ```
 
 The fields doing the work:
@@ -123,12 +123,12 @@ The fields doing the work:
 - `mcpServers` – which external tools this agent gets. Toby has the drafting and scheduling tools, Emma has calendar and email
 - `model` – worth pinning for sub-agents. For main agents I leave it unpinned and pick per session, but pinning works fine if you'd rather not think about it
 
-And the part that matters more than any config field: don't write the persona yourself. Take the strongest model you have, give it real examples of your writing (posts, emails, whatever you've got) and have it draft the instructions from scratch. Then hand it your old tone-of-voice doc, if you have one, and ask what's worth keeping.
+And more important than any config field: don't write the persona yourself. Take the strongest model you have, give it real examples of your writing (posts, emails, whatever you've got) and have it draft the instructions from scratch. Then hand it your old tone-of-voice doc, if you have one, and ask what's worth keeping.
 
 Examples matter twice, though. Once when writing the instructions and again at generation time: Toby reads recent published posts for whichever platform he's drafting for, because models imitate examples better than they follow descriptions of them. I refresh those examples every few weeks, replacing the weaker ones with posts that read or performed well.
 
 ## Which one you want
 
-If you like what Claude does but can't stand how it reports it: output style, `keep-coding-instructions: true`. It's a 5 minute fix and it works this afternoon.
+If you like what Claude does but can't stand how it reports it: output style, `keep-coding-instructions: true`. It's a 5-minute fix and it works this afternoon.
 
-If the job was never coding in the first place (an EA, a marketing writer, a ghostwriter) build the agent. It needs more tweaking and the first version will be wrong in places (all three of mine were). The real work is [correcting it over time](/posts/maturity-not-complexity): every miss you catch goes back into the file as a rule, which is why Toby's drafts need less of my time every month.
+If the job was never coding in the first place (an EA, a marketing writer, a ghostwriter), build the agent. It needs more tweaking and the first version will be wrong in places (all three of mine were). The real work is [correcting it over time](/posts/maturity-not-complexity): every miss you catch goes back into the file as a rule, which is why Toby's drafts need less of my time every month.
