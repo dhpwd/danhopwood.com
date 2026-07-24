@@ -16,7 +16,7 @@ When I tell people I auto-record my calls, the next question is usually "where d
 
 It's data that was true once, parked in a place where nothing reads it.
 
-The problem isn't the transcript. The problem is the absence of a pipeline.
+The problem isn't the transcript. The problem is that there's no pipeline.
 
 ## What I run
 
@@ -24,7 +24,7 @@ Every call transcript that lands in `~/call-transcripts/inbox/` goes through thr
 
 **Layer 1: the recorder.** It drops a markdown file with minimal frontmatter: date, platform, meeting title, participants, duration, the Recall upload ID. That's the artefact.
 
-**Layer 2: the account-aware agent.** When I prompt my account assistant to "check call inbox" after a call with a prospect/customer, it reads the raw transcript with the full account strategy already loaded into context. It classifies the call (`call_type: "discovery"`, `"audit-readout"`, `"check-in"`, and so on), tags it with the account name and domain, and resolves the generic Zoom-default title into the readable `{Account} – {Call type}` format. The output is a distilled interaction note in the account folder.
+**Layer 2: the account-aware agent.** When I prompt my account assistant to "check call inbox" after a call with a prospect or customer, it reads the raw transcript with the full account strategy already loaded into context. It classifies the call (`call_type: "discovery"`, `"audit-readout"`, `"check-in"`, and so on), tags it with the account name and domain, and resolves the generic Zoom-default title into the readable `{Account} – {Call type}` format. The output is a distilled interaction note in the account folder.
 
 **Layer 3: the archive.** The raw transcript moves from `inbox/` to `archive/`. The interaction note (a structured summary keyed to the account) becomes the historical record. Action items extracted from the call go into [the account's working notes](/posts/i-run-my-ai-customer-notes-like-a-database), where they surface the next time I load the account to continue where I left off.
 
@@ -50,15 +50,11 @@ The recorder produces an artefact. The pipeline produces context.
 
 ## Frontmatter is the leverage
 
-The trick is the frontmatter.
-
-A transcript with the account name, domain and call type populated, plus a properly resolved title, isn't just a transcript any more. It's a row in a queryable table that didn't exist before the call.
+A transcript with the account name, domain and call type populated, plus a properly resolved title, becomes a row in a queryable table that didn't exist before the call.
 
 I never built a search system. I just classified at source, so when I want every discovery call with a particular customer this quarter, or the most recent audit-readout, or every commercial call across all accounts since January, my agent can find them in seconds.
 
 This is the move data engineers have been making for a decade: when you want a system to be useful at scale, you classify at source. Retrofitting metadata later is always more expensive than capturing it upfront.
-
-The same discipline applies to call transcripts.
 
 ## Data, information, intelligence
 
@@ -72,7 +68,7 @@ The same agent does all three steps, but the artefacts are distinct. Each layer 
 
 If this sounds like a warehouse pattern (source data, conformed model, semantic layer), it's because it is.
 
-## Same problem, different scale
+## Same problems, solved before
 
 The thing I keep noticing is that most of the unsolved problems in working with AI agents are problems data teams solved years ago.
 
@@ -80,4 +76,4 @@ Speaker attribution in AI tooling is the same identity-stitching problem data en
 
 The pipeline I run on call transcripts isn't novel. It's the cheapest version of a discipline that has run in every well-built data team I've ever worked with: capture cleanly, classify at source, archive deliberately, surface what changed.
 
-The recorder was easy because Recall's SDK does most of the work. The pipeline is harder but only because most people skip it.
+The recorder was easy because Recall's SDK does most of the work. The pipeline isn't much harder. Most people just skip it.

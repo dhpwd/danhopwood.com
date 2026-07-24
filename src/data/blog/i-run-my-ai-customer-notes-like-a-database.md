@@ -14,11 +14,11 @@ I've spent years keeping customer data trustworthy for a living – attribution,
 
 ## One document, every account
 
-If you've kept notes on a contact in a CRM, this is familiar: a running log of "spoke to them, they're worried about pricing" that grows every time something happens. My version lives as files an agent reads, not a box in a web app, and one document defines how those files are structured and the rules for keeping them clean. For every prospect and customer, the same files sit in the same places, just with different content. Point the agent at any account folder, in a brand new session knowing nothing about the account, and it already knows how to read it, where each kind of fact belongs, and how to update it without making a mess.
+If you've kept notes on a contact in a CRM, this is familiar: a running log of "spoke to them, they're worried about pricing" that grows every time something happens. My version lives as files an agent reads, not a box in a web app, and one document defines how those files are structured and the rules for keeping them clean. For every prospect and customer, the same files sit in the same places, just with different content. Point a brand-new session at any account folder and the agent already knows how to read it, where each kind of fact belongs, and how to update it without making a mess.
 
 That cold start is the whole point, and it's where the system came from. When I build software with an agent, it forgets everything between sessions, so I keep a [memory bank](/posts/the-memory-bank-framework) – a fixed set of files it reads at the start of each session to get back up to speed. I wanted the same for my customers: open a fresh conversation, load an account, carry on where I left off. So I handed the agent my memory bank rules and we designed a first version for account context. The rules evolved from there, one at a time, as things went wrong.
 
-I won't walk through the whole thing. The interesting part isn't the structure, it's that every rule I added to keep it trustworthy already has a name in data engineering. Here's the map.
+I won't walk through the whole thing. The interesting part is that every rule I added to keep it trustworthy already has a name in data engineering. Here's the map.
 
 ## One fact, one owner
 
@@ -36,7 +36,7 @@ There's a list in the framework of phrases the AI isn't allowed to write into th
 
 ![The banned-phrases list in the framework itself, with the source-of-truth rule above it](../../assets/images/cc-account-framework-rules.png)
 
-The list catches bad input before it lands. A validation constraint does the same job: it sits at the edge of the table and refuses any write that doesn't fit. It's cheaper to block it at the door than to clean it up later. The same habit of checking at the edge is what lets you [hand work to an agent and trust what comes back](/posts/writing-loops-is-a-ladder-not-a-command).
+The list catches bad input before it lands. A validation constraint does the same job: it sits at the edge of the table and refuses any write that doesn't fit. It's cheaper to block it at the door than to clean it up later. The same habit of checking at the edge is what lets you [hand work to an agent and trust what comes back](/posts/writing-loops).
 
 ## Old detail ages out
 
@@ -60,7 +60,7 @@ That's a data quality check: not "is this value valid?" but "is this record stil
 
 I didn't set out to port data governance onto markdown. I just wanted my AI to remember my customers between conversations. The disciplines I reached for, by reflex, were the same ones I use on customer data. The reflex is the point.
 
-The context an AI holds isn't _like_ data. It **is** data. It has owners, it goes stale, it duplicates, it needs checking at the edges and pruning when it bloats. [Manage it like data](/posts/maturity-not-complexity) and the agent stays sharp. Let it rot and the agent gets confused, slow and confidently wrong, the same way a neglected warehouse does.
+The context an AI holds isn't _like_ data. It _is_ data. It has owners, it goes stale, it duplicates, it needs checking at the edges and pruning when it bloats. [Manage it like data](/posts/maturity-not-complexity) and the agent stays sharp. Neglect it and the agent gets confused, slow and confidently wrong, the same way a neglected warehouse does.
 
 And it's the same customers. The data I keep trustworthy for them and the memory my AI holds of them are the same engineering problem, one layer up.
 

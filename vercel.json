@@ -1,4 +1,11 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "trailingSlash": false
+  "trailingSlash": false,
+  "redirects": [
+    {
+      "source": "/posts/writing-loops-is-a-ladder-not-a-command",
+      "destination": "/posts/writing-loops",
+      "permanent": true
+    }
+  ]
 }

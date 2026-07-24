@@ -6,7 +6,7 @@ draft: false
 tags: ["claude-code", "agentic-coding", "ai"]
 ---
 
-A software factory is the setup where agents do the building and you do the deciding: you own the spec, they execute, verify and open the pull request, you review what's worth reviewing. I ended the [last post](/posts/writing-loops-is-a-ladder-not-a-command) promising to lay out how you actually get there, and in what order. This is that.
+A software factory is the setup where agents do the building and you do the deciding: you own the spec, they execute, verify and open the pull request, you review what's worth reviewing. I ended the [last post](/posts/writing-loops) promising to lay out how you actually get there, and in what order. This is that.
 
 People talk about getting there like it's a switch you flip. It isn't. It's six separate investments, and they only pay off in a particular order.
 

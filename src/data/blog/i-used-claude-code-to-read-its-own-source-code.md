@@ -14,17 +14,17 @@ I've been [running my business through Claude Code](/posts/claude-code-for-found
 
 The leaked source tree is 1,884 TypeScript files, 33 MB. Too much for a single pass, even with a 1M token context window.
 
-So I spun up 8 exploration agents in parallel. Each one got a different area: architecture, security, context management, tools, prompts, UI, testing, and a few others. They ran simultaneously, each reporting back a structured summary of what they found.
+So I spun up 8 exploration agents in parallel. Each one got a different area: architecture, security, context management, tools, prompts, UI, testing and a few others. They ran simultaneously, each reporting back a structured summary of what they found.
 
 ![8 exploration agents running in parallel against the Claude Code source tree](../../assets/images/cc-source-code-agents.png)
 
-This is how you explore a large codebase with Claude Code. You don't feed the whole thing in and ask "what's interesting?" You carve it into domains, delegate and synthesise. The parallel agent model isn't theoretical, it's how the tool is designed to work.
+This is how you explore a large codebase with Claude Code. You don't feed the whole thing in and ask "what's interesting?" You carve it into domains, delegate and synthesise. The parallel agent model is how the tool is designed to work.
 
 ## The architecture
 
 Claude Code is a TypeScript monolith running on Bun. 43 tools, 87 slash commands, 83 React hooks. The UI is a custom React-based terminal renderer – 50 files, 1.5 MB of rendering code. They didn't use the npm `ink` package. They built their own.
 
-Why? Hardware-accelerated scrolling via terminal escape sequences. Damage-aware rendering that only redraws what actually changed. Right-to-left text support. Reduced-motion accessibility. The kind of decisions you make when you're optimising something millions of people use all day.
+Why? They wanted hardware-accelerated scrolling via terminal escape sequences, damage-aware rendering that only redraws what changed, right-to-left text support and reduced-motion accessibility. They're the decisions you make when you're optimising something millions of people use all day.
 
 ## The cache trick that makes parallel agents work
 
@@ -42,7 +42,7 @@ This is the most useful thing I found for anyone who uses Claude Code daily. The
 4. **Session memory** – a background agent extracts conversation insights and writes them to a per-session MEMORY.md file. Kicks in after 10+ tool calls
 5. **The CLAUDE.md hierarchy** – four tiers loaded in priority order: managed (enterprise), user, project, local
 
-If you've ever wondered why Claude Code stays coherent across long sessions while other tools lose the plot after 20 minutes, this is why. Five layers, each handling a different failure mode.
+If you've ever wondered why Claude Code stays coherent across long sessions while other tools lose the plot after 20 minutes, this is why.
 
 (These layers exist because most users don't bring a structured memory layer of their own. If you have one – [here's the 5-file system I use](/posts/the-memory-bank-framework) – most of them become unnecessary scaffolding.)
 
@@ -58,7 +58,7 @@ Anti-patterns are explicit in the agent's prompt: "code looks correct", "tests p
 
 Deep in the source tree there's a `buddy/` directory containing a fully realised digital companion system. 18 species (duck, ghost, axolotl, capybara, mushroom), five rarity tiers (1% chance of legendary), hats (crown, propeller, wizard, tiny duck on your duck), and personality stats including CHAOS and SNARK.
 
-Your companion is deterministically generated from your user ID. It's always been there – you just couldn't see it.
+Your companion is deterministically generated from your user ID.
 
 The species names are encoded as `String.fromCharCode()` calls in the source code. Why? To dodge an internal `excluded-strings.txt` canary file that flags unexpected strings during code review. They hid the Easter egg from their own tooling.
 
@@ -76,6 +76,6 @@ It's date-gated to April 2026 but still behind a feature flag – present in the
 
 ## What this tells you
 
-VentureBeat called the leak a "strategic hemorrhage of intellectual property". As a daily user, the source code confirms something simpler: this isn't a wrapper around an LLM. It's a custom operating system for agent-based work – built like a product doing $2.5 billion ARR.
+VentureBeat called the leak a "strategic hemorrhage of intellectual property". As a daily user, I read it more simply: this isn't a wrapper around an LLM. It's a custom operating system for agent-based work – built like a product doing $2.5 billion ARR.
 
-The cache sharing across parallel agents, the five-layer context management, the fail-closed security model – these aren't shortcuts. And the hidden pet with a 1% legendary chance and a tiny duck hat? That's the kind of detail teams add when they genuinely enjoy what they're building.
+And the hidden pet with a 1% legendary chance and a tiny duck hat is the kind of detail a team adds when they genuinely enjoy what they're building.
