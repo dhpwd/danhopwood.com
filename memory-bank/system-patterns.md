@@ -42,7 +42,7 @@ Three constraints bite when editing `src/utils/og-templates/`. All three fail qu
 
 **Solution:** Two registers, each with a fixed treatment:
 
-- **Content** (prose, post furniture): Geist; links use dashed underlines (`decoration-dashed underline-offset-4`) – the site's signature
+- **Content** (prose, post furniture): Geist; links use dashed underlines (`decoration-dashed underline-offset-4`) – the site's signature – at body weight (400, matching every other dashed link; the prose plugin's 500 default is overridden). The underline is the link signal – don't add weight or colour to compensate for its muting
 - **Chrome** (headings, metadata, labels, nav): Geist Mono via the global `h1–h6` base rule or `font-mono`; UI state markers (e.g. `.active-nav`) use solid underlines, not dashed
 
 **When to use:** any new component or restyle. Pick the register, inherit its treatment; don't invent per-component font/underline combinations. Canonical build facts (faces, weights, tokens) live in `tech-context.md` "Type system".
