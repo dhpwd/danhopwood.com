@@ -3,6 +3,7 @@ title: "Claude Code for founders who hate the terminal"
 description: "Paste one command and you'll never have to re-explain your company to AI again."
 pubDatetime: 2026-03-16T12:00:00Z
 modDatetime: 2026-07-24T12:00:00Z
+featured: true
 draft: false
 tags: ["claude-code", "ai", "knowledge-work"]
 ---
