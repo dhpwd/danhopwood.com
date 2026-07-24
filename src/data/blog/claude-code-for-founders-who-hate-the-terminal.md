@@ -14,7 +14,7 @@ Someone in a private founders' group I'm in said they went back to ChatGPT becau
 
 Another person asked whether Claude Code was even worth the effort for non-techies – while watching everyone else rave about it.
 
-Claude Code is built for developers. It assumes you want to write code, know what a "working directory" is and understand technical jargon. So I built a plugin called [Techie](https://github.com/dhpwd/techie) that replaces all of that with plain English. Same power underneath (persistent memory, connected documents, custom workflows) minus the developer assumptions.
+Claude Code is built for developers. It assumes you want to write code, know what a 'working directory' is and understand technical jargon. So I built a plugin called [Techie](https://github.com/dhpwd/techie) that replaces all of that with plain English. Same power underneath (persistent memory, connected documents, custom workflows) minus the developer assumptions.
 
 I had them both introduce themselves:
 
@@ -41,7 +41,7 @@ Paste one command, answer a few questions about your business and walk away with
 - A checkpoint system for saving your work
 - An assistant that remembers where you left off
 
-The terminal is a door, not a skill. One command and you're on the other side. Everything after that is a conversation.
+None of this needs terminal skills. Three pasted commands, start to finish. Everything after that is a conversation.
 
 ## Install
 
@@ -122,9 +122,9 @@ Your strategy document shows up, cleanly formatted, instantly browsable. As you 
 
 ## The hump is behind you
 
-The terminal is a door. You just walked through it.
+The whole terminal part was three pasted commands.
 
-If you want to learn your way around the terminal, type `/learn terminal basics` and Techie will teach you interactively.
+If you want to learn your way around the terminal anyway, type `/learn terminal basics` and Techie will teach you interactively.
 
 If the window still looks ugly, `/setup-theme` will sort it out – fonts, colours, the lot. That's what produced the screenshot at the top.
 
