@@ -2,7 +2,7 @@
 title: "Claude Code for founders who hate the terminal"
 description: "Paste one command and you'll never have to re-explain your company to AI again."
 pubDatetime: 2026-03-16T12:00:00Z
-modDatetime: 2026-04-07T15:00:00Z
+modDatetime: 2026-07-24T12:00:00Z
 draft: false
 tags: ["claude-code", "ai", "knowledge-work"]
 ---
@@ -54,7 +54,7 @@ Open Terminal (Cmd+Space, type "Terminal", hit enter), paste this and hit enter:
 curl -fsSL https://raw.githubusercontent.com/dhpwd/techie/main/install.sh | bash
 ```
 
-This installs Claude Code and Techie, creates a Workspace folder and pre-configures the settings so common actions (reading files, saving work) don't need approval every time.
+This installs Claude Code and Techie, creates a Workspace folder and pre-configures the settings so routine actions (reading files, saving work) don't stop to ask permission every time. A safety check runs in the background and reviews anything risky before it goes ahead.
 
 After running, if Claude Code wasn't already on your machine, the installer will tell you to open a fresh terminal window – your computer needs a new window to recognise the new command.
 
