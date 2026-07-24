@@ -13,7 +13,7 @@ Someone in a private founders' group I'm in said they went back to ChatGPT becau
 
 Another person asked whether Claude Code was even worth the effort for non-techies – while watching everyone else rave about it.
 
-Honestly? Claude Code is built for developers. It assumes you want to write code, know what a "working directory" is and understand technical jargon. So I built a plugin called [Techie](https://github.com/dhpwd/techie) that replaces all of that with plain English. Same power underneath (persistent memory, connected documents, custom workflows) minus the developer assumptions.
+Claude Code is built for developers. It assumes you want to write code, know what a "working directory" is and understand technical jargon. So I built a plugin called [Techie](https://github.com/dhpwd/techie) that replaces all of that with plain English. Same power underneath (persistent memory, connected documents, custom workflows) minus the developer assumptions.
 
 I had them both introduce themselves:
 
@@ -23,15 +23,13 @@ I had them both introduce themselves:
 
 If you use ChatGPT or Claude, you probably have one long conversation thread for each project. You keep going back because each one has all the history and starting fresh means explaining everything again.
 
-Those threads quietly get worse. AI chats have a 'context window': a limit on how much the model holds at once. As the conversation grows, older messages get silently dropped. The things you told it three weeks ago? Gone. And the longer the thread, the worse it handles everything, including what you said five minutes ago.
+Those threads get worse without you noticing. AI chats have a 'context window': a limit on how much the model holds at once. As the conversation grows, the model drops older messages and nothing tells you. The things you told it three weeks ago are gone. And the longer the thread, the worse it handles everything, including what you said five minutes ago.
 
-Claude Code works differently. Your company context lives in files on your computer, not in a chat thread. A memory file loads at the start of every session. Close a conversation, open a new one, lose nothing. Starting fresh is _better_ – clean reasoning, full context, every time.
-
-For the technical deep version (a structured 5-file memory system I use on coding projects) see [the memory bank framework](/posts/the-memory-bank-framework).
+Claude Code works differently. Your company context lives in files on your computer, not in a chat thread. A memory file loads at the start of every session. Close a conversation, open a new one and you lose nothing. Starting fresh is _better_ – clean reasoning, full context, every time.
 
 No more re-explaining. That's the reason to bother.
 
-If you're weighing up [Cowork vs Claude Code](/posts/cowork-vs-claude-code), I wrote about that too. This guide is about getting set up.
+For the technical deep version (a structured 5-file memory system I use on coding projects) see [the memory bank framework](/posts/the-memory-bank-framework). And if you're weighing up [Cowork vs Claude Code](/posts/cowork-vs-claude-code), I wrote about that too – this guide is about getting set up.
 
 ## What you'll have in 15 minutes
 
@@ -46,7 +44,7 @@ The terminal is a door, not a skill. One command and you're on the other side. E
 
 ## Install
 
-You need a Claude Pro ($20/month), Max, Team or Enterprise subscription. If you don't have one yet, create an account at claude.ai. It'll ask you to choose between Chat, Cowork and Code – skip this step. Claude Code authenticates through your subscription regardless.
+You need a Claude Pro ($20/month), Max, Team or Enterprise subscription. If you don't have one yet, create an account at claude.ai. It'll ask you to choose between Chat, Cowork and Code – pick any of them. Claude Code authenticates through your subscription regardless.
 
 Open Terminal (Cmd+Space, type "Terminal", hit enter), paste this and hit enter:
 
@@ -56,11 +54,11 @@ curl -fsSL https://raw.githubusercontent.com/dhpwd/techie/main/install.sh | bash
 
 This installs Claude Code and Techie, creates a Workspace folder and pre-configures the settings so routine actions (reading files, saving work) don't stop to ask permission every time. A safety check runs in the background and reviews anything risky before it goes ahead.
 
-After running, if Claude Code wasn't already on your machine, the installer will tell you to open a fresh terminal window – your computer needs a new window to recognise the new command.
+If Claude Code wasn't already on your machine, the installer will tell you to open a fresh terminal window – your computer needs a new one to recognise the new command.
 
 ![Installer output](../../assets/images/cc-techie-install.png)
 
-**Windows:** The installer is Mac and Linux only. Install Claude Code via PowerShell (`irm https://claude.ai/install.ps1 | iex`), then <a href="https://github.com/dhpwd/techie?tab=readme-ov-file#install" target="_blank">install the Techie plugin manually</a>. Same experience once it's running.
+**Windows:** The installer is Mac and Linux only. Install Claude Code via PowerShell (`irm https://claude.ai/install.ps1 | iex`), then <a href="https://github.com/dhpwd/techie?tab=readme-ov-file#install" target="_blank">install the Techie plugin manually</a>. The installer normally creates your `Workspace` folder, so make it yourself: `mkdir Workspace`. Same experience once it's running.
 
 ## Your first session
 
@@ -92,7 +90,7 @@ Then it sets up two things behind the scenes: a memory file so it remembers this
 
 ![Strategy document created, memory set up](../../assets/images/cc-first-steps-complete.png)
 
-## The moment it clicks
+## Prove it to yourself
 
 Type `/exit`. Open a fresh terminal. Then:
 
@@ -105,17 +103,17 @@ Say hello.
 
 > Welcome back. Last time we created your strategy document.
 
-No pasting. No re-explaining. It picks up where you left off and suggests what to do next.
+No pasting, no re-explaining – it picks up where you left off and suggests what to do next.
 
 ![Returning session – Techie remembers everything](../../assets/images/cc-returning-session.png)
 
-That's what the fuss is about. Not the terminal. The compound memory. Each session builds on the last. Each document feeds the next.
+That's what the fuss is about – not the terminal, the compound memory. Each session builds on the last and each document feeds the next.
 
 ## See your work
 
-The documents Techie creates are known as markdown files – plain text with simple formatting. You can open them in any text editor, but there's a nicer way.
+The documents Techie creates are markdown files – plain text with simple formatting. You can open them in any text editor, but there's a nicer way.
 
-Download [Obsidian](https://obsidian.md) (free). Open it, choose "Open folder as vault" and point it at your **Workspace** folder (the folder itself, not a file inside it).
+Download [Obsidian](https://obsidian.md) (free). Open it, choose "Open folder as vault" and point it at your `Workspace` folder (the folder itself, not a file inside it).
 
 Your strategy document shows up, cleanly formatted, instantly browsable. As you create more documents, they all appear here.
 
@@ -127,7 +125,7 @@ The terminal is a door. You just walked through it.
 
 If you want to learn your way around the terminal, type `/learn terminal basics` and Techie will teach you interactively.
 
-If the window still looks ugly, `/setup-theme` will sort it out: fonts, colours, the lot. That screenshot at the top? That's the result.
+If the window still looks ugly, `/setup-theme` will sort it out – fonts, colours, the lot. That's what produced the screenshot at the top.
 
 A few more commands worth knowing:
 
@@ -138,6 +136,6 @@ A few more commands worth knowing:
 
 ![Obsidian graph view – nine months of compounding documents](../../assets/images/cc-obsidian-graph.png)
 
-This is my Obsidian vault after nine months of working this way. Each node is a document, each line a connection. That blue circle? The first document I created, still connected to everything.
+This is my Obsidian vault after nine months of working this way. Each node is a document, each line a connection. The blue circle is the first document I created – it's still connected to everything.
 
 It looks like a lot. It's really the same idea as day one, just [further along](/posts/maturity-not-complexity).
