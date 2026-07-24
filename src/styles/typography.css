@@ -24,8 +24,8 @@
     }
 
     a {
-      /* font-normal: body weight, overriding the prose plugin's 500 – the
-         dashed underline is the link signal, weight stays out of it. */
+      /* font-normal overrides the prose plugin's 500 default – see
+         system-patterns.md "Type registers". */
       @apply font-normal wrap-break-word text-foreground decoration-dashed underline-offset-4 hover:text-accent focus-visible:no-underline;
       /* Prose links get dashed via @apply, so the a[class~="decoration-dashed"]
          base rule in global.css can't reach them – same token, stated here. */

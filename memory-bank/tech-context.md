@@ -78,7 +78,9 @@ Two faces, two registers, loaded via Astro's experimental fonts API (Google prov
 - **Geist** (`--font-app`) – prose and general UI. Weights 400/500/600/700
 - **Geist Mono** (`--font-mono`) – headings (global `h1–h6` base rule in `global.css`), dates/metadata, breadcrumb, code, UI labels (e.g. copy button). Weights 400/500/600/700
 
-No italic faces exist for Geist – semantic emphasis (`em`, blockquotes) renders as browser-synthesised oblique, which is accepted; decorative italics were removed instead. Don't hand-set font families per component – use the registers (see `system-patterns.md` "Type registers").
+No italic faces exist for Geist – semantic emphasis (`em`, blockquotes) renders as browser-synthesised oblique, which is accepted. Decorative italics were removed instead. Don't hand-set font families per component – use the registers (see `system-patterns.md` "Type registers").
+
+Prose links render at 400, set by `font-normal` on `.app-prose a` in `typography.css`. Keep that override: `@tailwindcss/typography` defaults `a` to 500, so removing it restores a weight nobody chose and nothing in the build warns you. Prose body is 400 and `strong` is 600. Post-title links in `Card.astro` sit in the Chrome register and stay at 600 – the 400 rule is Content-register only. See `system-patterns.md` "Type registers" for why the underline carries the signal alone.
 
 Code blocks highlight with shiki themes `vitesse-light` / `vitesse-dark` (set in `astro.config.ts`), chosen for neutral grounds that sit with the theme palettes.
 
