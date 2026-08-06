@@ -131,4 +131,4 @@ Examples matter twice, though. Once when writing the instructions and again at g
 
 If you like what Claude does but can't stand how it reports it: output style, `keep-coding-instructions: true`. It's a 5-minute fix and it works this afternoon.
 
-If the job was never coding in the first place (an EA, a marketing writer, a ghostwriter), build the agent. It needs more tweaking and the first version will be wrong in places (all three of mine were). The real work is [correcting it over time](/posts/maturity-not-complexity): every miss you catch goes back into the file as a rule, which is why Toby's drafts need less of my time every month.
+If the job was never coding in the first place (an EA, a marketing writer, a ghostwriter), build the agent. It needs more tweaking and the first version will be wrong in places (all three of mine were). The real work is [correcting it over time](/posts/maturity-not-complexity): every miss you catch [goes back into the file as a rule](/posts/the-context-engineering-skill), which is why Toby's drafts need less of my time every month.

@@ -44,7 +44,7 @@ For software, "what good looks like" and "how we know it's good" are the same do
 
 ## 5. Skills for the builds you keep doing
 
-Once you've written the same kind of spec three times, stop writing it by hand. Encode the pattern as a skill: it pulls the right reference doc, scaffolds the spec, wires in the verification gates. A build that took half a day drops to minutes. You only reach this point once spec-writing has gone repetitive, which is why it's fifth and not first.
+Once you've written the same kind of spec three times, stop writing it by hand. [Encode the pattern as a skill](/posts/the-context-engineering-skill): it pulls the right reference doc, scaffolds the spec, wires in the verification gates. A build that took half a day drops to minutes. You only reach this point once spec-writing has gone repetitive, which is why it's fifth and not first.
 
 ## 6. Layered review (the safety net)
 
