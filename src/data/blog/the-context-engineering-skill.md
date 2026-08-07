@@ -66,4 +66,9 @@ The name went through three versions in a day: `/skill-writing`, then `/skills-a
 
 One recommendation isn't written into the files: the skill is model-agnostic, but author and edit these artefacts with the strongest reasoning model you have (Fable right now) even if cheaper models will read/execute the instructions themselves. The hard thinking happens once, at writing time, and every model that loads the file later inherits it. It's the equivalent of getting a seasoned consultant in to design the processes your team executes afterwards.
 
-The full skill is public – all four files, nothing in them specific to my setup: <a href="https://gist.github.com/dhpwd/c3480f753125a8255f27b9add9812d6b" target="_blank" rel="noopener noreferrer">the gist</a>. Copy it into `~/.claude/skills/context-engineering/`, adapt the standards you disagree with and let it load itself the next time you edit a skill.
+The full skill is public, and nothing in it is specific to my setup. Two versions, depending on where you work:
+
+- **Claude Code:** <a href="https://gist.github.com/dhpwd/c3480f753125a8255f27b9add9812d6b" target="_blank" rel="noopener noreferrer">the gist</a> has all four files – click "Download ZIP", unzip it and move them into `~/.claude/skills/context-engineering/`
+- **Cowork:** <a href="https://gist.github.com/dhpwd/bca9d471a4b34c515be7d23706e17bea" target="_blank" rel="noopener noreferrer">a single-file version</a> – the reference files are Claude Code mechanics that don't apply there, so I stripped them out. Same "Download ZIP" and unzip, then upload the `SKILL.md` it contains under Customize > Skills
+
+Either way: adapt the standards you disagree with, and let it load itself the next time you edit a skill.
