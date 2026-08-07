@@ -58,6 +58,8 @@ Most people treat skills as slash commands: something you run at the start of a 
 
 And the trigger doesn't have to be automatic. I invoke it mid-sentence to force the load e.g. "go ahead, following /context-engineering", or "check your edits conform to /context-engineering". A skill's name in a sentence is both the instruction and the nudge to load it. That's why I name skills so they read as part of a normal sentence. "Catch up on /slack" is the entire prompt.
 
+![Invoking /context-engineering mid-sentence in a session with Emma, my EA agent – "audit my claude.md per /context-engineering" loads the skill, and Emma runs the audit against it](../../assets/images/cc-context-engineering-emma-invoke.png)
+
 ## Take it
 
 The name went through three versions in a day: `/skill-writing`, then `/skills-and-agents` when agent definitions joined, then `/context-engineering` when CLAUDE.md coverage did. (I considered `/context-hygiene` and rejected it – hygiene only covers the cleanup, and most of the skill is design decisions.)
