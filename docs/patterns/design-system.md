@@ -39,3 +39,13 @@ The dashed underline is the link signal on its own. `--dashed-decoration` in `gl
 No italic Geist face is loaded. Semantic emphasis (`em`, blockquotes) renders as browser-synthesised oblique, which is accepted. Decorative italics were removed rather than adding a face to carry them.
 
 **When to use:** any new component or restyle.
+
+## Hover raises, never fades
+
+**Problem:** AstroPaper ships several links with `hover:opacity-75`. Fading is the opposite signal to the rest of the site, and it compounds with any tinted child – an `/85` accent inside a 75% parent lands at 64%, which drops small text below WCAG AA in both themes.
+
+**Solution:** interactive elements hover to `hover:text-accent`. The chevron and arrow SVGs use `stroke="currentColor"`, so the whole control picks the colour up from the anchor. Where a child needs to be accent at rest, set it at full strength (`text-accent`, not `text-accent/85`) and let hover carry the change through the parent.
+
+Motion is the one accepted alternative, used for icon rows that are already accent-coloured: `hover:rotate-6` in `Socials.astro` and `ShareLinks.astro`, `hover:-mt-0.5` in `Tag.astro`. Both are additive to a colour change, never a substitute for one on a text link.
+
+**When to use:** any new interactive element, and any AstroPaper component being restyled.
