@@ -44,8 +44,10 @@ No italic Geist face is loaded. Semantic emphasis (`em`, blockquotes) renders as
 
 **Problem:** AstroPaper ships several links with `hover:opacity-75`. Fading is the opposite signal to the rest of the site, and it compounds with any tinted child – an `/85` accent inside a 75% parent lands at 64%, which drops small text below WCAG AA in both themes.
 
-**Solution:** interactive elements hover to `hover:text-accent`. The chevron and arrow SVGs use `stroke="currentColor"`, so the whole control picks the colour up from the anchor. Where a child needs to be accent at rest, set it at full strength (`text-accent`, not `text-accent/85`) and let hover carry the change through the parent.
+**Solution:** interactive elements hover to `hover:text-accent` – `Card.astro`, `Footer.astro`, `Header.astro`, `EditPost.astro` and the prev/next links in `PostDetails.astro` all do. The icon SVGs are `stroke="currentColor"`, so a chevron or arrow picks the colour up from its anchor with no rule of its own.
 
-Motion is the one accepted alternative, used for icon rows that are already accent-coloured: `hover:rotate-6` in `Socials.astro` and `ShareLinks.astro`, `hover:-mt-0.5` in `Tag.astro`. Both are additive to a colour change, never a substitute for one on a text link.
+A child already sitting at `text-accent` can't take that colour change, so it needs a second signal or the largest part of the control stays inert on hover. Put `group` on the anchor and `group-hover:underline decoration-dashed underline-offset-4` on the child – the dashed underline is the site's link signal, and `Card.astro` pairs the two the same way for post titles.
+
+Two exceptions. A filled accent button has the accent in its background rather than its text, so `hover:text-accent` has nothing to change: `NewsletterSignup.astro` fades with `hover:opacity-90` instead. Motion adds to a colour change and never replaces one – `hover:rotate-6` on the `Socials.astro` and `ShareLinks.astro` icon rows, `hover:-mt-0.5` in `Tag.astro`, each sitting on top of a `hover:text-accent` the element sets itself (`Tag.astro`) or inherits from `LinkButton.astro` (the icon rows).
 
 **When to use:** any new interactive element, and any AstroPaper component being restyled.
