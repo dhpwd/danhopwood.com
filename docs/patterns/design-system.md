@@ -15,7 +15,9 @@ Code blocks are the one area with its own palette: the shiki themes `vitesse-lig
 
 **When to use:** any change to the palette or a theme token.
 
-## Two type registers
+## Type
+
+### Two registers
 
 **Problem:** two typefaces are in play, so per-component font choices drift. A new component that hand-picks a face or a link style breaks the visual system and nothing in the build flags it.
 
@@ -26,13 +28,13 @@ Code blocks are the one area with its own palette: the shiki themes `vitesse-lig
 
 Both faces load through Astro's experimental fonts API (Google provider, configured in `astro.config.ts`, preloaded by `<Font>` in `Layout.astro`) at weights 400/500/600/700.
 
-## Don't compensate for the muted underline
+### Don't compensate for the muted underline
 
 The dashed underline is the link signal on its own. `--dashed-decoration` in `global.css` mutes it to 45% of the current colour on purpose, because full-strength 1px dashes read as noise. Adding weight or colour to make links stand out defeats the register: at `strong`'s weight an emphasised phrase and a link become indistinguishable.
 
 `typography.css` sets `font-normal` on `.app-prose a` for this reason. `@tailwindcss/typography` defaults links to 500, so removing that override restores a weight nobody chose and nothing in the build warns you. Post-title links in `Card.astro` sit in the Chrome register and stay at 600 – the 400 rule is Content-register only.
 
-## No italics
+### No italics
 
 No italic Geist face is loaded. Semantic emphasis (`em`, blockquotes) renders as browser-synthesised oblique, which is accepted. Decorative italics were removed rather than adding a face to carry them.
 

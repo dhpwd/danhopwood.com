@@ -30,7 +30,7 @@ pnpm generate:favicons  # regenerate public/ favicons from the brand tokens
 ### Full verify (at completion)
 
 1. Preflight
-2. `pnpm run build` – runs `astro check`, then the production build
+2. `pnpm run build` – `astro check`, the production build, then Pagefind, which writes its index into `public/`
 
 ## Pattern index
 

@@ -1,6 +1,6 @@
 # External services
 
-Three services sit outside the repo. Their dashboard state can't be read from the code, so it is recorded here.
+Three services sit outside the repo. How the site talks to each is recorded here. Their dashboard state is not – it changes without a commit, so a snapshot of it here would go stale with nothing to catch it. Where a gap is known, the ticket owns it.
 
 ## Vercel
 
@@ -11,7 +11,7 @@ Hosts the site from the `dhpwd/danhopwood.com` GitHub repo. `danhopwood.com` is 
 - `trailingSlash: false` – see `docs/patterns/urls.md`
 - `redirects` – permanent redirects for renamed post slugs
 
-`dhpwd.com` and `www.danhopwood.com` are both meant to redirect to the apex domain. Neither points at Vercel: `dhpwd.com` still resolves to its previous host and `www.danhopwood.com` has no DNS record.
+`dhpwd.com` and `www.danhopwood.com` are both meant to redirect to the apex domain. Wiring that up is FID-547.
 
 ## Plausible
 
@@ -22,7 +22,7 @@ Custom events use Title Case with spaces, the Plausible convention. `plausible` 
 - **Newsletter Signup** – from `trackSignup()` in `NewsletterSignup.astro`, on both Ajax success and the native form fallback
 - **Share Link** – on click in `ShareLinks.astro`, with `{ props: { platform } }` for a per-platform breakdown
 
-Each event needs a matching goal in the Plausible dashboard before it reports. The script loads from `plausible.io` directly, so ad blockers suppress it – routing it through `danhopwood.com` with a `vercel.json` rewrite is the fix, and no rewrite is configured.
+Each event needs a matching goal in the Plausible dashboard before it reports. The script loads from `plausible.io` directly, so ad blockers suppress it – proxying it through `danhopwood.com` with a `vercel.json` rewrite is the fix, and that is FID-548.
 
 ## Buttondown
 

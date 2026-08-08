@@ -16,4 +16,4 @@ Five constraints bite when editing them. None of them fails the build – you ge
 
 Asset paths inside these templates resolve from `process.cwd()` – see `docs/patterns/astro-build.md`.
 
-**When to use:** any edit to the templates, the palette, or the text they render.
+**When to use:** any edit to the templates, the palette or the text they render.
