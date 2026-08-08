@@ -4,7 +4,8 @@
  *
  * Standalone script run directly by node (`pnpm generate:favicons`), so
  * paths resolve from import.meta.url, not process.cwd() – see
- * memory-bank/system-patterns.md "Satori OG templates" for the split.
+ * docs/patterns/astro-build.md "Module paths in bundled code vs standalone
+ * scripts" for the split.
  *
  * Colours mirror src/styles/global.css light-mode tokens by hand (satori
  * resolves no CSS custom properties): --accent #0f766e, --background
