@@ -4,9 +4,9 @@ Personal site for Dan Hopwood, a public lab notebook built on the AstroPaper v5.
 
 @~/Workspace/cli-agents/shared/coding.md
 
-## Strategic context
+## Constraints
 
-<!-- Digest of vault strategy: only constraints that change engineering decisions in this repo, stated as rules, not narrative. The vault is canonical – when vault strategy moves, update this digest, never the reverse. Never replace the digest with a vault link: sessions must be self-sufficient in the repo. -->
+<!-- Only what changes engineering decisions in this repo, stated as rules, not narrative. Never replace a constraint with a link: sessions must be self-sufficient in the repo. -->
 
 - **The repo is public** – the "Edit on GitHub" link on every post depends on it. Everything committed is world-readable, including `docs/` and commit messages. Commit only what building the site needs, and keep business strategy, positioning and competitive context out of the repo
 
