@@ -1,7 +1,11 @@
 {
   "permissions": {
     "allow": [
-      "mcp__astro-docs__search_astro_docs"
+      "mcp__astro-docs__search_astro_docs",
+      "Bash(pnpm run lint)",
+      "Bash(pnpm run check)",
+      "Bash(pnpm run format:check)",
+      "Bash(pnpm run build)"
     ]
   }
 }
