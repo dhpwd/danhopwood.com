@@ -41,8 +41,6 @@ const readingTime = post.body ? calculateReadingTime(post.body) : undefined;
 
 let ogImageUrl: string | undefined;
 
-// A string `ogImage` is an absolute URL to a remote image; the object form is a
-// local asset resolved by Astro.
 if (typeof initOgImage === "string") {
   ogImageUrl = initOgImage;
 } else if (initOgImage?.src) {
@@ -227,8 +225,9 @@ const nextPost =
       const wrapper = document.createElement("div");
       wrapper.style.position = "relative";
 
-      // --file-name-offset is set by src/utils/transformers/fileName.js on
-      // blocks carrying a file label. Share its offset so the two line up.
+      // src/utils/transformers/fileName.js sets --file-name-offset on every
+      // code block it processes. Reusing it puts the button on the same line
+      // as a file label, where one is rendered.
       const computedStyle = getComputedStyle(codeBlock);
       const hasFileNameOffset =
         computedStyle.getPropertyValue("--file-name-offset").trim() !== "";

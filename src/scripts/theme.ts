@@ -56,12 +56,12 @@ if (window.theme) {
   };
 }
 
-// The inline script cannot set the theme-color meta: it reads the body
-// background, and <body> does not exist yet when that script runs.
+// The inline script in Layout.astro sets data-theme only: the theme-color meta
+// is taken from the body background, and <body> does not exist when it runs.
 reflectPreference();
 
 function setThemeFeature(): void {
-  // Re-run on every navigation so the button's aria-label matches the theme.
+  // A swap replaces the theme button, so its aria-label needs setting again.
   reflectPreference();
 
   document.querySelector("#theme-btn")?.addEventListener("click", () => {

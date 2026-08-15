@@ -31,7 +31,7 @@ export const transformerFileName = ({
 
     if (!file) return;
 
-    // The label is positioned above the block, so it needs the room.
+    // The label sits at or above the block's top edge, so it needs the room.
     this.addClassToHast(
       node,
       `mt-8 ${style === "v1" ? "rounded-tl-none" : ""}`

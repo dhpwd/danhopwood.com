@@ -223,7 +223,7 @@ const structuredDataJSON = JSON.stringify(structuredData).replace(
 
         document.firstElementChild?.setAttribute("data-theme", themeValue);
 
-        // Picked up by src/scripts/theme.ts, which loads after paint.
+        // Picked up by src/scripts/theme.ts, loaded at the end of <body>.
         window.theme = {
           themeValue: themeValue,
           getTheme: () => window.theme.themeValue,
