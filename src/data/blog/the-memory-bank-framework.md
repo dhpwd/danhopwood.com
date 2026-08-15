@@ -9,11 +9,9 @@ tags: ["claude-code", "ai", "agentic-coding"]
 
 _Updated July 2026: the framework originally had six files. progress.md turned out to be a hand-maintained copy of `git log`, so I retired it. The post now describes the five-file version – [there's a new section on why](#there-used-to-be-a-sixth-file)._
 
-You come back to a project on Monday. You tell the agent what you're working on and it proposes the solution you talked it out of three days ago.
+The memory bank is a structured memory layer: five files at the root of the project. The agent reads them at the start of every session and updates them after significant work. Cross-session context lives in files you control, not inside the session itself.
 
-You re-explain. The next session opens with the same amnesia and the loop starts over.
-
-The fix I use is a structured memory layer called the memory bank: five files at the root of the project. The agent reads them at the start of every session and updates them after significant work. Cross-session context lives in files you control, not inside the session itself.
+The problem it fixes: you come back to a project on Monday, tell the agent what you're working on and it proposes the solution you talked it out of three days ago. You re-explain. The next session opens with the same amnesia and the loop starts over.
 
 ## Five files
 
