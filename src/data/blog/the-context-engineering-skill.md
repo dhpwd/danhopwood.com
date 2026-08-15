@@ -6,11 +6,9 @@ draft: false
 tags: ["claude-code", "agentic-coding", "ai"]
 ---
 
-Every skill in my Claude Code setup is a living file. A skill is just a markdown file of instructions for a particular job – and when a workflow breaks, the fix goes straight into the skill that ran it so the same thing [doesn't happen again](/posts/maturity-not-complexity). I make those edits constantly, and for weeks nearly every one ended with me typing the same sentence: "check the skill for unnecessary reasoning – anything that doesn't change behaviour goes."
+A skill in Claude Code is just a markdown file of instructions for a particular job. `/context-engineering` is the skill that carries the standards for writing skills – and [agent definitions](/posts/two-ways-to-change-claudes-personality), and CLAUDE.md files. Its description tells Claude to load it whenever one of those is being created or edited, so the standard applies itself.
 
-That sentence is a quality standard and I was applying it by hand, edit after edit. Which is exactly the signal <a href="https://code.claude.com/docs/en/skills" target="_blank" rel="noopener noreferrer">Anthropic's docs</a> give for creating a skill in the first place: an instruction you keep repeating is a skill you haven't written yet. It took me an embarrassing amount of time to notice that the instruction I kept repeating was _about skills_.
-
-So this week I encoded it. `/context-engineering` is a skill that carries the standards for writing skills – and [agent definitions](/posts/two-ways-to-change-claudes-personality), and CLAUDE.md files. Its description tells Claude to load it whenever one of those is being created or edited, so the standard applies itself. I haven't typed that sentence since.
+I built it because I kept typing the same sentence. Every skill in my setup is a living file – when a workflow breaks, the fix goes straight into the skill that ran it so the same thing [doesn't happen again](/posts/maturity-not-complexity). For weeks nearly every one of those edits ended with me typing: "check the skill for unnecessary reasoning – anything that doesn't change behaviour goes." Which is exactly the signal <a href="https://code.claude.com/docs/en/skills" target="_blank" rel="noopener noreferrer">Anthropic's docs</a> give for creating a skill in the first place: an instruction you keep repeating is a skill you haven't written yet. It took me an embarrassing amount of time to notice that the instruction I kept repeating was _about skills_. I haven't typed that sentence since.
 
 ## The standards, distilled
 
