@@ -1,6 +1,8 @@
 # Writing posts
 
-Posts are markdown files in `src/data/blog/`, loaded by the glob `**/[^_]*.md`. A leading underscore keeps a file out of the build, which is how idea lists and unfinished drafts sit in the repo without publishing.
+Posts are markdown files in `src/data/blog/`, loaded by the glob `**/[^_]*.md`. A leading underscore on the filename keeps a post out of the build, which is how idea lists and unfinished drafts sit in the repo without publishing.
+
+The underscore only works on filenames. `[^_]` tests that segment alone, so a `_drafts/` directory is still walked and every post inside it publishes – with the underscore stripped from the URL, so `_drafts/my-post.md` lands at `/posts/my-post`. Prefix the filename, or set `draft: true`.
 
 The homepage is the post list. There is no splash page, no hero and no "blog" label.
 
