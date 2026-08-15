@@ -15,7 +15,6 @@ import { getPostModDates } from "./src/utils/getPostModDates";
 // Post URL path -> last-modified date, for sitemap <lastmod> freshness signals.
 const postModDates = getPostModDates();
 
-// https://astro.build/config
 export default defineConfig({
   site: SITE.website,
   trailingSlash: "never",

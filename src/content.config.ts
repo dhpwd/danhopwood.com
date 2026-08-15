@@ -16,8 +16,8 @@ const blog = defineCollection({
       draft: z.boolean().optional(),
       tags: z.array(z.string()).default(["others"]),
       ogImage: image().or(z.string()).optional(),
-      // 200 ≈ the three-line budget of the OG share card – overruns fail
-      // the build here rather than truncating the card silently
+      // 200 ≈ the three-line budget of the OG share card – see
+      // docs/patterns/og-images.md
       description: z.string().max(200),
       canonicalURL: z.string().optional(),
       hideEditPost: z.boolean().optional(),

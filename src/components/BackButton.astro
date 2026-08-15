@@ -20,7 +20,8 @@ import { SITE } from "@/config";
 }
 
 <script>
-  /* Update Search Praam */
+  // The search page writes its own URL, query included, to sessionStorage as
+  // "backUrl", so "Go back" returns to those results rather than the home page.
   function updateGoBackUrl() {
     const backButton: HTMLAnchorElement | null =
       document.querySelector("#back-button");

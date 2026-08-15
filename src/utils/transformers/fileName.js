@@ -1,22 +1,16 @@
 /**
- * CustomShiki transformer that adds file name labels to code blocks.
+ * Shiki transformer for the `file="filename"` meta attribute on a code block.
  *
- * This transformer looks for the `file="filename"` meta attribute in code blocks
- * and creates a styled label showing the filename. It supports two different
- * styling options and can optionally hide the green dot indicator.
- *
- * @param {Object} options - Configuration options for the transformer
- * @param {string} [options.style="v2"] - The styling variant to use
- *   - `"v1"`: Tab-style with rounded top corners, positioned at top-left
- *   - `"v2"`: Badge-style with border, positioned at top-left with offset
- * @param {boolean} [options.hideDot=false] - Whether to hide the green dot indicator
+ * `style` picks the label treatment: `"v1"` sits it as a tab above the block,
+ * `"v2"` as a badge overlapping the top border. The `--file-name-offset`
+ * custom property it sets is read by the copy-button script in
+ * `src/layouts/PostDetails.astro`, which shares that position.
  */
 export const transformerFileName = ({
   style = "v2",
   hideDot = false,
 } = {}) => ({
   pre(node) {
-    // Add CSS custom property to the node
     const fileNameOffset = style === "v1" ? "0.75rem" : "-0.75rem";
     node.properties.style =
       (node.properties.style || "") + `--file-name-offset: ${fileNameOffset};`;
@@ -37,13 +31,12 @@ export const transformerFileName = ({
 
     if (!file) return;
 
-    // Add additional margin to code block
+    // The label is positioned above the block, so it needs the room.
     this.addClassToHast(
       node,
       `mt-8 ${style === "v1" ? "rounded-tl-none" : ""}`
     );
 
-    // Add file name to code block
     node.children.push({
       type: "element",
       tagName: "span",

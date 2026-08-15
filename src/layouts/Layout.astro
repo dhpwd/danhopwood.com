@@ -112,7 +112,6 @@ const structuredDataJSON = JSON.stringify(structuredData).replace(
     <link rel="canonical" href={canonicalURL} />
     <meta name="generator" content={Astro.generator} />
 
-    <!-- Load Fonts -->
     <Font
       cssVariable="--font-geist"
       preload={[{ subset: "latin", weight: 400, style: "normal" }]}
@@ -122,25 +121,22 @@ const structuredDataJSON = JSON.stringify(structuredData).replace(
       preload={[{ subset: "latin", weight: 400, style: "normal" }]}
     />
 
-    <!-- General Meta Tags -->
     <title>{title}</title>
     <meta name="title" content={title} />
     <meta name="description" content={description} />
     <meta name="author" content={author} />
     <link rel="sitemap" href="/sitemap-index.xml" />
 
-    <!-- Open Graph / Facebook -->
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonicalURL} />
     <meta property="og:image" content={socialImageURL} />
-    <!-- All OG images (default, dynamic generator, post overrides) are 1200x630 -->
+    <!-- Every OG image is 1200x630 – see docs/patterns/machine-readability.md -->
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
     <meta property="og:site_name" content="danhopwood.com" />
     <meta property="og:type" content={pubDatetime ? "article" : "website"} />
 
-    <!-- Article Published/Modified time -->
     {
       pubDatetime && (
         <meta
@@ -158,22 +154,18 @@ const structuredDataJSON = JSON.stringify(structuredData).replace(
       )
     }
 
-    <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image" />
     <meta property="twitter:url" content={canonicalURL} />
     <meta property="twitter:title" content={title} />
     <meta property="twitter:description" content={description} />
     <meta property="twitter:image" content={socialImageURL} />
 
-    <!-- Google JSON-LD Structured data -->
     <script
       type="application/ld+json"
       is:inline
       set:html={structuredDataJSON}
     />
 
-    <!-- Enable RSS feed auto-discovery  -->
-    <!-- https://docs.astro.build/en/recipes/rss/#enabling-rss-feed-auto-discovery -->
     <link
       rel="alternate"
       type="application/rss+xml"
@@ -184,9 +176,7 @@ const structuredDataJSON = JSON.stringify(structuredData).replace(
     <meta name="theme-color" content="" />
 
     {
-      // If PUBLIC_GOOGLE_SITE_VERIFICATION is set in the environment variable,
-      // include google-site-verification tag in the heading
-      // Learn more: https://support.google.com/webmasters/answer/9008080#meta_tag_verification&zippy=%2Chtml-tag
+      // https://support.google.com/webmasters/answer/9008080#meta_tag_verification&zippy=%2Chtml-tag
       PUBLIC_GOOGLE_SITE_VERIFICATION && (
         <meta
           name="google-site-verification"
@@ -197,7 +187,6 @@ const structuredDataJSON = JSON.stringify(structuredData).replace(
 
     <ClientRouter />
 
-    <!-- Privacy-friendly analytics by Plausible -->
     <script async src="https://plausible.io/js/pa-5_pTbyn4WENDkAje9-m4P.js"
     ></script>
     <script is:inline>
@@ -215,7 +204,8 @@ const structuredDataJSON = JSON.stringify(structuredData).replace(
       plausible.init();
     </script>
 
-    <!-- Minimal inline script to prevent FOUC - sets theme immediately -->
+    <!-- Inline and blocking: the theme must be set before first paint, or the
+    page flashes the wrong one -->
     <script is:inline>
       (function () {
         const initialColorScheme = ""; // "light" | "dark"
@@ -231,10 +221,9 @@ const structuredDataJSON = JSON.stringify(structuredData).replace(
 
         const themeValue = getPreferTheme();
 
-        // Set theme immediately to prevent flash
         document.firstElementChild?.setAttribute("data-theme", themeValue);
 
-        // Export minimal API for external script
+        // Picked up by src/scripts/theme.ts, which loads after paint.
         window.theme = {
           themeValue: themeValue,
           getTheme: () => window.theme.themeValue,
@@ -248,7 +237,6 @@ const structuredDataJSON = JSON.stringify(structuredData).replace(
   <body>
     <slot />
 
-    <!-- Load full theme logic -->
     <script src="../scripts/theme.ts"></script>
   </body>
 </html>

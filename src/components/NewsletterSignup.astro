@@ -121,6 +121,7 @@ const { compact = false } = Astro.props;
       });
   }
 
-  // Re-attach on every navigation (View Transitions support)
+  // The client router swaps the DOM without re-running this module, so the
+  // listeners have to be re-attached per navigation.
   document.addEventListener("astro:page-load", initNewsletterForms);
 </script>
