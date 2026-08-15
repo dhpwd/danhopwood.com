@@ -8,9 +8,9 @@ tags: ["claude-code", "ai", "knowledge-work"]
 
 You look at someone else's AI setup – the skills, the agents, the folder structure – and quietly conclude it's a level of complexity you'll never reach. So you don't start. Or you start and abandon it the first time it gets messy. That feeling does the damage long before the complexity would have.
 
-The conclusion is built on something that isn't true.
+The conclusion is built on something that isn't true: their setup isn't more complex than yours, it's more mature.
 
-I've been running my company entirely with AI agents for ten months, ever since I moved the documents out of Notion and a chatbot, into plain files the AI reads directly. That's long enough for the setup to be well past day one. It took me a while to work out why, and longer to put it into words.
+I've been running my company entirely with AI agents for ten months, ever since I moved the documents out of Notion and a chatbot, into plain files the AI reads directly. That's long enough for the setup to be well past day one.
 
 ## It's the same idea, it's just had longer to grow
 
