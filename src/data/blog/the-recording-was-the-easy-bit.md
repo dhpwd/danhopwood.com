@@ -8,19 +8,11 @@ tags: ["ai", "tools", "agentic-coding"]
 
 A transcript email lands in your inbox. You glance at it, think "I'll read that later" but never do. Most call transcripts die in someone's downloads folder, six minutes after the call ends.
 
-The recorder I wrote about [last week](/posts/i-replaced-granola-in-2-hours) drops a markdown file into `~/call-transcripts/inbox/` after each call. On its own, that's not progress. A transcript sitting in a folder is data, not information.
-
-## Most transcripts die in Notion
-
-When I tell people I auto-record my calls, the next question is usually "where do they go?" For most people, the honest answer is: nowhere useful. The transcript gets dropped into a Notion page, an Apple Notes scratch file or the bottom of an email thread – on the assumption that they'll come back to it. They almost never do.
-
-It's data that was true once, parked in a place where nothing reads it.
-
-The problem isn't the transcript. The problem is that there's no pipeline.
+The recorder I wrote about [last week](/posts/i-replaced-granola-in-2-hours) drops a markdown file into `~/call-transcripts/inbox/` after each call. On its own, that's not progress: a transcript sitting in a folder is data, not information. The problem isn't the transcript. The problem is that there's no pipeline.
 
 ## What I run
 
-Every call transcript that lands in `~/call-transcripts/inbox/` goes through three layers before it stops being raw material.
+Every transcript that lands in the inbox goes through three layers before it stops being raw material.
 
 **Layer 1: the recorder.** It drops a markdown file with minimal frontmatter: date, platform, meeting title, participants, duration, the Recall upload ID. That's the artefact.
 
@@ -64,7 +56,7 @@ Step back and you'll see a familiar pattern.
 - **Distilled interaction note = information.** A condensed, account-contextualised summary. The agent has interpreted the call against everything it knows about the account's strategy, decisions and history
 - **Account context update = intelligence.** What changed because of this call: shifts in priority, new objections, decisions made. This is the layer that drives what I do next
 
-The same agent does all three steps, but the artefacts are distinct. Each layer has a different shelf life and a different purpose. Confuse them and the pipeline collapses back into the Notion-page graveyard.
+The same agent does all three steps, but the artefacts are distinct. Each layer has a different shelf life and a different purpose. Confuse them and the pipeline collapses back into the downloads-folder graveyard.
 
 If this sounds like a warehouse pattern (source data, conformed model, semantic layer), it's because it is.
 
