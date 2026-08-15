@@ -10,9 +10,7 @@ tags: ["claude-code", "ai", "knowledge-work"]
 
 _Updated April 2026: the original guide had four terminal commands. I've since built a plugin called Techie that replaces them. Rewritten end-to-end._
 
-Someone in a private founders' group I'm in said they went back to ChatGPT because the terminal hurt their eyes. The fonts, the lack of visual hierarchy, the clipboard not working how they expected. They hated it.
-
-Another person asked whether Claude Code was even worth the effort for non-techies – while watching everyone else rave about it.
+Someone in a private founders' group I'm in went back to ChatGPT because the terminal hurt their eyes – the fonts, the lack of visual hierarchy, the clipboard not working how they expected. Another asked whether Claude Code was even worth the effort for non-techies, while watching everyone else rave about it.
 
 Claude Code is built for developers. It assumes you want to write code, know what a 'working directory' is and understand technical jargon. So I built a plugin called [Techie](https://github.com/dhpwd/techie) that replaces all of that with plain English. Same power underneath (persistent memory, connected documents, custom workflows) minus the developer assumptions.
 
