@@ -50,6 +50,6 @@ Step back from Claude Code for a moment, because the progression isn't a coding 
 
 The shift is from doing the task, to specifying the task, to designing the system that specifies and verifies the task for you. That last step is where 'writing loops' lives.
 
-Work that out, and the quote stops being about Claude Code. I run my company by building the systems that do the work, instead of doing the work myself. Boris's line is the coding version of it, and 'writing loops' is a better name than any I had. The same progression is there anywhere you can define an outcome and check whether it's been hit.
+I run my company the same way: I build the systems that do the work, instead of doing the work myself. Boris's line is the coding version of it, and 'writing loops' is a better name than any I had. The same progression is there anywhere you can define an outcome and check whether it's been hit.
 
 The question the quote leaves you with is what to put in place, and in what order. Verification capacity before orchestration, the same way you don't build a factory before you can test what comes off the line. You move up a level at a time, over months, the way you [build any of this](/posts/maturity-not-complexity). The order is its own piece, and I've [written it up in full](/posts/the-order-you-build-a-software-factory-in).
