@@ -73,5 +73,3 @@ The full practical guide (how to initialise one, the session loop, the disciplin
 Install a memory bank because you're sick of re-explaining your project.
 
 Keep it because it stops your codebase drifting.
-
-Forgetting is the problem that shrinks. Drift is the problem that grows.
