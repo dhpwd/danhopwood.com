@@ -6,13 +6,9 @@ draft: false
 tags: ["claude-code", "agentic-coding", "ai"]
 ---
 
-Two questions landed in a founder group I'm in over the past fortnight, and they turned out to be the same question.
+An output style fixes Claude's default voice in about five minutes – the word soup in every title, the "let me be straight" before perfectly routine statements. Running a custom agent as the main agent goes further and replaces the persona entirely. Which you want comes down to one question: how much of Claude's default identity do you want to keep?
 
-The first was a complaint about Claude's writing style. You know the one: word soup in every title, "let me be straight" before perfectly routine statements, every answer structured like a keynote. It had got bad enough that the founder raising it was tuning out what Claude was actually telling him.
-
-The second came a week later from someone who'd built a tone-of-voice doc for their content, watched the AI-isms creep back in anyway, and wanted to know whether it was worth going further and building a dedicated agent.
-
-How much of Claude's default identity do you want to keep? I told the group I'd write up how I handle both ends of it, so here it is.
+That question landed twice in a founder group I'm in over the past fortnight. One founder was tuning out Claude's keynote-speak, another had watched AI-isms creep back in despite a tone-of-voice doc, so I said I'd write up how I handle both.
 
 ## It all comes back to the system prompt
 
