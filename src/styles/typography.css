@@ -48,7 +48,8 @@
     }
 
     figcaption {
-      @apply opacity-75;
+      /* Centred to sit under the images, which are themselves mx-auto. */
+      @apply text-center opacity-75;
     }
 
     table {
