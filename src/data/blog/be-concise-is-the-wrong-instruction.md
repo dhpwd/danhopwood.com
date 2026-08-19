@@ -20,11 +20,13 @@ A real colleague doesn't come back with all the detail. And they don't come back
 
 That decouples the reply from the work. The agent still works at full depth, and the artefacts it produces (reports, drafts, analysis) keep whatever depth they need – only the reply is capped at message depth, and it points at the artefacts instead of repeating them.
 
-Here's the difference in practice. I asked "what site improvements have been made in the last 3 months?" twice in this site's repo – once under each set of instructions. Before: 400 words, and the terminal still cuts it off. After: 202, and nothing I'd act on is missing.
+Here's the difference in practice. I asked "what site improvements have been made in the last 3 months?" twice in this site's repo – first to the default agent, then with the Slack output style:
 
-![Claude answering "what site improvements have been made in the last 3 months?" under the old instructions – 400 words of headed sections, cut off by the terminal](../../assets/images/cc-slack-reply-before.png)
+![Claude answering "what site improvements have been made in the last 3 months?" as the default agent – headed sections cut off by the terminal](../../assets/images/cc-slack-reply-before.png)
+_Default agent: 400 words of headed sections – so long I couldn't fit the full response in the screenshot._
 
-![The same question under the Slack instruction – 202 words, outcome first, ending with an offer to pull the diffs for detail](../../assets/images/cc-slack-reply-after.png)
+![The same question under the Slack output style – a short message leading with the outcome and ending with an offer to pull the diffs for detail](../../assets/images/cc-slack-reply-after.png)
+_Slack output style: 202 words, and far easier to digest – it leads with the outcome, uses plain sentences, and nothing I'd act on is missing._
 
 ## The file
 
