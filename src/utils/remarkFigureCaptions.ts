@@ -2,26 +2,18 @@ import type { Paragraph, PhrasingContent, Root } from "mdast";
 import { visit } from "unist-util-visit";
 
 /**
- * Renders an image followed by an italic line as a <figure>/<figcaption> pair:
+ * Renders an image followed by an italic line on the next line as a
+ * <figure>/<figcaption> pair.
  *
- *     ![alt text](../../assets/images/example.png)
- *     _The caption._
- *
- * The caption stays ordinary markdown rather than an image `title`, so it is
- * processed like any other prose (links, emphasis, inline code and smart
- * punctuation all apply) and remains visible wherever the post is read as raw
- * markdown – see docs/patterns/images.md.
- *
- * Operating on the mdast, and via hName rather than raw HTML, keeps the image
- * a genuine `image` node: Astro's own collection and optimisation passes run
- * over it unchanged.
+ * Why a caption is authored this way rather than as an image `title`:
+ * docs/patterns/images.md. Why this rewrites the mdast and sets hName instead
+ * of emitting raw HTML, which is what preserves Astro's image optimisation:
+ * docs/patterns/astro-build.md.
  */
 
-// A line break between the image and the caption arrives as a text node holding
-// the newline, or as an explicit `break` where the author left two trailing
-// spaces. Requiring the newline is what separates a caption from emphasis
-// written alongside the image on the same line, which is divided from it by a
-// plain space and has to stay inline prose.
+// A line break arrives as a text node holding the newline, or as an explicit
+// `break` where the author left two trailing spaces. Requiring the newline is
+// what keeps emphasis written alongside an image on one line as inline prose.
 function isLineBreak(node: PhrasingContent): boolean {
   return (
     node.type === "break" || (node.type === "text" && node.value.includes("\n"))
