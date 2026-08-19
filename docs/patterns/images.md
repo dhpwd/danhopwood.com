@@ -18,7 +18,7 @@ The caption is ordinary markdown, so the whole pipeline applies to it: smart pun
 
 The plugin rewrites the mdast and sets `hName` rather than emitting raw HTML, which leaves the node a genuine `image`. Astro's own collection and optimisation passes then run over it exactly as they do over an uncaptioned image – WebP, responsive `srcset` and all.
 
-Alt text and caption do different jobs, so write both: alt describes the image for screen readers, the caption is prose everyone reads. To opt out, put a blank line between the image and the italic line – a standalone emphasised paragraph is never captioned.
+Alt text and caption do different jobs, so write both: alt describes the image for screen readers, the caption is prose everyone reads. To opt out, put a blank line between the image and the italic line – a standalone emphasised paragraph is never captioned. Emphasis written alongside an image on the same line stays inline prose, so only a genuine line break makes a caption.
 
 **Favicons are generated, not drawn.** `pnpm generate:favicons` renders the "dh" monogram in Geist Mono on the teal accent, hand-mirroring the light-mode `--accent` and `--background` values because satori resolves no CSS custom properties. Changing either token means editing the script and regenerating – see `docs/patterns/design-system.md`.
 
