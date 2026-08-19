@@ -9,6 +9,7 @@ import {
   transformerNotationWordHighlight,
 } from "@shikijs/transformers";
 import { transformerFileName } from "./src/utils/transformers/fileName";
+import { remarkFigureCaptions } from "./src/utils/remarkFigureCaptions";
 import { SITE } from "./src/config";
 import { getPostModDates } from "./src/utils/getPostModDates";
 
@@ -30,7 +31,11 @@ export default defineConfig({
     }),
   ],
   markdown: {
-    remarkPlugins: [remarkToc, [remarkCollapse, { test: "Table of contents" }]],
+    remarkPlugins: [
+      remarkToc,
+      [remarkCollapse, { test: "Table of contents" }],
+      remarkFigureCaptions,
+    ],
     shikiConfig: {
       // For more themes, visit https://shiki.style/themes
       themes: { light: "vitesse-light", dark: "vitesse-dark" },
