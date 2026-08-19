@@ -17,12 +17,14 @@ import { visit } from "unist-util-visit";
  * over it unchanged.
  */
 
-// A newline between the image and the caption arrives as a whitespace-only text
-// node. Two trailing spaces make it an explicit `break`. Both mean the author
-// wrote the caption on the line directly below.
+// A line break between the image and the caption arrives as a text node holding
+// the newline, or as an explicit `break` where the author left two trailing
+// spaces. Requiring the newline is what separates a caption from emphasis
+// written alongside the image on the same line, which is divided from it by a
+// plain space and has to stay inline prose.
 function isLineBreak(node: PhrasingContent): boolean {
   return (
-    node.type === "break" || (node.type === "text" && node.value.trim() === "")
+    node.type === "break" || (node.type === "text" && node.value.includes("\n"))
   );
 }
 
