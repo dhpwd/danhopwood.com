@@ -6,7 +6,7 @@ draft: false
 tags: ["claude-code", "agentic-coding", "ai"]
 ---
 
-My agents don't run on my laptop any more. They run on a €30-a-month Linux box that never turns off, where the laptop and phone are just windows into it. Close the lid mid-session, open the phone in an airport, and the agents have been working the whole time. Here's why the hosted products didn't fit, the stack that did, and the scripts to build your own.
+My agents don't run on my laptop any more. They run on a €30-a-month Linux box that never turns off, where the laptop and phone are just windows into it. Close the lid mid-session, open the phone at the airport, and the agents have been working the whole time. Here's why the hosted products didn't fit, the stack that did, and the scripts to build your own.
 
 ![Diagram: a laptop and a phone connect through a Tailscale private network to one Linux box holding three tmux sessions, each running a Claude Code process. Nothing runs on the laptop or phone.](../../assets/images/cc-cloud-box-topology.png)
 
