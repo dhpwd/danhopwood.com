@@ -55,6 +55,12 @@ export default defineConfig({
     // This will be fixed in Astro 6 with Vite 7 support
     // See: https://github.com/withastro/astro/issues/14030
     plugins: [tailwindcss()],
+    server: {
+      // Dev previews are served from the cloud box and opened on the laptop
+      // over the tailnet by MagicDNS name. Vite rejects any hostname it does
+      // not know, so the name is allowed here.
+      allowedHosts: ["cloud-box"],
+    },
     optimizeDeps: {
       exclude: ["@resvg/resvg-js"],
     },
