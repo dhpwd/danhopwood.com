@@ -18,7 +18,7 @@ Here's the order, from prerequisite to polish.
 
 ## 1. Verification capacity (build this first)
 
-Before anything else, the work has to be able to tell you whether it's right. A test framework, CI, browser automation, something watching what the running system actually does. You build it once and every task reuses it.
+Before anything else, the work has to be able to tell you whether it's right. A test framework, CI, browser automation, something watching what the running system actually does. You build it once and every task reuses it. It helps to have somewhere for it to run that doesn't switch off with your laptop – mine is now [a €30 Linux box](/posts/running-coding-agents-on-a-30-euro-linux-box).
 
 Skip it and nothing above it holds. The agent writes code, but it can't tell when the code is good, so it can't fix its own mistakes and you're back to reading every line yourself. It's a [data quality check](/posts/i-run-my-ai-customer-notes-like-a-database) with a different name: nothing downstream gets to trust the output until something at the edge has checked it. Unglamorous, but the whole foundation. You don't build the factory before you can test what comes off the line.
 

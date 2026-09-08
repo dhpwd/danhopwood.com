@@ -18,7 +18,7 @@ That interpretation is wrong. `/loop` is the smallest, least powerful version of
 
 `/loop` re-fires a prompt on a schedule. `/loop 5m check the deploy` runs the same instruction every five minutes. Leave the interval off and it paces itself: after each pass it picks a delay based on what it just saw, and it stops once the work is provably done. It's genuinely useful. I use it to usher a pull request towards merge, to poll a build, to run a cleanup pass while I'm doing something else.
 
-But look at what it actually is. It re-fires a prompt I already wrote, so the loop just repeats me. It's session-scoped, so it only runs while my laptop's on and Claude's sitting idle. It runs one thing at a time, on a timer, and it can't tell when it's done unless I give it a stopping condition. A poller. A good one, but a poller.
+But look at what it actually is. It re-fires a prompt I already wrote, so the loop just repeats me. It's session-scoped, so it only runs while my laptop's on and Claude's sitting idle – or, since I moved my sessions to [an always-on box](/posts/running-coding-agents-on-a-30-euro-linux-box), whenever I like. It runs one thing at a time, on a timer, and it can't tell when it's done unless I give it a stopping condition. A poller. A good one, but a poller.
 
 ## What 'writing loops' actually means
 
