@@ -19,7 +19,7 @@ Cloud-hosted, privacy-friendly, no cookie banner. The script tag and the vendor 
 
 Custom events use Title Case with spaces, the Plausible convention. `plausible` is typed on `Window` in `src/env.d.ts`. Two events fire:
 
-- **Newsletter Signup** – from `trackSignup()` in `NewsletterSignup.astro`, on both Ajax success and the native form fallback
+- **Newsletter Signup** – from `trackSignup()` in `NewsletterSignup.astro`, on form submit. It counts signups started, not confirmed – the reader may still abandon Buttondown's verification step
 - **Share Link** – on click in `ShareLinks.astro`, with `{ props: { platform } }` for a per-platform breakdown
 
 Each event needs a matching goal in the Plausible dashboard before it reports. The script loads from `plausible.io` directly, so ad blockers suppress it – proxying it through `danhopwood.com` with a `vercel.json` rewrite is the fix, and that is FID-548.
@@ -30,6 +30,6 @@ Powers the Build Notes newsletter. `NewsletterSignup.astro` POSTs to `https://bu
 
 - The hidden `embed=1` input is required by Buttondown's embed API
 - Subscribers are tagged `website` through a hidden input. Further fields go in as `name="metadata__<key>"`
-- The form submits by fetch, with inline success and error messages and no redirect. When fetch fails – Buttondown's human verification step returns a non-200 – it falls back to a native form POST in a new tab
+- The form submits as a native POST into a new tab, so the reader keeps the post open. Buttondown's docs rule out calling the endpoint with fetch: the response is a page the subscriber has to act on – a Cloudflare Turnstile CAPTCHA or a validation error – before the signup completes ([Embedding an HTML form](https://docs.buttondown.com/building-your-subscriber-base#embedding-an-html-form))
 - The "Read the latest issue" link below the form points at `buttondown.com/dhpwd/archive`. It is muted relative to the Subscribe button on purpose, to keep the CTA hierarchy
 - The strapline leads with the frequency and stays anti-sell. One short line, no hype
