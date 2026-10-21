@@ -10,6 +10,6 @@
 
 **The share icon row carries `md:-ml-2`.** The icons' own padding would otherwise push the first one right of the "Share this post on:" label above it. The row is centred on mobile, where the alignment doesn't apply.
 
-**Repeated furniture carries `data-pagefind-ignore`.** `<main>` is the `data-pagefind-body`, so anything rendered inside it on every post is indexed with each post, and a search for its text matches them all. Pagefind ignores CSS, so a `hidden` element is indexed too. The newsletter card and the post navigation carry the attribute on their root element.
+**Only the title, article and tags are indexed.** `data-pagefind-body` sits on the `<h1>`, `<article>` and tag list, not on `<main>`. Anything rendered on every post – the date and reading time, newsletter card, share and edit links, post navigation – would otherwise be indexed with each post, and a search for its text would match them all. A new element on the post page stays out of search unless it gets the attribute. Pagefind ignores CSS, so a `hidden` element inside a body element is indexed.
 
 **When to use:** changing what appears after the article body, or the furniture around it.
