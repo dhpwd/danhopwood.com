@@ -14,6 +14,7 @@ const { compact = false } = Astro.props;
         !compact,
     },
   ]}
+  data-pagefind-ignore
 >
   <h2
     class:list={[compact ? "text-lg font-semibold" : "text-xl font-semibold"]}
@@ -47,7 +48,7 @@ const { compact = false } = Astro.props;
       Subscribe
     </button>
   </form>
-  <p class="mt-2 hidden text-sm text-foreground opacity-80" data-newsletter-msg>
+  <p class="mt-2 hidden text-sm opacity-80" data-newsletter-msg>
     Complete signup in the new tab.
   </p>
   <p class="mt-2 text-sm opacity-80">
@@ -71,7 +72,7 @@ const { compact = false } = Astro.props;
 
         // Buttondown requires a native POST, never fetch – see
         // docs/external-services.md. The form data is built after this
-        // handler runs, so it must not clear the email field.
+        // handler runs, so the reset that blocks a repeat submit is deferred.
         form.addEventListener("submit", () => {
           form
             .parentElement!.querySelector("[data-newsletter-msg]")!
@@ -79,6 +80,7 @@ const { compact = false } = Astro.props;
           if (typeof window.plausible === "function") {
             window.plausible("Newsletter Signup");
           }
+          setTimeout(() => form.reset());
         });
       });
   }

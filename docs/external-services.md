@@ -30,6 +30,6 @@ Powers the Build Notes newsletter. `NewsletterSignup.astro` POSTs to `https://bu
 
 - The hidden `embed=1` input is required by Buttondown's embed API
 - Subscribers are tagged `website` through a hidden input. Further fields go in as `name="metadata__<key>"`
-- The form submits as a native POST into a new tab, so the reader keeps the post open. Buttondown's docs rule out calling the endpoint with fetch: the response is a page the subscriber has to act on – a Cloudflare Turnstile CAPTCHA or a validation error – before the signup completes ([Embedding an HTML form](https://docs.buttondown.com/building-your-subscriber-base#embedding-an-html-form))
+- The form submits as a native POST into a new tab, so the reader keeps the post open. Buttondown's docs rule out calling the endpoint with fetch, because the subscriber sometimes has to act on the response page – a CAPTCHA or a validation error – before the signup completes. In testing the CAPTCHA was Cloudflare Turnstile ([Embedding an HTML form](https://docs.buttondown.com/building-your-subscriber-base#embedding-an-html-form))
 - The "Read the latest issue" link below the form points at `buttondown.com/dhpwd/archive`. It is muted relative to the Subscribe button on purpose, to keep the CTA hierarchy
 - The strapline leads with the frequency and stays anti-sell. One short line, no hype
