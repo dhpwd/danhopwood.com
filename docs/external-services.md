@@ -19,7 +19,7 @@ Cloud-hosted, privacy-friendly, no cookie banner. The script tag and the vendor 
 
 Custom events use Title Case with spaces, the Plausible convention. `plausible` is typed on `Window` in `src/env.d.ts`. Two events fire:
 
-- **Newsletter Signup** – from `trackSignup()` in `NewsletterSignup.astro`, on form submit. It counts signups started, not confirmed – the reader may still abandon Buttondown's verification step
+- **Newsletter Signup** – from the submit handler in `NewsletterSignup.astro`. It counts signups started, not confirmed – the reader may still abandon Buttondown's verification step
 - **Share Link** – on click in `ShareLinks.astro`, with `{ props: { platform } }` for a per-platform breakdown
 
 Each event needs a matching goal in the Plausible dashboard before it reports. The script loads from `plausible.io` directly, so ad blockers suppress it – proxying it through `danhopwood.com` with a `vercel.json` rewrite is the fix, and that is FID-548.

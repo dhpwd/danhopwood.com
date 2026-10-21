@@ -47,7 +47,9 @@ const { compact = false } = Astro.props;
       Subscribe
     </button>
   </form>
-  <p class="mt-2 hidden text-sm" data-newsletter-msg></p>
+  <p class="mt-2 hidden text-sm text-foreground opacity-80" data-newsletter-msg>
+    Complete signup in the new tab.
+  </p>
   <p class="mt-2 text-sm opacity-80">
     <a
       href="https://buttondown.com/dhpwd/archive"
@@ -60,12 +62,6 @@ const { compact = false } = Astro.props;
 </div>
 
 <script>
-  function trackSignup() {
-    if (typeof window.plausible === "function") {
-      window.plausible("Newsletter Signup");
-    }
-  }
-
   function initNewsletterForms() {
     document
       .querySelectorAll<HTMLFormElement>(".newsletter-signup form")
@@ -77,12 +73,12 @@ const { compact = false } = Astro.props;
         // docs/external-services.md. The form data is built after this
         // handler runs, so it must not clear the email field.
         form.addEventListener("submit", () => {
-          const msg = form.parentElement!.querySelector(
-            "[data-newsletter-msg]"
-          )!;
-          msg.textContent = "Complete signup in the new tab.";
-          msg.className = "mt-2 text-sm text-foreground opacity-80";
-          trackSignup();
+          form
+            .parentElement!.querySelector("[data-newsletter-msg]")!
+            .classList.remove("hidden");
+          if (typeof window.plausible === "function") {
+            window.plausible("Newsletter Signup");
+          }
         });
       });
   }
