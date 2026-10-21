@@ -10,7 +10,7 @@ The homepage is the post list. There is no splash page, no hero and no "blog" la
 
 `src/content.config.ts` holds the schema. The fields that carry a convention rather than an obvious meaning:
 
-- `description` is required and capped at 200 characters. It is the one-line hook for the post list, the RSS item, the share card and search results, so write a hook rather than a summary. The cap is the OG card's three-line budget – see `docs/patterns/og-images.md`
+- `description` is required and capped at 200 characters. It is the one-line hook for the post list, the RSS item, the share card and search-engine snippets (site search doesn't index it), so write a hook rather than a summary. The cap is the OG card's three-line budget – see `docs/patterns/og-images.md`
 - `draft: true` keeps a post out of the build. A future `pubDatetime` does the same until it passes, with a 15-minute margin (`SITE.scheduledPostMargin`)
 - `modDatetime` feeds more than the post header. `getSortedPosts` sorts on `modDatetime ?? pubDatetime`, so it sets position on the homepage, the listings, RSS and `llms.txt`, and `rss.xml.ts` uses it as the item's `pubDate`. Setting it on an old post moves that post back to the top and re-notifies feed readers. It also drives the sitemap's `<lastmod>` – see `docs/patterns/machine-readability.md`. Set it only when a published post changes materially
 - `tags` defaults to `["others"]`

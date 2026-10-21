@@ -26,7 +26,7 @@ Each event needs a matching goal in the Plausible dashboard before it reports. T
 
 ## Buttondown
 
-Powers the Build Notes newsletter. `NewsletterSignup.astro` POSTs to `https://buttondown.com/api/emails/embed-subscribe/dhpwd` and is embedded in `PostDetails.astro` and `AboutLayout.astro`, both as the full bordered card. Its `compact` prop has no caller.
+Powers the Build Notes newsletter. `NewsletterSignup.astro` POSTs to `https://buttondown.com/api/emails/embed-subscribe/dhpwd` and is embedded in `PostDetails.astro` and `AboutLayout.astro`, both as the same bordered card.
 
 - The hidden `embed=1` input is required by Buttondown's embed API
 - Subscribers are tagged `website` through a hidden input. Further fields go in as `name="metadata__<key>"`
