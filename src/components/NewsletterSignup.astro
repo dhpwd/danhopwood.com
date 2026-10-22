@@ -58,11 +58,10 @@
           "[data-newsletter-msg]"
         )!;
 
-        // The fetch goes to our own function, api/subscribe.ts. Anything short
-        // of a confirmed signup falls back to the form's native POST to
-        // Buttondown, in the same tab, where Buttondown handles CAPTCHA,
-        // duplicates and validation – see docs/external-services.md.
-        // form.submit() skips the submit event, so the fallback can't loop.
+        // Subscribes through our own function, api/subscribe.ts, and falls
+        // back to the form's native same-tab POST to Buttondown on anything
+        // else – see docs/external-services.md. form.submit() skips the submit
+        // event, so the fallback can't loop.
         form.addEventListener("submit", async event => {
           event.preventDefault();
           if (typeof window.plausible === "function") {
@@ -70,17 +69,14 @@
           }
           button.disabled = true;
 
-          let ok = false;
-          try {
-            const response = await fetch("/api/subscribe", {
-              method: "POST",
-              body: new FormData(form),
-              signal: AbortSignal.timeout(8000),
-            });
-            ok = response.ok;
-          } catch {
-            // A network error or timeout takes the fallback below
-          }
+          const ok = await fetch("/api/subscribe", {
+            method: "POST",
+            body: new FormData(form),
+            signal: AbortSignal.timeout(8000),
+          }).then(
+            response => response.ok,
+            () => false
+          );
 
           if (ok) {
             form.hidden = true;
