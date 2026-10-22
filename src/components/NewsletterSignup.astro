@@ -31,7 +31,13 @@
       Subscribe
     </button>
   </form>
-  <p class="mt-2 text-sm opacity-80" role="status" data-newsletter-msg></p>
+  <p
+    class="mt-2 text-sm opacity-80"
+    role="status"
+    tabindex="-1"
+    data-newsletter-msg
+  >
+  </p>
   <p class="mt-2 text-sm opacity-80">
     <a
       href="https://buttondown.com/dhpwd/archive"
@@ -54,7 +60,7 @@
         const button = form.querySelector<HTMLButtonElement>(
           "button[type=submit]"
         )!;
-        const status = form.parentElement!.querySelector(
+        const status = form.parentElement!.querySelector<HTMLElement>(
           "[data-newsletter-msg]"
         )!;
 
@@ -69,19 +75,25 @@
           }
           button.disabled = true;
 
-          const ok = await fetch("/api/subscribe", {
-            method: "POST",
-            body: new FormData(form),
-            signal: AbortSignal.timeout(8000),
-          }).then(
-            response => response.ok,
-            () => false
-          );
+          let ok = false;
+          try {
+            const response = await fetch("/api/subscribe", {
+              method: "POST",
+              body: new FormData(form),
+              signal: AbortSignal.timeout(8000),
+            });
+            ok = response.ok;
+          } catch {
+            // Also catches browsers without AbortSignal.timeout, which throws
+            // before fetch runs
+          }
 
           if (ok) {
             form.hidden = true;
             status.textContent =
               "Almost there – check your inbox to confirm your subscription.";
+            // Hiding the form drops focus to <body> otherwise
+            status.focus();
           } else {
             button.disabled = false;
             form.submit();

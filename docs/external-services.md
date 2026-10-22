@@ -13,7 +13,7 @@ Hosts the site from the `dhpwd/danhopwood.com` GitHub repo. `danhopwood.com` is 
 
 The site is static apart from one Vercel function, `api/subscribe.ts`, served at `POST /api/subscribe` (see Buttondown below). Vercel builds the root `api/` folder alongside the Astro build. The function runs on the Node runtime and exports the web-standard `{ fetch(request) }` handler. `pnpm dev` and `pnpm preview` don't serve it, so locally `/api/subscribe` 404s and the signup form takes its fallback.
 
-The function lives in `api/` rather than going through the `@astrojs/vercel` adapter. With the adapter, Vercel deploys `.vercel/output`, which `astro build` writes before the build script's `pagefind --site dist` step runs, so the deployed site would lose its search index.
+Server code goes in root `api/`, never through the `@astrojs/vercel` adapter, which would drop the search index – see `docs/patterns/astro-build.md`.
 
 `dhpwd.com` and `www.danhopwood.com` are both meant to redirect to the apex domain. Wiring that up is FID-547.
 
@@ -32,7 +32,7 @@ Each event needs a matching goal in the Plausible dashboard before it reports. T
 
 Powers the Build Notes newsletter. `NewsletterSignup.astro` is embedded in `PostDetails.astro` and `AboutLayout.astro`, both as the same bordered card. It subscribes the reader in place through our own function, and falls back to Buttondown's embed form in the same tab.
 
-**Inline path.** The submit handler fires the Plausible event, disables the button and POSTs the form data to `/api/subscribe` with an 8s timeout. On a 200 it hides the form and puts "Almost there – check your inbox to confirm your subscription." in the card's `role="status"` paragraph. `api/subscribe.ts` creates the subscriber with `POST https://api.buttondown.com/v1/subscribers` ([Creating a subscriber](https://docs.buttondown.com/api-subscribers-create)):
+**Inline path.** The submit handler fires the Plausible event, disables the button and POSTs the form data to `/api/subscribe` with an 8s timeout. On a 2xx it hides the form, puts "Almost there – check your inbox to confirm your subscription." in the card's `role="status"` paragraph and moves focus there. `api/subscribe.ts` creates the subscriber with `POST https://api.buttondown.com/v1/subscribers` ([Creating a subscriber](https://docs.buttondown.com/api-subscribers-create)):
 
 - Authenticates with the `BUTTONDOWN_API_KEY` environment variable, set in Vercel and never exposed to client code
 - Sends `email_address`, `tags: ["website"]` (hard-coded, never read from the request), `ip_address` and `referrer_url`
@@ -42,7 +42,9 @@ Powers the Build Notes newsletter. `NewsletterSignup.astro` is embedded in `Post
 - Times out after 5s, inside the client's 8s
 - Logs nothing, since the request and Buttondown's response both hold the email
 
-The function's responses: 405 for a non-POST, 400 for a missing or blank email, 503 when the key is unset (without calling Buttondown) and 200 only when Buttondown returns 201 with `type: unactivated`. Anything else from Buttondown – another status, another `type` such as `blocked`, a timeout or a network error – is a 502 with `{ ok: false, upstream }`, where `upstream` is Buttondown's status code, its returned `type`, `"timeout"` or `"error"`. That is enough to diagnose a failure from the browser's network tab without exposing the email.
+The function's responses: 405 for a non-POST, 403 when the browser marks the request `Sec-Fetch-Site: cross-site`, 400 for a body that isn't form data or a missing or blank email, 503 when the key is unset (without calling Buttondown) and 200 only when Buttondown returns 201 with `type: unactivated`. Anything else from Buttondown – another status, another `type` such as `blocked`, a timeout or a network error – is a 502 with `{ ok: false, upstream }`, where `upstream` is Buttondown's status code, its returned `type`, `"timeout"` or `"error"`. That is enough to diagnose a failure from the browser's network tab without exposing the email.
+
+The 403 stops another site's page from making its visitors' browsers subscribe arbitrary addresses through our key. Each of those requests would carry a different real visitor's IP, so Buttondown's firewall would score them as unrelated signups. Browsers that don't send `Sec-Fetch-Site` pass, and same-origin and same-site requests always do.
 
 **Honeypot.** The form carries a text input named `bd_hp` in an off-screen wrapper (`aria-hidden`, `tabindex="-1"`, `autocomplete="off"`). When it is non-empty the function returns 200 without calling Buttondown, so a bot sees a success. We don't run our own CAPTCHA: Buttondown's firewall scores API signups, and a reader it rejects lands on Buttondown's CAPTCHA page through the fallback.
 

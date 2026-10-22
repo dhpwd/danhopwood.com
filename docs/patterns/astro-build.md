@@ -8,6 +8,14 @@
 
 **When to use:** after deleting or renaming a content collection entry, when a route you removed still appears in `dist/`.
 
+## Server code goes in root `api/`, not the Vercel adapter
+
+**Problem:** the usual Astro answer for an endpoint is the `@astrojs/vercel` adapter with on-demand routes. With the adapter, Vercel deploys `.vercel/output`, which `astro build` writes before the build script's `pagefind --site dist` step runs. The deployed site loses its search index, and the build passes.
+
+**Solution:** write the endpoint as a Vercel function in the root `api/` folder, exporting the web-standard `export default { async fetch(request: Request) { … } }`. Vercel builds it alongside the static Astro output, and `astro.config.ts` and the build script stay unchanged. `api/subscribe.ts` is the worked example – see `docs/external-services.md`. `pnpm dev` and `pnpm preview` don't serve `api/`, so test a function by calling its default export's `fetch` from a Node script.
+
+**When to use:** adding any server-side endpoint.
+
 ## Client scripts and View Transitions
 
 **Problem:** Astro bundles `<script>` blocks in `.astro` components as module scripts, which run once per full page load. With View Transitions (`<ClientRouter />` in `Layout.astro`), navigating swaps the DOM without re-running them, so listeners are never attached to the new nodes. The page looks correct and the handler never fires again.

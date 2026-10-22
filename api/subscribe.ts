@@ -1,7 +1,7 @@
 // Creates a Build Notes subscriber through Buttondown's API for the inline
-// signup in NewsletterSignup.astro. Every non-200 response sends the reader to
-// Buttondown's own embed form instead. The request fields, the version pin and
-// the no-logging rule are explained in docs/external-services.md.
+// signup in NewsletterSignup.astro, which falls back to Buttondown's own embed
+// form on anything but a 2xx. The request fields, the version pin and the
+// no-logging rule are explained in docs/external-services.md.
 
 const BUTTONDOWN_SUBSCRIBERS_URL = "https://api.buttondown.com/v1/subscribers";
 const BUTTONDOWN_API_VERSION = "2026-04-01";
@@ -15,6 +15,12 @@ export default {
   async fetch(request: Request): Promise<Response> {
     if (request.method !== "POST") {
       return new Response(null, { status: 405, headers: { Allow: "POST" } });
+    }
+
+    // Stops another site's page making its visitors' browsers subscribe
+    // arbitrary addresses through our key, each from a different real IP
+    if (request.headers.get("sec-fetch-site") === "cross-site") {
+      return json(403, { ok: false });
     }
 
     let form: FormData;
@@ -49,6 +55,7 @@ export default {
         },
         body: JSON.stringify({
           email_address: email,
+          // Mirrors the form's hidden tag input, which the fallback sends
           tags: ["website"],
           ...(ipAddress && { ip_address: ipAddress }),
           ...(referrerUrl && { referrer_url: referrerUrl }),
