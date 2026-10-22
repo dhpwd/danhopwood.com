@@ -26,6 +26,20 @@
 
 **When to use:** any component that attaches client-side event listeners.
 
+## Testing client scripts and functions
+
+**Problem:** three behaviours of this site and its runtime break the obvious test harness, and each fails with an error that points elsewhere.
+
+**Solution:**
+
+- `global.css` applies `scroll-smooth` to `html`, so after Playwright's `fill()` scrolls down a long post the target keeps moving for about a second, and `click()` fails with "element is not stable". Wait for the scroll to settle before clicking
+- `<ClientRouter />` saves the scroll position with `history.replaceState`, which fires Playwright's `framenavigated` on the same URL. To assert that a submit didn't navigate, count navigation requests (`request.isNavigationRequest()`) or check a `window` marker survives, not `framenavigated`
+- Node's `AbortSignal.timeout` timer doesn't keep the event loop alive. A stubbed `fetch` that hangs until aborted needs its own pending timer, or the test script exits before the timeout fires
+
+Run Playwright against `pnpm build && pnpm preview`, stub `api/` routes with `page.route` (preview doesn't serve them), and test a function by calling its default export's `fetch` from a Node script with a stubbed global `fetch`.
+
+**When to use:** browser-testing a client script, or testing an `api/` function.
+
 ## Markdown plugins and image optimisation
 
 **Problem:** a markdown plugin that rewrites images can cost them Astro's build-time optimisation, with nothing in the build output to say so. Astro collects local image paths in `remarkCollectImages` and marks the `<img>` elements in `rehypeImages`, both of which run after the plugins configured in `markdown.remarkPlugins` and `markdown.rehypePlugins`. A plugin that replaces an image with raw HTML leaves those passes nothing to find, and the image is then served unprocessed. The ordering lives in `@astrojs/markdown-remark`'s processor rather than the public docs, so read the package to confirm it.
