@@ -67,6 +67,10 @@
           if (typeof window.plausible === "function") {
             window.plausible("Newsletter Signup");
           }
+          status.textContent = "";
+          // Disabling a focused button drops focus to <body>, so note where
+          // it was and put it back once the button is enabled again
+          const focused = document.activeElement;
           button.disabled = true;
 
           let ok = false;
@@ -87,6 +91,7 @@
             form.reset();
             status.textContent =
               "Almost there – check your inbox to confirm your subscription.";
+            if (focused instanceof HTMLElement) focused.focus();
           } else {
             form.submit();
           }
