@@ -26,14 +26,24 @@
 
 **When to use:** any component that attaches client-side event listeners.
 
+## Disabling a focused button drops focus
+
+**Problem:** setting `disabled` on the focused element moves focus to `<body>`, and re-enabling it doesn't bring focus back. A submit button is focused whenever it was clicked or tabbed to, so a handler that disables it while a request runs leaves keyboard and screen-reader users at the top of the document. Nothing visible marks it.
+
+**Solution:** note `document.activeElement` before disabling, and call `focus()` on it once the control is enabled again. Focus returned this way doesn't draw a `:focus-visible` ring after a mouse click. `NewsletterSignup.astro`'s submit handler is the worked example.
+
+**When to use:** any handler that disables a control while work is pending.
+
 ## Testing client scripts and functions
 
-**Problem:** three behaviours of this site and its runtime break the obvious test harness, and each fails with an error that points elsewhere.
+**Problem:** behaviours of this site, the browser and Node break the obvious test harness, either failing with an error that points elsewhere or passing when the code is wrong.
 
 **Solution:**
 
 - `global.css` applies `scroll-smooth` to `html`, so after Playwright's `fill()` scrolls down a long post the target keeps moving for about a second, and `click()` fails with "element is not stable". Wait for the scroll to settle before clicking
 - `<ClientRouter />` saves the scroll position with `history.replaceState`, which fires Playwright's `framenavigated` on the same URL. To assert that a submit didn't navigate, count navigation requests (`request.isNavigationRequest()`) or check a `window` marker survives, not `framenavigated`
+- Submit forms by clicking the button as well as pressing Enter in a field. Only the click leaves focus on the button, so a bug in how the handler treats focus shows on that route alone
+- `locator.boundingBox()` is relative to the viewport, and a click can scroll the page. To assert an element didn't move, compare `getBoundingClientRect().top + scrollY`
 - Node's `AbortSignal.timeout` timer doesn't keep the event loop alive. A stubbed `fetch` that hangs until aborted needs its own pending timer, or the test script exits before the timeout fires
 
 Run Playwright against `pnpm build && pnpm preview`, stub `api/` routes with `page.route` (preview doesn't serve them), and test a function by calling its default export's `fetch` from a Node script with a stubbed global `fetch`.
