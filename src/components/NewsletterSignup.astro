@@ -9,11 +9,13 @@
   <form
     action="https://buttondown.com/api/emails/embed-subscribe/dhpwd"
     method="post"
-    target="_blank"
     class="mt-3 flex gap-2"
   >
     <input type="hidden" name="tag" value="website" />
     <input type="hidden" name="embed" value="1" />
+    <div class="absolute -left-[9999px]" aria-hidden="true">
+      <input type="text" name="bd_hp" tabindex="-1" autocomplete="off" />
+    </div>
     <input
       type="email"
       name="email"
@@ -24,13 +26,17 @@
     />
     <button
       type="submit"
-      class="rounded bg-accent px-4 py-2 text-sm font-medium text-white hover:opacity-90"
+      class="rounded bg-accent px-4 py-2 text-sm font-medium text-white hover:opacity-90 disabled:opacity-60"
     >
       Subscribe
     </button>
   </form>
-  <p class="mt-2 hidden text-sm opacity-80" data-newsletter-msg>
-    Complete signup in the new tab.
+  <p
+    class="mt-2 text-sm opacity-80"
+    role="status"
+    tabindex="-1"
+    data-newsletter-msg
+  >
   </p>
   <p class="mt-2 text-sm opacity-80">
     <a
@@ -51,17 +57,47 @@
         if (form.dataset.initialized) return;
         form.dataset.initialized = "true";
 
-        // Buttondown requires a native POST, never fetch – see
-        // docs/external-services.md. The form data is built after this
-        // handler runs, so the reset that blocks a repeat submit is deferred.
-        form.addEventListener("submit", () => {
-          form
-            .parentElement!.querySelector("[data-newsletter-msg]")!
-            .classList.remove("hidden");
+        const button = form.querySelector<HTMLButtonElement>(
+          "button[type=submit]"
+        )!;
+        const status = form.parentElement!.querySelector<HTMLElement>(
+          "[data-newsletter-msg]"
+        )!;
+
+        // Subscribes through our own function, api/subscribe.ts, and falls
+        // back to the form's native same-tab POST to Buttondown on anything
+        // else – see docs/external-services.md. form.submit() skips the submit
+        // event, so the fallback can't loop.
+        form.addEventListener("submit", async event => {
+          event.preventDefault();
           if (typeof window.plausible === "function") {
             window.plausible("Newsletter Signup");
           }
-          setTimeout(() => form.reset());
+          button.disabled = true;
+
+          let ok = false;
+          try {
+            const response = await fetch("/api/subscribe", {
+              method: "POST",
+              body: new FormData(form),
+              signal: AbortSignal.timeout(8000),
+            });
+            ok = response.ok;
+          } catch {
+            // Also catches browsers without AbortSignal.timeout, which throws
+            // before fetch runs
+          }
+
+          if (ok) {
+            form.hidden = true;
+            status.textContent =
+              "Almost there – check your inbox to confirm your subscription.";
+            // Hiding the form drops focus to <body> otherwise
+            status.focus();
+          } else {
+            button.disabled = false;
+            form.submit();
+          }
         });
       });
   }

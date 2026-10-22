@@ -8,6 +8,14 @@
 
 **When to use:** after deleting or renaming a content collection entry, when a route you removed still appears in `dist/`.
 
+## Server code goes in root `api/`, not the Vercel adapter
+
+**Problem:** the usual Astro answer for an endpoint is the `@astrojs/vercel` adapter with on-demand routes. With the adapter, Vercel deploys `.vercel/output`, which `astro build` writes before the build script's `pagefind --site dist` step runs. The deployed site loses its search index, and the build passes.
+
+**Solution:** write the endpoint as a Vercel function in the root `api/` folder, exporting the web-standard `export default { async fetch(request: Request) { … } }`. Vercel builds it alongside the static Astro output, and `astro.config.ts` and the build script stay unchanged. `api/subscribe.ts` is the worked example – see `docs/external-services.md`. `pnpm dev` and `pnpm preview` don't serve `api/`, so test a function by calling its default export's `fetch` from a Node script.
+
+**When to use:** adding any server-side endpoint.
+
 ## Client scripts and View Transitions
 
 **Problem:** Astro bundles `<script>` blocks in `.astro` components as module scripts, which run once per full page load. With View Transitions (`<ClientRouter />` in `Layout.astro`), navigating swaps the DOM without re-running them, so listeners are never attached to the new nodes. The page looks correct and the handler never fires again.
@@ -17,6 +25,20 @@
 **Anti-pattern for new work:** `is:inline data-astro-rerun`. It does re-run the script, at the cost of TypeScript, import resolution and deduplication. `PostDetails.astro` and `BackToTopButton.astro` both take that route, so expect to find it in the tree – prefer `astro:page-load` for anything new, and keep inline scripts for pre-paint state such as the theme flash guard in `Layout.astro`.
 
 **When to use:** any component that attaches client-side event listeners.
+
+## Testing client scripts and functions
+
+**Problem:** three behaviours of this site and its runtime break the obvious test harness, and each fails with an error that points elsewhere.
+
+**Solution:**
+
+- `global.css` applies `scroll-smooth` to `html`, so after Playwright's `fill()` scrolls down a long post the target keeps moving for about a second, and `click()` fails with "element is not stable". Wait for the scroll to settle before clicking
+- `<ClientRouter />` saves the scroll position with `history.replaceState`, which fires Playwright's `framenavigated` on the same URL. To assert that a submit didn't navigate, count navigation requests (`request.isNavigationRequest()`) or check a `window` marker survives, not `framenavigated`
+- Node's `AbortSignal.timeout` timer doesn't keep the event loop alive. A stubbed `fetch` that hangs until aborted needs its own pending timer, or the test script exits before the timeout fires
+
+Run Playwright against `pnpm build && pnpm preview`, stub `api/` routes with `page.route` (preview doesn't serve them), and test a function by calling its default export's `fetch` from a Node script with a stubbed global `fetch`.
+
+**When to use:** browser-testing a client script, or testing an `api/` function.
 
 ## Markdown plugins and image optimisation
 
