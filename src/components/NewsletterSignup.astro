@@ -31,13 +31,7 @@
       Subscribe
     </button>
   </form>
-  <p
-    class="mt-2 text-sm opacity-80"
-    role="status"
-    tabindex="-1"
-    data-newsletter-msg
-  >
-  </p>
+  <p class="mt-2 text-sm opacity-80" role="status" data-newsletter-msg></p>
   <p class="mt-2 text-sm opacity-80">
     <a
       href="https://buttondown.com/dhpwd/archive"
@@ -60,7 +54,7 @@
         const button = form.querySelector<HTMLButtonElement>(
           "button[type=submit]"
         )!;
-        const status = form.parentElement!.querySelector<HTMLElement>(
+        const status = form.parentElement!.querySelector(
           "[data-newsletter-msg]"
         )!;
 
@@ -73,6 +67,10 @@
           if (typeof window.plausible === "function") {
             window.plausible("Newsletter Signup");
           }
+          status.textContent = "";
+          // Disabling a focused button drops focus to <body>, so note where
+          // it was and put it back once the button is enabled again
+          const focused = document.activeElement;
           button.disabled = true;
 
           let ok = false;
@@ -88,14 +86,13 @@
             // before fetch runs
           }
 
+          button.disabled = false;
           if (ok) {
-            form.hidden = true;
+            form.reset();
             status.textContent =
               "Almost there – check your inbox to confirm your subscription.";
-            // Hiding the form drops focus to <body> otherwise
-            status.focus();
+            if (focused instanceof HTMLElement) focused.focus();
           } else {
-            button.disabled = false;
             form.submit();
           }
         });
