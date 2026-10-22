@@ -32,7 +32,7 @@ Each event needs a matching goal in the Plausible dashboard before it reports. T
 
 Powers the Build Notes newsletter. `NewsletterSignup.astro` is embedded in `PostDetails.astro` and `AboutLayout.astro`, both as the same bordered card. It subscribes the reader in place through our own function, and falls back to Buttondown's embed form in the same tab.
 
-**Inline path.** The submit handler fires the Plausible event, disables the button and POSTs the form data to `/api/subscribe` with an 8s timeout. On a 2xx it clears the form, re-enables the button and puts "Almost there – check your inbox to confirm your subscription." in the `role="status"` paragraph below the form. The form stays in place, so the card doesn't change height. `api/subscribe.ts` creates the subscriber with `POST https://api.buttondown.com/v1/subscribers` ([Creating a subscriber](https://docs.buttondown.com/api-subscribers-create)):
+**Inline path.** The submit handler fires the Plausible event, disables the button and POSTs the form data to `/api/subscribe` with an 8s timeout. On a 2xx it clears the form, re-enables the button and puts "Almost there – check your inbox to confirm your subscription." in the `role="status"` paragraph below the form. The form stays in place, so the card grows by the message's one line rather than collapsing. `api/subscribe.ts` creates the subscriber with `POST https://api.buttondown.com/v1/subscribers` ([Creating a subscriber](https://docs.buttondown.com/api-subscribers-create)):
 
 - Authenticates with the `BUTTONDOWN_API_KEY` environment variable, set in Vercel and never exposed to client code
 - Sends `email_address`, `tags: ["website"]` (hard-coded, never read from the request), `ip_address` and `referrer_url`
