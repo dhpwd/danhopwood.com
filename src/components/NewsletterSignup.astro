@@ -9,11 +9,13 @@
   <form
     action="https://buttondown.com/api/emails/embed-subscribe/dhpwd"
     method="post"
-    target="_blank"
     class="mt-3 flex gap-2"
   >
     <input type="hidden" name="tag" value="website" />
     <input type="hidden" name="embed" value="1" />
+    <div class="absolute -left-[9999px]" aria-hidden="true">
+      <input type="text" name="bd_hp" tabindex="-1" autocomplete="off" />
+    </div>
     <input
       type="email"
       name="email"
@@ -24,14 +26,12 @@
     />
     <button
       type="submit"
-      class="rounded bg-accent px-4 py-2 text-sm font-medium text-white hover:opacity-90"
+      class="rounded bg-accent px-4 py-2 text-sm font-medium text-white hover:opacity-90 disabled:opacity-60"
     >
       Subscribe
     </button>
   </form>
-  <p class="mt-2 hidden text-sm opacity-80" data-newsletter-msg>
-    Complete signup in the new tab.
-  </p>
+  <p class="mt-2 text-sm opacity-80" role="status" data-newsletter-msg></p>
   <p class="mt-2 text-sm opacity-80">
     <a
       href="https://buttondown.com/dhpwd/archive"
@@ -51,17 +51,45 @@
         if (form.dataset.initialized) return;
         form.dataset.initialized = "true";
 
-        // Buttondown requires a native POST, never fetch – see
-        // docs/external-services.md. The form data is built after this
-        // handler runs, so the reset that blocks a repeat submit is deferred.
-        form.addEventListener("submit", () => {
-          form
-            .parentElement!.querySelector("[data-newsletter-msg]")!
-            .classList.remove("hidden");
+        const button = form.querySelector<HTMLButtonElement>(
+          "button[type=submit]"
+        )!;
+        const status = form.parentElement!.querySelector(
+          "[data-newsletter-msg]"
+        )!;
+
+        // The fetch goes to our own function, api/subscribe.ts. Anything short
+        // of a confirmed signup falls back to the form's native POST to
+        // Buttondown, in the same tab, where Buttondown handles CAPTCHA,
+        // duplicates and validation – see docs/external-services.md.
+        // form.submit() skips the submit event, so the fallback can't loop.
+        form.addEventListener("submit", async event => {
+          event.preventDefault();
           if (typeof window.plausible === "function") {
             window.plausible("Newsletter Signup");
           }
-          setTimeout(() => form.reset());
+          button.disabled = true;
+
+          let ok = false;
+          try {
+            const response = await fetch("/api/subscribe", {
+              method: "POST",
+              body: new FormData(form),
+              signal: AbortSignal.timeout(8000),
+            });
+            ok = response.ok;
+          } catch {
+            // A network error or timeout takes the fallback below
+          }
+
+          if (ok) {
+            form.hidden = true;
+            status.textContent =
+              "Almost there – check your inbox to confirm your subscription.";
+          } else {
+            button.disabled = false;
+            form.submit();
+          }
         });
       });
   }
