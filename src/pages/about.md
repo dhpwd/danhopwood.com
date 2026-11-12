@@ -3,16 +3,27 @@ layout: ../layouts/AboutLayout.astro
 title: "About"
 ---
 
-I'm Dan Hopwood, a founder in London. I've spent 12+ years building data infrastructure for startups – the plumbing that decides whether a company can trust its own numbers.
+I'm a founder in London, building [Fidero](https://fidero.com) entirely with AI agents. That claim tends to get a reaction. Fair enough. The agents write the code, run the data audits and manage the projects, and I decide what gets built and check what comes back.
 
-Now I'm building [Fidero](https://fidero.com), a server-first data platform (a CDP) that makes customer data trustworthy: attribution you can prove, identity that holds together across systems, and quality that doesn't drift when things change. It's focused on consumer subscription businesses, where every decision rides on accurate CAC, activation and retention.
+This site is where I show my working, including the parts that broke. It's written for founders working out how their own company should run, with enough detail underneath that your CTO can check I'm not making it up.
 
-I build it entirely with AI agents – the code, the audits, the strategy, the sales. That claim tends to get a reaction. Fair enough. What started as a way to move faster became the thesis behind most of what I write: the same discipline that makes customer data trustworthy makes AI agents reliable. Garbage in, garbage out, whether it's an event pipeline or an agent's context.
+Good places to start:
 
-Along the way: data & analytics mentor at Seedcamp, CPO and CTO roles, a few companies of my own. These days I also advise founders and teams on data leadership and building with AI agents – everything I advise on, I've built with first.
+- [Claude Code for founders who hate the terminal](/posts/claude-code-for-founders-who-hate-the-terminal)
+- [Maturity, not complexity](/posts/maturity-not-complexity)
+- [The order you build a software factory in](/posts/the-order-you-build-a-software-factory-in)
 
-This site is where I show my working i.e. what I discover building a company this way: data infrastructure, agent workflows, verification loops, memory systems and context management. The best of each week lands in Build Notes, a short email every Thursday morning.
+Fidero makes customer data trustworthy. If your deals close in a CRM, or your subscriptions start in an app or a billing tool, Google and Meta only see the enquiry or the sign-up. So their bidding learns to buy more of those, not more customers. It's a data platform that fixes your data where it's collected, so every tool and AI agent you run finally agrees. [fidero.com](https://fidero.com) has the detail and the case studies, and the [Data Infrastructure Audit](https://fidero.com/audit) is where to start.
 
-## Get in touch
+The same discipline that makes customer data trustworthy makes AI agents reliable. Garbage in, garbage out, whether it's an event pipeline or an agent's context. One of our customers now asks an agent for their MRR and gets an answer that reconciles to billing, because the data underneath is right. And inside Fidero, we run the notes our agents keep on each customer [like a database](/posts/i-run-my-ai-customer-notes-like-a-database), where every fact has a single home.
 
-[Book a call](https://cal.com/dhpwd/30min) · [Twitter](https://x.com/dhpwd) · [LinkedIn](https://linkedin.com/in/dhpwd) · [GitHub](https://github.com/dhpwd)
+I also advise founders and leadership teams on both:
+
+- Getting a company working with AI agents, when everyone is faster on their own but the team as a whole isn't
+- Data leadership, when there are plenty of dashboards but no one agrees which number matters
+
+It usually starts with one session and carries on as a monthly retainer. I have room for one or two more clients. [Book an advisory intro call](https://cal.com/dhpwd/advisory) and we'll work out whether I can help.
+
+I know the jobs the agents now do because I've hired for them and done them: I've been a CTO who grew an engineering team, a CPO who hired a product team and a founder several times over. For more than 12 years I've built analytics and data infrastructure for companies including Polaroid and FATMAP, and I mentor Seedcamp's portfolio companies on data.
+
+For anything else, message me on [LinkedIn](https://www.linkedin.com/in/dhpwd).

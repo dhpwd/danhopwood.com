@@ -6,10 +6,13 @@ import { SITE } from "@/config";
 
 const SUMMARY =
   "Personal site and public lab notebook of Dan Hopwood, who is building " +
-  "Fidero (a data platform for companies whose customer data breaks across " +
-  "domains and systems) entirely with AI agents. Writing on agentic coding, " +
-  "AI agents, Claude Code, data platforms and the discipline that makes both " +
-  "customer data and AI agents reliable.";
+  "Fidero entirely with AI agents. Written for founders and their leadership " +
+  "teams working out how their own company should run on AI agents, with " +
+  "practitioner detail on agentic coding and Claude Code. Fidero is a data " +
+  "platform for companies whose deals close in a CRM, or whose subscriptions " +
+  "start in an app or a billing tool. The thread through both is the " +
+  "discipline that makes customer data trustworthy and AI agents reliable. " +
+  "Dan also advises founders and leadership teams on AI agents and data.";
 
 export const GET: APIRoute = async ({ site }) => {
   const posts = getSortedPosts(await getCollection("blog"));

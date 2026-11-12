@@ -2,7 +2,7 @@ export const SITE = {
   website: "https://danhopwood.com/",
   author: "Dan Hopwood",
   profile: "https://danhopwood.com/",
-  desc: "Notes from building Fidero entirely with AI agents. Fidero is a data platform for companies whose customer data breaks across domains and systems.",
+  desc: "Notes from building Fidero entirely with AI agents. Fidero is a data platform for companies whose deals close in a CRM, or whose subscriptions start in an app or a billing tool.",
   title: "Dan Hopwood",
   ogImage: "", // deliberately empty – see docs/patterns/machine-readability.md
   lightAndDarkMode: true,
