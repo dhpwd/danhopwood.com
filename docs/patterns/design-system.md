@@ -55,3 +55,23 @@ Two exceptions. A filled accent button has the accent in its background rather t
 The second exception: motion adds to a colour change and never replaces one – `hover:rotate-6` on the `Socials.astro` and `ShareLinks.astro` icon rows, `hover:-mt-0.5` in `Tag.astro`, each sitting on top of a `hover:text-accent` the element sets itself (`Tag.astro`) or inherits from `LinkButton.astro` (the icon rows).
 
 **When to use:** any new interactive element, and any AstroPaper component being restyled.
+
+## Form fields
+
+**Problem:** `--border` is the divider token, about 1.2:1 against the background in light theme and 1.5:1 in dark. A text field outlined with it is close to invisible until it's focused, and WCAG 1.4.11 asks 3:1 for the boundary that identifies a control. Placeholders fall short too. Tailwind's preflight sets `::placeholder` to the text colour mixed 50% with transparent, about 3:1 in light theme against the 4.5:1 that WCAG 1.4.3 asks of text, and Safari before 17 skips that rule for the browser default. An opacity utility on the placeholder lowers it further.
+
+**Solution:** draw fields from `--foreground` at an opacity. Fields get no token of their own, and `--border` stays as it is for dividers.
+
+| Part        | Classes                                                                   | Light  | Dark   |
+| ----------- | ------------------------------------------------------------------------- | ------ | ------ |
+| Boundary    | `border-foreground/60`                                                    | 4.09:1 | 5.38:1 |
+| Placeholder | `placeholder:text-foreground/75`                                          | 6.44:1 | 7.69:1 |
+| Focus       | `focus:border-accent focus:ring-1 focus:ring-accent focus:outline-hidden` | –      | –      |
+
+The figures are measured in Chromium on all three forms, with the computed colour composited onto `--background`. 75% is the opacity the site already uses for muted text. Don't take the border below 60%: `/50` comes to about 3:1 in light theme, with no headroom.
+
+The focus ring is there because the accent border alone is a step of only about 1.3:1 from the 60% border at rest, close to a change of hue and nothing else. `ring-1` is a box-shadow, so it thickens the focused edge to 2px without moving the layout. `outline-hidden` replaces `outline-none` for Windows contrast themes. Those drop box-shadows and force border colours, and in Tailwind 4 `outline-none` sets only `outline-style: none`, which leaves a focused field with no marker. `outline-hidden` also draws a 2px transparent outline under `forced-colors: active`, which the contrast theme paints in its own colour.
+
+The search box on `/search` is Pagefind's markup, so it takes the same 60% and 75% foreground mixes as plain CSS in the `#pagefind-search` block of `search.astro`. Its placeholder rule also sets `opacity: 1`, overriding the `opacity: 0.2` placeholder rule in `@pagefind/default-ui/css/ui.css`, which the ID selector outranks. Without it the 75% colour renders at a fifth of that. Focus keeps the 1px accent outline on `input:focus-visible`, which sits outside the border as a second edge. `--pagefind-ui-border` stays `var(--border)`, because Pagefind draws result dividers with it too.
+
+**When to use:** any new text input or textarea, and any third-party widget that brings its own field styles.
