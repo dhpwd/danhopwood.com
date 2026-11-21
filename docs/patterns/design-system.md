@@ -76,16 +76,18 @@ The search box on `/search` is Pagefind's markup, so it takes the same 60% and 7
 
 **When to use:** any new text input or textarea, and any third-party widget that brings its own field styles.
 
-## Fields stay at 16px on phones
+## Fields stay at 16px on touch screens
 
 **Problem:** iOS Safari zooms the page when a text field under 16px takes focus, and leaves it zoomed after the keyboard closes, so the reader has to pinch back out. `text-sm` is 14px, so a field sized to match the small text around it triggers the zoom. Desktop browsers show nothing, so check a field's computed `font-size` rather than looking for the zoom. `maximum-scale=1` in the viewport meta also stops it, but blocks pinch zoom in browsers that honour it.
 
-**Solution:** give text fields `text-base sm:text-sm`, which is 16px below `sm` and 14px from 640px up. `inputClass` in `cloud-box-setup.astro` and the email field in `NewsletterSignup.astro` both do this. A button inline beside a field takes the same pair, so the row has one type size. A button on its own row, like "Request setup", stays `text-sm`, because buttons don't take text focus and so don't trigger the zoom.
+**Solution:** give text fields `text-base sm:pointer-fine:text-sm`. A field is 16px by default and drops to 14px only at 640px and up with a mouse or trackpad as the primary pointer, so a phone held sideways or a tablet keeps 16px. `inputClass` in `cloud-box-setup.astro` and the email field in `NewsletterSignup.astro` both do this. A button inline beside a field takes the same classes, so the row has one type size. A button on its own row, like "Request setup", stays `text-sm`, because buttons don't take text focus and so don't trigger the zoom.
+
+`sm:text-sm` on its own is the anti-pattern. `sm` tests viewport width only, and every current iPhone is wider than 640px in landscape, so a phone held sideways gets the 14px field.
 
 A field that is a flex item also needs `min-w-0`. Its default `min-width: auto` resolves to the input's intrinsic width, which grows with the font. Without it the 16px newsletter field won't shrink, and at 375px the Subscribe button overflows the card and the page scrolls sideways.
 
-`sm` tests viewport width only, so a phone held sideways (667px and wider) gets the 14px size. DHP-104 holds the decision on that case.
+To check the touch case in Chromium, turn on touch emulation over CDP (`Emulation.setTouchEmulationEnabled`), which makes `(pointer: coarse)` match. Setting the `pointer` feature through `Emulation.setEmulatedMedia` leaves `(pointer: fine)` matching.
 
-The `/search` box needs neither. Pagefind sizes its field at 16.8px at every width.
+The `/search` box needs none of this. Pagefind sizes its field at 16.8px at every width.
 
 **When to use:** any new text input or textarea.
