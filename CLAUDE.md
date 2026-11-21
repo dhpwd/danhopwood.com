@@ -45,5 +45,5 @@ pnpm generate:favicons  # regenerate public/ favicons from the brand tokens
 ## Key references
 
 - writing or editing a post → `docs/content-conventions.md`
-- Vercel, Plausible or Buttondown configuration → `docs/external-services.md`
+- Vercel, Plausible, Buttondown or Web3Forms configuration → `docs/external-services.md`
 - Astro framework questions → the `astro-docs` MCP
