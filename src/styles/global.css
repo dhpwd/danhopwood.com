@@ -33,6 +33,12 @@ html[data-theme="dark"] {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-accent: var(--accent);
+  /* Filled accent button hover – see docs/patterns/design-system.md */
+  --color-accent-hover: color-mix(
+    in srgb,
+    var(--accent) 70%,
+    var(--foreground)
+  );
   --color-muted: var(--muted);
   --color-border: var(--border);
 }
