@@ -109,7 +109,7 @@ const backUrl = SITE.showBackButton ? `${Astro.url.pathname}` : "/";
     /* Field contrast – see "Form fields" in docs/patterns/design-system.md */
     input {
       font-weight: 400;
-      border: 1px solid color-mix(in srgb, var(--foreground) 60%, transparent);
+      border-color: color-mix(in srgb, var(--foreground) 60%, transparent);
     }
 
     input::placeholder {
