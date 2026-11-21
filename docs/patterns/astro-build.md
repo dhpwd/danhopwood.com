@@ -32,6 +32,8 @@
 
 **Solution:** note `document.activeElement` before disabling, and call `focus()` on it once the control is enabled again. Focus returned this way doesn't draw a `:focus-visible` ring after a mouse click. `NewsletterSignup.astro`'s submit handler is the worked example.
 
+Where the form's spec puts focus on the submit button after every submit, call `focus()` on the button itself instead. Noting `document.activeElement` can't deliver that: after Enter in a field it is the field, and Safari on macOS doesn't focus a button on click, so after a click there it is `<body>`. The enquiry form in `cloud-box-setup.astro` does this.
+
 **When to use:** any handler that disables a control while work is pending.
 
 ## Testing client scripts and functions

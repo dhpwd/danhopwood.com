@@ -1,6 +1,6 @@
 # External services
 
-Three services sit outside the repo. How the site talks to each is recorded here. Their dashboard state is not – it changes without a commit, so a snapshot of it here would go stale with nothing to catch it. Where a gap is known, the ticket owns it.
+Four services sit outside the repo. How the site talks to each is recorded here. Their dashboard state is not – it changes without a commit, so a snapshot of it here would go stale with nothing to catch it. Where a gap is known, the ticket owns it.
 
 ## Vercel
 
@@ -56,3 +56,21 @@ The 403 stops another site's page from making its visitors' browsers subscribe a
 - Subscribers are tagged `website` through a hidden input. Further fields go in as `name="metadata__<key>"`
 - The "Read the latest issue" link below the form points at `buttondown.com/dhpwd/archive`. It is muted relative to the Subscribe button on purpose, to keep the CTA hierarchy
 - The strapline leads with the frequency and stays anti-sell. One short line, no hype
+
+## Web3Forms
+
+Delivers the enquiry form on `/cloud-box-setup` (`src/pages/cloud-box-setup.astro`) as an email. There is no function of ours in between: the browser posts straight to `https://api.web3forms.com/submit`, which Web3Forms recommends over server-side calls, since those need a paid plan and an allow-listed IP ([API reference](https://docs.web3forms.com/getting-started/api-reference)).
+
+**Access key.** `PUBLIC_WEB3FORMS_ACCESS_KEY` is a public client variable in the `astro.config.ts` `env.schema`, read from `astro:env/client` into the hidden `access_key` input at build time. It is public by design: the key can only send email to the inbox it was created for, so holding it lets nobody read submissions or send anywhere else. Set it as a Vercel environment variable, and in a local `.env` for a local build, never in the repo. It is optional, so the page builds without it. Every submit then fails: the inline path shows the failure line, and the native post lands on Web3Forms' error response.
+
+**Fields.** Besides `access_key`, the form carries:
+
+- Hidden `subject` (`Cloud box setup enquiry via danhopwood.com`) and `from_name` (`danhopwood.com`), which set the email's subject and sender name
+- A `botcheck` honeypot checkbox, off-screen with `aria-hidden` and `tabindex="-1"`. A real visitor never ticks it, so it is left out of the form data. Web3Forms marks this honeypot deprecated and recommends a captcha instead ([Honeypot](https://docs.web3forms.com/getting-started/customizations/spam-protection/spam-protection))
+- `name`, `email` and `message`, all `required`. Web3Forms sets the email's reply-to from `email`
+
+**Inline path.** The submit handler disables the button, clears the `role="status"` paragraph and POSTs the form data as JSON with a 10s timeout (none on Safari before 16, which lacks `AbortSignal.timeout`). Success is a 2xx whose JSON body has `success: true`, the response body Web3Forms documents for a 200. The handler then clears the form and shows the success line. Anything else – another status (400 for a bad request, 429 for the per-IP rate limit), `success` not `true`, an unparseable body, a network error or the timeout – keeps what the visitor typed and shows the failure line, whose LinkedIn link opens in a new tab so the typed text survives. Either way the button is re-enabled and takes focus, after Enter in a field too (see `docs/patterns/astro-build.md`). The LinkedIn URL comes from `SOCIALS` in `src/constants.ts`, passed to the script as the form's `data-linkedin`.
+
+**Never send `redirect` from fetch.** Web3Forms answers a `redirect` field with a redirect to that URL, which is for the no-JavaScript path only. A fetch that follows it fails on CORS while the email still sends ([Troubleshooting](https://docs.web3forms.com/getting-started/troubleshooting)), so the visitor would see the failure line for an enquiry that arrived. The same page names the two other failures to expect: a 429 when one IP submits too often, which lifts after an hour, and a refusal of the sending domain, which Web3Forms applies to some domains by default and lifts only through its support.
+
+**No JavaScript.** The form's `action` and `method` post it natively, and Web3Forms shows its own success page.

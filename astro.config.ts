@@ -76,6 +76,11 @@ export default defineConfig({
         context: "client",
         optional: true,
       }),
+      PUBLIC_WEB3FORMS_ACCESS_KEY: envField.string({
+        access: "public",
+        context: "client",
+        optional: true,
+      }),
     },
   },
   experimental: {
