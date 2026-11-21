@@ -75,3 +75,17 @@ The focus ring is there because the accent border alone is a step of only about 
 The search box on `/search` is Pagefind's markup, so it takes the same 60% and 75% foreground mixes as plain CSS in the `#pagefind-search` block of `search.astro`. Its placeholder rule also sets `opacity: 1`, overriding the `opacity: 0.2` placeholder rule in `@pagefind/default-ui/css/ui.css`, which the ID selector outranks. Without it the 75% colour renders at a fifth of that. Focus keeps the 1px accent outline on `input:focus-visible`, which sits outside the border as a second edge. `--pagefind-ui-border` stays `var(--border)`, because Pagefind draws result dividers with it too.
 
 **When to use:** any new text input or textarea, and any third-party widget that brings its own field styles.
+
+## Fields stay at 16px on phones
+
+**Problem:** iOS Safari zooms the page when a text field under 16px takes focus, and leaves it zoomed after the keyboard closes, so the reader has to pinch back out. `text-sm` is 14px, so a field sized to match the small text around it triggers the zoom. Desktop browsers show nothing, so check a field's computed `font-size` rather than looking for the zoom. `maximum-scale=1` in the viewport meta also stops it, but blocks pinch zoom in browsers that honour it.
+
+**Solution:** give text fields `text-base sm:text-sm`, which is 16px below `sm` and 14px from 640px up. `inputClass` in `cloud-box-setup.astro` and the email field in `NewsletterSignup.astro` both do this. A button inline beside a field takes the same pair, so the row has one type size. A button on its own row, like "Request setup", stays `text-sm`, because buttons don't take text focus and so don't trigger the zoom.
+
+A field that is a flex item also needs `min-w-0`. Its default `min-width: auto` resolves to the input's intrinsic width, which grows with the font. Without it the 16px newsletter field won't shrink, and at 375px the Subscribe button overflows the card and the page scrolls sideways.
+
+`sm` tests viewport width only, so a phone held sideways (667px and wider) gets the 14px size. DHP-104 holds the decision on that case.
+
+The `/search` box needs neither. Pagefind sizes its field at 16.8px at every width.
+
+**When to use:** any new text input or textarea.
