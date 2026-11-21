@@ -387,9 +387,7 @@ const inputClass =
     );
   }
 
-  // The catch also covers browsers without AbortSignal.timeout, which throws
-  // before fetch runs. Never send a `redirect` field from here – see
-  // docs/external-services.md.
+  // Never send a `redirect` field from here – see docs/external-services.md.
   async function send(form: HTMLFormElement) {
     try {
       const response = await fetch(form.action, {
@@ -399,7 +397,9 @@ const inputClass =
           Accept: "application/json",
         },
         body: JSON.stringify(Object.fromEntries(new FormData(form))),
-        signal: AbortSignal.timeout(10000),
+        // Safari before 16 has no AbortSignal.timeout. There the request runs
+        // without a timeout, rather than throwing and failing every submit
+        signal: AbortSignal.timeout?.(10000),
       });
       if (!response.ok) return false;
       const result = await response.json();
@@ -423,9 +423,6 @@ const inputClass =
 
     form.addEventListener("submit", async event => {
       event.preventDefault();
-      // Disabling a focused button drops focus to <body>, so note where it
-      // was and put it back once the button is enabled again
-      const focused = document.activeElement;
       button.disabled = true;
       status.textContent = "";
 
@@ -438,11 +435,13 @@ const inputClass =
       } else {
         showFailure(status, form.dataset.linkedin!);
       }
-      if (focused instanceof HTMLElement) focused.focus();
+      // Focus goes to the button on every route, Enter in a field included –
+      // see "Disabling a focused button drops focus" in
+      // docs/patterns/astro-build.md
+      button.focus();
     });
   }
 
-  // The client router swaps the DOM without re-running this module, so the
-  // listener has to be re-attached per navigation.
+  // See "Client scripts and View Transitions" in docs/patterns/astro-build.md
   document.addEventListener("astro:page-load", initSetupForm);
 </script>
