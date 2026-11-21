@@ -30,7 +30,7 @@ _Slack output style: 202 words, and far easier to digest – it leads with the o
 
 ## The file
 
-This is the output style I run in every coding session. The same block (lightly adapted) sits at the top of each of my [custom agents](/posts/two-ways-to-change-claudes-personality) (my EA, my product manager) because none of this is coding-specific. The file is on its third name: Concise, then Briefing, then Slack. Each rename tracked where the mental model had moved.
+This is the output style I run in every coding session. The same block (lightly adapted) sits at the top of each of my [custom agents](/posts/two-ways-to-change-claudes-personality) (my EA, [my product manager](/posts/what-my-ai-agents-decide-without-me)) because none of this is coding-specific. The file is on its third name: Concise, then Briefing, then Slack. Each rename tracked where the mental model had moved.
 
 ```markdown
 ---
