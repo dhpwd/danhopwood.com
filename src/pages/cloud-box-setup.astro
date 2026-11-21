@@ -4,6 +4,9 @@ import Layout from "@/layouts/Layout.astro";
 import Header from "@/components/Header.astro";
 import Footer from "@/components/Footer.astro";
 import { SITE } from "@/config";
+import { SOCIALS } from "@/constants";
+
+const linkedIn = SOCIALS.find(({ name }) => name === "LinkedIn")!.href;
 
 const heading = "Claude Code that keeps working when your laptop is shut";
 const opening =
@@ -32,6 +35,7 @@ const chipClass = {
 };
 
 const sectionClass = "flex flex-col gap-5 border-t border-border pt-8";
+const headingClass = "text-xl leading-[1.3] font-semibold";
 const labelClass =
   "font-mono text-[0.8125rem] font-medium tracking-[0.04em] uppercase";
 const listClass = "flex flex-col gap-2.5 pl-5 marker:text-accent";
@@ -58,9 +62,7 @@ const inputClass =
       </div>
 
       <section aria-labelledby="shift-h" class={sectionClass}>
-        <h2 id="shift-h" class="text-xl leading-[1.3] font-semibold">
-          What changes
-        </h2>
+        <h2 id="shift-h" class={headingClass}>What changes</h2>
         <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <div
             class="flex min-w-0 flex-col gap-2 rounded-md border border-border px-5 py-[1.125rem]"
@@ -85,9 +87,7 @@ const inputClass =
       </section>
 
       <section aria-labelledby="get-h" class={sectionClass}>
-        <h2 id="get-h" class="text-xl leading-[1.3] font-semibold">
-          What you get
-        </h2>
+        <h2 id="get-h" class={headingClass}>What you get</h2>
         <ul class:list={[listClass, "list-disc"]}>
           <li>
             A server in your own account, running Claude Code all the time on
@@ -115,9 +115,7 @@ const inputClass =
       </section>
 
       <section aria-labelledby="how-h" class={sectionClass}>
-        <h2 id="how-h" class="text-xl leading-[1.3] font-semibold">
-          How it works
-        </h2>
+        <h2 id="how-h" class={headingClass}>How it works</h2>
         <ol
           class:list={[
             listClass,
@@ -147,9 +145,7 @@ const inputClass =
       </section>
 
       <section aria-labelledby="why-h" class={sectionClass}>
-        <h2 id="why-h" class="text-xl leading-[1.3] font-semibold">
-          Why a server
-        </h2>
+        <h2 id="why-h" class={headingClass}>Why a server</h2>
         <ul class:list={[listClass, "list-disc"]}>
           <li>
             <strong class="font-semibold">A keep-awake app</strong> works while the
@@ -169,7 +165,7 @@ const inputClass =
       </section>
 
       <section aria-labelledby="price-h" class={sectionClass}>
-        <h2 id="price-h" class="text-xl leading-[1.3] font-semibold">Price</h2>
+        <h2 id="price-h" class={headingClass}>Price</h2>
         <p>
           The price is one-off, plus VAT. The first three places are at a
           founding price, because you'd be among the first people I've set this
@@ -259,9 +255,7 @@ const inputClass =
       </section>
 
       <section aria-labelledby="need-h" class={sectionClass}>
-        <h2 id="need-h" class="text-xl leading-[1.3] font-semibold">
-          What you need
-        </h2>
+        <h2 id="need-h" class={headingClass}>What you need</h2>
         <ul class:list={[listClass, "list-disc"]}>
           <li>A paid Claude plan</li>
           <li>Your work in GitHub</li>
@@ -279,9 +273,7 @@ const inputClass =
         aria-labelledby="cta-h"
         class="flex flex-col gap-1.5 rounded-md border border-accent px-[1.375rem] py-5"
       >
-        <h2 id="cta-h" class="text-xl leading-[1.3] font-semibold">
-          Get it set up
-        </h2>
+        <h2 id="cta-h" class={headingClass}>Get it set up</h2>
         <p>
           Tell me what you'd want running on it and I'll email you back to see
           if it fits.
@@ -293,6 +285,7 @@ const inputClass =
           method="POST"
           class="mt-3 flex flex-col gap-4"
           data-setup-form
+          data-linkedin={linkedIn}
         >
           <input
             type="hidden"
@@ -378,10 +371,10 @@ const inputClass =
   const SUCCESS_LINE =
     "Thanks, that's with me. I'll reply by email, and nothing's booked until I send the invoice.";
 
-  function showFailure(status: Element) {
+  function showFailure(status: Element, linkedIn: string) {
     // A new tab, so the text the visitor typed survives
     const link = document.createElement("a");
-    link.href = "https://www.linkedin.com/in/dhpwd";
+    link.href = linkedIn;
     link.target = "_blank";
     link.rel = "noopener noreferrer";
     link.className =
@@ -394,10 +387,9 @@ const inputClass =
     );
   }
 
-  // Web3Forms answers a successful submit with 200 and `success: true`.
-  // Anything else, an unparseable body or a thrown fetch (network error,
-  // timeout, no AbortSignal.timeout) counts as a failure. Never send a
-  // `redirect` field from here – see docs/external-services.md.
+  // The catch also covers browsers without AbortSignal.timeout, which throws
+  // before fetch runs. Never send a `redirect` field from here – see
+  // docs/external-services.md.
   async function send(form: HTMLFormElement) {
     try {
       const response = await fetch(form.action, {
@@ -411,47 +403,46 @@ const inputClass =
       });
       if (!response.ok) return false;
       const result = await response.json();
-      return result?.success === true;
+      return result.success === true;
     } catch {
       return false;
     }
   }
 
-  function initSetupForms() {
-    document
-      .querySelectorAll<HTMLFormElement>("form[data-setup-form]")
-      .forEach(form => {
-        if (form.dataset.initialized) return;
-        form.dataset.initialized = "true";
+  function initSetupForm() {
+    const form = document.querySelector<HTMLFormElement>(
+      "form[data-setup-form]"
+    );
+    if (!form || form.dataset.initialized) return;
+    form.dataset.initialized = "true";
 
-        const button = form.querySelector<HTMLButtonElement>(
-          "button[type=submit]"
-        )!;
-        const status = form.querySelector("[data-setup-status]")!;
+    const button = form.querySelector<HTMLButtonElement>(
+      "button[type=submit]"
+    )!;
+    const status = form.querySelector("[data-setup-status]")!;
 
-        form.addEventListener("submit", async event => {
-          event.preventDefault();
-          // Disabling the focused button drops focus to <body>, so focus goes
-          // back to the button once it's enabled, on both the click and the
-          // Enter-in-a-field routes
-          button.disabled = true;
-          status.textContent = "";
+    form.addEventListener("submit", async event => {
+      event.preventDefault();
+      // Disabling a focused button drops focus to <body>, so note where it
+      // was and put it back once the button is enabled again
+      const focused = document.activeElement;
+      button.disabled = true;
+      status.textContent = "";
 
-          const ok = await send(form);
+      const ok = await send(form);
 
-          button.disabled = false;
-          if (ok) {
-            form.reset();
-            status.textContent = SUCCESS_LINE;
-          } else {
-            showFailure(status);
-          }
-          button.focus();
-        });
-      });
+      button.disabled = false;
+      if (ok) {
+        form.reset();
+        status.textContent = SUCCESS_LINE;
+      } else {
+        showFailure(status, form.dataset.linkedin!);
+      }
+      if (focused instanceof HTMLElement) focused.focus();
+    });
   }
 
   // The client router swaps the DOM without re-running this module, so the
   // listener has to be re-attached per navigation.
-  document.addEventListener("astro:page-load", initSetupForms);
+  document.addEventListener("astro:page-load", initSetupForm);
 </script>
