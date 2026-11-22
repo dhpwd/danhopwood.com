@@ -8,6 +8,18 @@
 
 **When to use:** after deleting or renaming a content collection entry, when a route you removed still appears in `dist/`.
 
+## Reading posts in a route
+
+**Problem:** `postFilter` (`src/utils/postFilter.ts`) decides which posts are public: not a draft and, in a production build, past its `pubDatetime` less `SITE.scheduledPostMargin`. A route that filters the blog collection on `!data.draft` alone builds a scheduled post in production. It gets a page, a share card, a sitemap entry and a search entry, while the listings hide it. `pnpm dev` hides the leak, because `postFilter` passes every non-draft post in dev.
+
+**Solution:** pass `postFilter` to `getCollection`: `getCollection("blog", postFilter)`, or `post => postFilter(post) && …` where the route adds a condition, as the share-card route `index.png.ts` does. A route that also needs the listing order calls `getSortedPosts`, which applies `postFilter` itself. The date check lives in `postFilter` alone.
+
+To check a change here, add a temporary post with `draft: false` and a `pubDatetime` a day ahead, then run a production build. Confirm `dist/posts/<slug>/` doesn't exist and no other built file names the slug. Then on `pnpm preview`, look up a phrase from the post's body on `/search`: the Pagefind index is compressed, so a grep of `dist/` misses it. Delete `node_modules/.astro/data-store.json` before each build (see above).
+
+**Anti-pattern:** `getCollection("blog", ({ data }) => !data.draft)`. `src/pages/posts/[...page].astro` still has it, ahead of `getSortedPosts`, which makes it harmless there. A route that doesn't call `getSortedPosts` leaks scheduled posts with it.
+
+**When to use:** writing or changing any route that reads the blog collection.
+
 ## Server code goes in root `api/`, not the Vercel adapter
 
 **Problem:** the usual Astro answer for an endpoint is the `@astrojs/vercel` adapter with on-demand routes. With the adapter, Vercel deploys `.vercel/output`, which `astro build` writes before the build script's `pagefind --site dist` step runs. The deployed site loses its search index, and the build passes.
