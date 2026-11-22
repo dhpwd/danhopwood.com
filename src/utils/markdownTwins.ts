@@ -18,10 +18,10 @@ import { toMarkdown, type Options } from "mdast-util-to-markdown";
 type Root = ReturnType<typeof fromHtml>;
 type Element = NonNullable<ReturnType<typeof select>>;
 
-// Interface text that isn't page content. `.sr-only` text stays, since it is
-// what a screen reader reads.
+// Interface text that isn't page content, and on a post what follows the
+// article. `.sr-only` text stays, since it is what a screen reader reads.
 const DROP =
-  "[aria-hidden='true'], svg, script, style, button, form, nav, .newsletter-signup, #pagefind-search, [data-pagefind-ui]";
+  "[aria-hidden='true'], svg, script, style, button, form, nav, .newsletter-signup, #pagefind-search, [data-pagefind-ui], #article ~ *";
 
 const MARKDOWN_OPTIONS: Options = {
   extensions: [gfmToMarkdown()],
@@ -30,18 +30,16 @@ const MARKDOWN_OPTIONS: Options = {
   rule: "-",
 };
 
-const trimSlash = (path: string) => path.replace(/(.)\/$/, "$1");
-
 /** Every URL path in the built sitemap. */
 function sitemapPaths(dist: string) {
   return readdirSync(dist)
-    .filter(f => /^sitemap-.+\.xml$/.test(f) && f !== "sitemap-index.xml")
+    .filter(f => /^sitemap-\d+\.xml$/.test(f))
     .flatMap(f =>
       [
         ...readFileSync(join(dist, f), "utf-8").matchAll(
           /<loc>([^<]+)<\/loc>/g
         ),
-      ].map(m => trimSlash(new URL(m[1]).pathname))
+      ].map(m => new URL(m[1]).pathname)
     );
 }
 
@@ -59,7 +57,9 @@ function builtPagePaths(dist: string, path = ""): string[] {
 }
 
 /** A built page's title and main content as Markdown, or what stops it. */
-function pageToMarkdown(html: string): { markdown?: string; problem?: string } {
+function pageToMarkdown(
+  html: string
+): { markdown: string } | { problem: string } {
   const tree = fromHtml(html);
   const main = select("#main-content", tree);
   if (!main) return { problem: "has no #main-content" };
@@ -67,18 +67,11 @@ function pageToMarkdown(html: string): { markdown?: string; problem?: string } {
   if (headings.length !== 1)
     return { problem: `has ${headings.length} h1 elements in <main>, not one` };
   const [h1] = headings;
-
-  // A post's twin ends with the article, before the signup, tags and links
-  // that follow it. Its date line is the eyebrow above the title.
-  const article = select("#article", main);
-  const content = article
-    ? [select(".eyebrow", main), article].filter(node => node !== undefined)
-    : [main];
-  const root: Root = { type: "root", children: [h1, ...content] };
+  const root: Root = { type: "root", children: [h1, main] };
 
   // hast-util-to-mdast reads a code block's language from `code`'s class,
   // where Shiki puts it on `pre`.
-  for (const pre of selectAll("pre.astro-code[data-language]", root)) {
+  for (const pre of selectAll("pre.astro-code[data-language]", main)) {
     const code = pre.children.find(
       (child): child is Element =>
         child.type === "element" && child.tagName === "code"
@@ -90,27 +83,23 @@ function pageToMarkdown(html: string): { markdown?: string; problem?: string } {
 
   // A flex or grid item is its own box, so on the page its text never runs
   // on from the item before it (a tag's name and its count on /tags).
-  // Tailwind reads this file for class names, so a class named here that no
-  // page uses would add a rule to the site's CSS and change every page.
-  for (const box of selectAll(".flex, .inline-flex, .grid", root))
+  for (const box of selectAll(".flex, .inline-flex, .grid, .ledger", main))
     box.children = box.children.flatMap((child, i) =>
       i === 0 ? [child] : [{ type: "text", value: " " }, child]
     );
 
   // The h1 leads the twin, so it leaves its place in the content. HTML
   // comments are notes in the source, not page text.
-  const drop = new Set<unknown>(selectAll(DROP, root));
-  const prune = (node: Root | Element) => {
-    node.children = (node.children as Element["children"]).filter(
-      child =>
-        child.type !== "comment" &&
-        !drop.has(child) &&
-        (child !== h1 || node === root)
+  const drop = new Set<unknown>([...selectAll(DROP, main), h1]);
+  const prune = (node: Element) => {
+    node.children = node.children.filter(
+      child => child.type !== "comment" && !drop.has(child)
     );
     for (const child of node.children)
       if (child.type === "element") prune(child);
   };
-  prune(root);
+  prune(h1);
+  prune(main);
 
   return { markdown: toMarkdown(toMdast(root), MARKDOWN_OPTIONS) };
 }
@@ -122,28 +111,25 @@ function pageToMarkdown(html: string): { markdown?: string; problem?: string } {
  */
 function writeTwins(dist: string) {
   const problems: string[] = [];
-  const twinFile = (path: string) =>
-    join(dist, path === "/" ? "index.md" : `${path}.md`);
+  const twins = new Set<string>();
 
   const paths = sitemapPaths(dist);
   for (const path of paths) {
-    const { markdown, problem } = pageToMarkdown(
-      readFileSync(join(dist, path.slice(1), "index.html"), "utf-8")
+    const result = pageToMarkdown(
+      readFileSync(join(dist, path, "index.html"), "utf-8")
     );
-    if (markdown === undefined) {
-      problems.push(`${path}'s page ${problem}`);
+    if ("problem" in result) {
+      problems.push(`${path} has no twin: its page ${result.problem}`);
       continue;
     }
-    if (!markdown.startsWith("# "))
+    if (!result.markdown.startsWith("# "))
       problems.push(`${path}'s twin doesn't start with "# "`);
-    writeFileSync(twinFile(path), markdown);
+    writeFileSync(
+      join(dist, path === "/" ? "index.md" : `${path}.md`),
+      result.markdown
+    );
+    twins.add(path);
   }
-
-  // Read back from disk, so a page the loop above skips is caught too.
-  const twins = new Set(paths.filter(path => existsSync(twinFile(path))));
-  for (const path of paths)
-    if (!twins.has(path))
-      problems.push(`${path} is in the sitemap but has no twin`);
 
   // vercel.json's `^/$` routes serve /index.md whatever the sitemap holds.
   if (!paths.includes("/"))
@@ -166,8 +152,7 @@ function writeTwins(dist: string) {
   const pageRoutes = routes.filter(
     r => r.dest === "/$1.md" || r.headers?.link?.startsWith("</$1.md>")
   );
-  const sources = new Set(pageRoutes.map(r => r.src));
-  if (pageRoutes.length !== 2 || sources.size !== 1) {
+  if (pageRoutes.length !== 2 || pageRoutes[0].src !== pageRoutes[1].src) {
     problems.push(
       "vercel.json's alternate-link and negotiation routes no longer share one page regex"
     );
@@ -182,22 +167,17 @@ function writeTwins(dist: string) {
       );
     // Both slash forms of a page with a twin must match and capture its own
     // path, since the routes send `$1` to /$1.md.
-    const pageRegex = new RegExp([...sources][0] ?? "");
+    const pageRegex = new RegExp(pageRoutes[0].src ?? "");
     for (const path of builtPagePaths(dist)) {
-      const matches = [path, `${path}/`].map(p => pageRegex.exec(p));
-      const wrong = matches.find(m => m && `/${m[1]}` !== path);
+      const forms = [path, `${path}/`];
       if (!twins.has(path)) {
-        if (matches.some(Boolean))
+        if (forms.some(p => pageRegex.test(p)))
           problems.push(
             `vercel.json's page regex matches ${path}, which has no twin`
           );
-      } else if (!matches.every(Boolean)) {
+      } else if (!forms.every(p => pageRegex.exec(p)?.[1] === path.slice(1))) {
         problems.push(
-          `vercel.json's page regex misses ${path} or ${path}/, which has a twin`
-        );
-      } else if (wrong) {
-        problems.push(
-          `vercel.json's page regex sends ${path} to /${wrong[1]}.md, not its twin`
+          `vercel.json's page regex doesn't send ${path} and ${path}/ to its twin`
         );
       }
     }
