@@ -9,6 +9,7 @@ import {
   hostname,
   palette,
   tagline,
+  titleStyle,
 } from "./shared";
 
 export default async () => {
@@ -62,15 +63,7 @@ export default async () => {
                       {
                         type: "div",
                         props: {
-                          style: {
-                            display: "block",
-                            fontSize: 64,
-                            fontWeight: 600,
-                            lineHeight: 1.12,
-                            letterSpacing: "-0.028em",
-                            color: palette.foreground,
-                            fontFamily: "Geist",
-                          },
+                          style: titleStyle,
                           children: SITE.title,
                         },
                       },

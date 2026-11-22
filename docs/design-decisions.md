@@ -63,7 +63,7 @@ Rejected:
 
 ## Selected text and search matches sit on the accent tint
 
-Selected text, Pagefind's search matches and the phone tap flash share one tint, the accent at 20%, with the text in the text colour. Measured at 10.5:1 in light theme and 9.5:1 in dark.
+Selected text, Pagefind's search matches and the phone tap flash share one tint, the accent at 20%, with the text in the text colour, well clear of AA in both themes.
 
 Rejected: a solid accent selection. With `bg-accent/75` and `text-background` it measured 4.07:1 in light theme and 4.34:1 in dark, under AA, and reads as an error highlight.
 

@@ -48,6 +48,17 @@ export const palette = {
   faint: "#8a8a8a", // no token – muted grey for the tagline
 };
 
+/** Card title – the site's page-title treatment at card scale. */
+export const titleStyle = {
+  display: "block",
+  fontSize: 64,
+  fontWeight: 600,
+  lineHeight: 1.12,
+  letterSpacing: "-0.028em",
+  color: palette.foreground,
+  fontFamily: "Geist",
+};
+
 /** Faint dot grid – the lab-notebook ground shared by both templates. */
 export const dotGrid = {
   backgroundImage: `radial-gradient(circle at 16px 16px, ${palette.grid} 6%, transparent 6%)`,

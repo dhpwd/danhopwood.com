@@ -8,6 +8,7 @@ import {
   hostname,
   palette,
   tagline,
+  titleStyle,
 } from "./shared";
 
 export default async post => {
@@ -51,15 +52,9 @@ export default async post => {
                         type: "div",
                         props: {
                           style: {
-                            display: "block",
+                            ...titleStyle,
                             lineClamp: 3,
-                            fontSize: 64,
-                            fontWeight: 600,
-                            lineHeight: 1.12,
-                            letterSpacing: "-0.028em",
                             textWrap: "balance",
-                            color: palette.foreground,
-                            fontFamily: "Geist",
                           },
                           children: post.data.title,
                         },

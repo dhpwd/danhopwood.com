@@ -23,7 +23,7 @@ They sit on `:root` as plain custom properties and are then mapped in `@theme in
 
 `--dashed-decoration` is the one token satori never sees, since the cards carry no links. It is restated in `typography.css` for prose links, because the `global.css` base rule can't reach them.
 
-Code blocks are the one area with its own palette: the shiki themes `vitesse-light` and `vitesse-dark`, set in `astro.config.ts`. On the warm dark ground, `vitesse-dark`'s `#121212` reads as an inset well. Swapping them means checking both modes.
+Code blocks are the one area with its own palette: the shiki themes `vitesse-light` and `vitesse-dark`, set in `astro.config.ts`. Swapping them means checking both modes.
 
 **When to use:** any change to the palette or a theme token.
 
@@ -36,8 +36,8 @@ Code blocks are the one area with its own palette: the shiki themes `vitesse-lig
 **Solution:** every piece of text takes one of three treatments, each with a fixed style. Pick the treatment and use its shared style – new work adds no face, size or tracking of its own.
 
 - **Prose** – Geist, via `font-app` and the body default. Links carry dashed underlines (`decoration-dashed underline-offset-4`), the site's signature, at body weight
-- **Titles** – Geist at 600 with `text-wrap: balance` and -0.02em tracking, from the global `h1`–`h6` rule in `global.css`. Two `@utility` blocks there set the scale: `title-page` (`clamp(1.875rem, 1.45rem + 1.9vw, 2.5rem)`, line-height 1.12, tracking -0.028em) for a page's `h1`, and `title-item` (1.25rem, line-height 1.3, tracking -0.018em) for a card title or a section heading. In-post headings keep the prose plugin's sizes. Its own heading weights (800, 700, 600) outrank the global rule, so `typography.css` restates 600 and -0.02em on `.app-prose h1` to `h4`
-- **Mono** – Geist Mono, for the site name, labels, the eyebrow, dates, metadata and the breadcrumb, via an explicit `font-mono` or a shared utility. `eyebrow` (0.8125rem, tracking 0.02em, `text-accent`) is the mono accent line above a page's title. `label-caps` (0.8125rem, weight 500, tracking 0.04em, uppercase) labels a group, with `text-foreground/75` where the label is muted. A numeral set large, like the 404 page's, takes `font-mono` explicitly, since headings are no longer mono. UI state markers such as `.active-nav` use solid underlines, not dashed
+- **Titles** – Geist at 600 with balanced wrapping, from the global `h1`–`h6` rule in `global.css`. Two `@utility` blocks there set the scale: `title-page` for a page's `h1`, fluid between 30px and 40px, and `title-item` for a card title or a section heading. In-post headings keep the prose plugin's sizes. Its own heading weights (800, 700, 600) outrank the global rule, so `typography.css` restates the weight and tracking on `.app-prose h1` to `h4`
+- **Mono** – Geist Mono, for the site name, labels, the eyebrow, dates, metadata and the breadcrumb, via an explicit `font-mono` or a shared utility. `eyebrow` is the small mono accent line above a page's title. `label-caps` is the small uppercase label for a group, with `text-foreground/75` where the label is muted. A numeral set large, like the 404 page's, takes `font-mono` explicitly, since headings are no longer mono. UI state markers such as `.active-nav` use solid underlines, not dashed
 
 Nav links are Geist at 500 (`font-medium`), not mono.
 
@@ -66,8 +66,8 @@ No italic Geist face is loaded. Semantic emphasis (`em`, blockquotes) renders as
 
 **Solution:** each control moves one colour step on hover and one more on press, from two `@utility` blocks in `global.css`.
 
-- `interactive`, for text and icon controls: `transition-colors hover:text-accent active:text-accent-strong`. Icon SVGs stroke `currentColor`, so an icon follows its anchor with no rule of its own. `LinkButton.astro` applies it, so every `LinkButton` has it
-- `interactive-fill`, for filled accent buttons: `transition-[background-color,translate] enabled:hover:bg-accent-strong enabled:active:bg-accent-stronger motion-safe:enabled:active:translate-y-px`. The fill steps, and the button settles 1px on press. Subscribe in `NewsletterSignup.astro` and Request setup in `cloud-box-setup.astro` use it. The label is `text-background`, never `text-white`: white on the dark accent is 2.61:1. `disabled:opacity-60` dims the button while a submit is pending, and disabled controls are exempt from the contrast minimum
+- `interactive`, for text and icon controls: the text steps to `accent` on hover and `accent-strong` on press. Icon SVGs stroke `currentColor`, so an icon follows its anchor with no rule of its own. `LinkButton.astro` applies it, so every `LinkButton` has it
+- `interactive-fill`, for filled accent buttons: the fill steps to `accent-strong` on hover and `accent-stronger` on press, only while the button is enabled, and the button settles 1px on press. Subscribe in `NewsletterSignup.astro` and Request setup in `cloud-box-setup.astro` use it. The label is `text-background`, never `text-white`: white on the dark accent is 2.61:1. `disabled:opacity-60` dims the button while a submit is pending, and disabled controls are exempt from the contrast minimum
 - `.active-nav` rests on the accent, so it steps to `accent-strong` on hover and `accent-stronger` on press. The active Search and Archives icon links take it too, and their icons follow. It sits outside any layer in `global.css`, so it outranks the `interactive` on the same link
 
 The steps mix the accent towards `--foreground`. That darkens the light theme's accent and lightens the dark theme's, away from the `text-background` label each time, so each step raises contrast. Measured in Chromium, light then dark:
@@ -82,7 +82,7 @@ The steps mix the accent towards `--foreground`. That darkens the light theme's 
 | Button label on press                                      | 10.18:1 | 9.21:1 |
 | Accent on `--muted` (the copy button on hover)             | 5.65:1  | 5.78:1 |
 
-Timing: `--default-transition-duration: 150ms` and `--default-transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1)` sit in a `@theme` block, so every Tailwind transition utility takes them. A control names only the properties it transitions (`transition-colors`, `transition-[border-color,box-shadow]`).
+Timing: `--default-transition-duration` and `--default-transition-timing-function` (150ms, decelerating) sit in a `@theme` block, so every Tailwind transition utility takes them. A control names only the properties it transitions (`transition-colors`, `transition-[border-color,box-shadow]`).
 
 A muted control rests on a colour, not an opacity (`text-foreground/75`), so its hover reaches the full accent. Decoration beside a control's text can keep an opacity, like the hash in `Tag.astro`.
 

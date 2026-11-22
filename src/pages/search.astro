@@ -110,11 +110,9 @@ const backUrl = SITE.showBackButton ? `${Astro.url.pathname}` : "/";
     input {
       font-weight: 400;
       border-color: color-mix(in srgb, var(--foreground) 60%, transparent);
-      transition:
-        border-color var(--default-transition-duration)
-          var(--default-transition-timing-function),
-        box-shadow var(--default-transition-duration)
-          var(--default-transition-timing-function);
+      transition-property: border-color, box-shadow;
+      transition-duration: var(--default-transition-duration);
+      transition-timing-function: var(--default-transition-timing-function);
     }
 
     input::placeholder {
@@ -136,8 +134,7 @@ const backUrl = SITE.showBackButton ? `${Astro.url.pathname}` : "/";
       text-underline-offset: 4px;
     }
 
-    .pagefind-ui__result-title a:focus-visible,
-    .pagefind-ui__search-clear:focus-visible {
+    .pagefind-ui__result-title a:focus-visible {
       text-decoration-line: none;
       outline-width: 2px;
       outline-style: dashed;
@@ -157,11 +154,9 @@ const backUrl = SITE.showBackButton ? `${Astro.url.pathname}` : "/";
   #pagefind-search .pagefind-ui__result-link,
   #pagefind-search .pagefind-ui__search-clear,
   #pagefind-search .pagefind-ui__button {
-    transition:
-      color var(--default-transition-duration)
-        var(--default-transition-timing-function),
-      border-color var(--default-transition-duration)
-        var(--default-transition-timing-function);
+    transition-property: color, border-color;
+    transition-duration: var(--default-transition-duration);
+    transition-timing-function: var(--default-transition-timing-function);
   }
 
   #pagefind-search .pagefind-ui__search-clear:focus-visible,
@@ -175,12 +170,11 @@ const backUrl = SITE.showBackButton ? `${Astro.url.pathname}` : "/";
     border-color: color-mix(in srgb, var(--foreground) 60%, transparent);
   }
 
+  /* Pagefind's reset leaves result links and Clear with no border, so the
+     border step reaches "Load more results" only. */
   @media (hover: hover) {
     #pagefind-search .pagefind-ui__result-link:hover,
-    #pagefind-search .pagefind-ui__search-clear:hover {
-      color: var(--accent);
-    }
-
+    #pagefind-search .pagefind-ui__search-clear:hover,
     #pagefind-search .pagefind-ui__button:hover {
       color: var(--accent);
       border-color: var(--accent);
@@ -188,10 +182,7 @@ const backUrl = SITE.showBackButton ? `${Astro.url.pathname}` : "/";
   }
 
   #pagefind-search .pagefind-ui__result-link:active,
-  #pagefind-search .pagefind-ui__search-clear:active {
-    color: var(--accent-strong);
-  }
-
+  #pagefind-search .pagefind-ui__search-clear:active,
   #pagefind-search .pagefind-ui__button:active {
     color: var(--accent-strong);
     border-color: var(--accent-strong);

@@ -27,10 +27,9 @@ html[data-theme="dark"] {
   --dashed-decoration: color-mix(in srgb, currentcolor 45%, transparent);
 }
 
-/* Derived from the theme tokens, so they need no value per theme and no
-   satori mirror. The accent one and two steps towards the text colour are
-   the hover and press steps, and the tint is the ground for selected text,
-   search matches and the tap flash – see "One interaction behaviour" in
+/* Mixes of the theme tokens, so they need no value per theme and no satori
+   mirror. Plain custom properties, mapped in @theme inline below, so plain
+   CSS (the Pagefind block in search.astro) can read them – see
    docs/patterns/design-system.md */
 :root {
   --accent-strong: color-mix(in srgb, var(--accent) 70%, var(--foreground));
@@ -91,8 +90,8 @@ html[data-theme="dark"] {
   [role="button"]:not(:disabled) {
     cursor: pointer;
   }
-  /* Set by theme.ts for the frame a theme change paints in, so every colour
-     flips together. The toggle's own icons keep their morph. */
+  /* Set by theme.ts while a theme change paints. The toggle's own icons keep
+     their morph. */
   html[data-theme-switching] *:not(#theme-btn > svg) {
     transition-duration: 0s !important;
   }
