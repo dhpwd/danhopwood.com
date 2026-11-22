@@ -36,6 +36,36 @@ Alt text and caption do different jobs, so write both: alt describes the image f
 
 **When to use:** adding a screenshot or diagram to a post.
 
+## Diagrams
+
+**Problem:** a diagram saved as a PNG with no source can't follow a palette change, and one drawn in another palette is the one image on the page that isn't the site's.
+
+**Solution:** a diagram drawn for a post is an HTML file in `scripts/diagrams/`, named after its PNG in `src/assets/images/`. Its fonts are embedded, so the render needs no network. Every colour is a variable in one `:root` block that mirrors the light-mode tokens by hand – see "Theme tokens have three hand-written mirrors" in `docs/patterns/design-system.md`. Headless Chrome renders it at 2×, from the repo root, with the command in the file's header:
+
+```bash
+google-chrome --headless=new --disable-gpu --hide-scrollbars --no-sandbox \
+  --force-device-scale-factor=2 --virtual-time-budget=8000 \
+  --window-size=1200,<height> \
+  --screenshot=src/assets/images/<name>.png \
+  "file://$PWD/scripts/diagrams/<name>.html"
+```
+
+Commit the source and the PNG together.
+
+- The page is 1200 CSS pixels wide by default, so the 2× render opens in the dialog with its text at the size it was drawn – see "Save screenshots at 2×". Another width needs a reason
+- Its type is Geist and Geist Mono at the image's own sizes, not the site's type utilities, which a standalone page can't load
+- The window's height is the value the file's script writes to `<body data-h>`, the page's height rounded up. `scrollHeight` rounds it down, a pixel short. Read it in a browser at a 1200 pixel viewport once the page has loaded, and record it in the file's header. In the Playwright MCP, `browser_navigate` refuses `file:` URLs, so load the page with `page.goto` in `browser_run_code_unsafe` and read `document.body.dataset.h`. Chrome's `--dump-dom` is not a reliable way to read it: it often returns the page before the script has run
+- Render on Linux, with `google-chrome` or Playwright's bundled Chromium on the same flags. Another browser build or OS draws the text differently, so a re-render there moves pixels nobody meant to move
+- A re-render keeps the PNG's pixel size, so the post's layout doesn't move
+- One light image serves both themes, as "A diagram is ink, with the accent on its level labels" in `docs/design-decisions.md` settles. The dark theme dims it like any image – see "Figures" in `docs/patterns/post-page.md`
+
+Anti-patterns:
+
+- A diagram exported from a drawing tool, with no source in the repo
+- A colour written into a rule in place of a variable in the `:root` block
+
+**When to use:** adding or redrawing a diagram for a post, or changing a theme token a diagram mirrors.
+
 ## Favicons
 
 **Problem:** satori resolves no CSS custom properties, so the favicon generator cannot read the brand tokens and carries its own copy of their values.

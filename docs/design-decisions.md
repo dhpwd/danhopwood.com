@@ -23,7 +23,7 @@ Rejected: neutral `#1a1a1a`, which has nothing of the site's own in it.
 
 ## The accent at rest is a closed list
 
-At rest, the accent appears only on the mono line above a page's title (the `eyebrow`), the one filled action, prose marks (list markers and the blockquote rule), the active nav item and the reading progress bar. Hover, press and focus use it on every control, except that text fields focus in the text colour.
+At rest, the accent appears only on the mono line above a page's title (the `eyebrow`), the one filled action, prose marks (list markers and the blockquote rule), the active nav item and the reading progress bar. A drawn diagram's level labels take it too – see "A diagram is ink, with the accent on its level labels". Hover, press and focus use it on every control, except that text fields focus in the text colour.
 
 Rejected: frames, status chips, link titles and search result titles in the accent. Each reads as an error or a warning in a red.
 
@@ -151,6 +151,20 @@ Rejected: sideways scroll inside the table, which hides a prose table's first co
 `filter: brightness(0.88)`, which brings an image's white down to about the text colour. The full-size view shows the image as it was saved.
 
 Rejected: no filter, which leaves a white screenshot as the brightest thing on the page.
+
+## A diagram is ink, with the accent on its level labels
+
+A diagram drawn for a post is ink on the page's ground. Titles and filled boxes are the text colour, flat, with no gradient or shadow. Lines and panels are greys mixed from the text colour, and card borders take the share cards' rule grey. Connectors clear the 3:1 that WCAG asks of graphics, in both themes. The accent appears only on the diagram's level labels, the small mono label that heads each level or section, as the mono line above a page's title heads the page. A level's number and the diagram's other mono text, such as a card's role line, take a grey. One light image serves both themes, dimmed in the dark theme like any image.
+
+Known drawbacks: in the dark theme the labels are the light theme's brick on a dimmed plate, beside the page's lighter accent. A change to the accent means re-rendering each diagram.
+
+Rejected:
+
+- Ink only, which leaves nothing of the site's own in the diagram
+- Brick fills on the filled boxes, which are large red blocks and read as a warning
+- Brick on one connector, which is a hairline at the size the page shows it
+- A second image for the dark theme, which needs a way to swap images by theme
+- A palette other than the site's
 
 ## Motion answers the visitor
 
