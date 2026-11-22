@@ -100,6 +100,18 @@ Run Playwright against `pnpm build && pnpm preview`. To compare a base and a cha
 
 **When to use:** writing or changing a markdown plugin that restructures images.
 
+## Astro is patched for Markdown image alt text
+
+**Problem:** Astro's `rehypeImages` stores each local image's props, alt included, as JSON in an `__ASTRO_IMAGE_` attribute, which hast-util-to-html serialises with `"`, `'` and `&` as `&#x22;`, `&#x27;` and `&#x26;`. Astro 5 decodes only `&#x22;` before `JSON.parse`, then escapes the alt into the `<img>`, so an apostrophe or ampersand reaches the page as `&amp;#x27;` or `&amp;#x26;`, and a screen reader reads the literal `Clara&#x27;s queue`.
+
+**Solution:** `patches/astro@5.16.6.patch`, registered under `patchedDependencies` in `pnpm-workspace.yaml`, backports the decode from withastro/astro#18086. It changes four decode expressions in two files: `updateImageReferencesInBody` in `dist/content/runtime.js`, which renders every post, and three in the code `dist/vite-plugin-markdown/images.js` generates for Markdown pages in `src/pages/`. Each decodes quotes, then apostrophes, then ampersands, in numeric and named forms. Ampersands go last, so an alt that holds an entity name as text (`&quot;`, written `&amp;quot;` in the source) comes out as written.
+
+The key carries Astro's exact version, so a change to the Astro version fails the install with `ERR_PNPM_UNUSED_PATCH` until the patch is dealt with. Nothing else guards the fix. Write or regenerate the patch with pnpm 10 (`npx pnpm@10 patch astro@<version>`, edit the copy, then `npx pnpm@10 patch-commit <dir>`), per "Adding a package without lockfile churn" in `docs/patterns/dependencies.md`. The patch comes out when Astro reaches a version carrying #18086 (7.4.13 or later): delete the file and its `patchedDependencies` entry in the upgrade.
+
+To check the patch, build a temporary post whose image alt holds `'`, `&`, `"` and `&amp;amp;`, and compare the image's accessible name (`locator.ariaSnapshot()`) with the source. `grep -rl 'alt="[^"]*&amp;#' dist` finds a broken post, but not a broken `src/pages/` page, whose alt is escaped as `&#38;#x26;`.
+
+**When to use:** upgrading Astro, or an install or build failing on `patches/`.
+
 ## Module paths in bundled code vs standalone scripts
 
 **Problem:** Astro bundles `src/utils/` modules into `dist/chunks/` at build time, so a path resolved from `import.meta.url` lands outside the project and throws ENOENT in the production build while working in dev.
