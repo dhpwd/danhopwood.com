@@ -65,9 +65,11 @@ export default async () => {
                           style: {
                             display: "block",
                             fontSize: 64,
-                            fontWeight: 700,
-                            lineHeight: 1.2,
+                            fontWeight: 600,
+                            lineHeight: 1.12,
+                            letterSpacing: "-0.028em",
                             color: palette.foreground,
+                            fontFamily: "Geist",
                           },
                           children: SITE.title,
                         },

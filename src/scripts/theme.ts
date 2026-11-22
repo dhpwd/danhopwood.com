@@ -25,7 +25,16 @@ function setPreference(): void {
 }
 
 function reflectPreference(): void {
-  document.firstElementChild?.setAttribute("data-theme", themeValue);
+  const root = document.documentElement;
+
+  // Controls carry a colour transition for hover and press, so without this
+  // they fade to the new theme a beat behind the text around them. The
+  // attribute is held for one painted frame – see global.css.
+  root.setAttribute("data-theme-switching", "");
+  root.setAttribute("data-theme", themeValue);
+  requestAnimationFrame(() =>
+    requestAnimationFrame(() => root.removeAttribute("data-theme-switching"))
+  );
 
   document.querySelector("#theme-btn")?.setAttribute("aria-label", themeValue);
 

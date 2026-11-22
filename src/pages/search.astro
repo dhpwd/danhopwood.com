@@ -110,6 +110,11 @@ const backUrl = SITE.showBackButton ? `${Astro.url.pathname}` : "/";
     input {
       font-weight: 400;
       border-color: color-mix(in srgb, var(--foreground) 60%, transparent);
+      transition:
+        border-color var(--default-transition-duration)
+          var(--default-transition-timing-function),
+        box-shadow var(--default-transition-duration)
+          var(--default-transition-timing-function);
     }
 
     input::placeholder {
@@ -117,12 +122,14 @@ const backUrl = SITE.showBackButton ? `${Astro.url.pathname}` : "/";
       color: color-mix(in srgb, var(--foreground) 75%, transparent);
     }
 
-    input:focus-visible {
-      outline: 1px solid var(--accent);
+    input:focus {
+      border-color: var(--foreground);
+      box-shadow: 0 0 0 1px var(--foreground);
+      outline: 2px solid transparent;
     }
 
     .pagefind-ui__result-title a {
-      color: var(--accent);
+      color: var(--foreground);
       outline-offset: 1px;
       outline-color: var(--accent);
       text-decoration-style: dashed;
@@ -143,5 +150,55 @@ const backUrl = SITE.showBackButton ? `${Astro.url.pathname}` : "/";
     .pagefind-ui__result-nested .pagefind-ui__result-link:before {
       font-family: system-ui;
     }
+  }
+
+  /* Interaction states and palette – see "One interaction behaviour" in
+     docs/patterns/design-system.md */
+  #pagefind-search .pagefind-ui__result-link,
+  #pagefind-search .pagefind-ui__search-clear,
+  #pagefind-search .pagefind-ui__button {
+    transition:
+      color var(--default-transition-duration)
+        var(--default-transition-timing-function),
+      border-color var(--default-transition-duration)
+        var(--default-transition-timing-function);
+  }
+
+  #pagefind-search .pagefind-ui__search-clear:focus-visible,
+  #pagefind-search .pagefind-ui__button:focus-visible {
+    outline: 2px dashed var(--accent);
+    outline-offset: 1px;
+  }
+
+  #pagefind-search .pagefind-ui__button {
+    color: var(--foreground);
+    border-color: color-mix(in srgb, var(--foreground) 60%, transparent);
+  }
+
+  @media (hover: hover) {
+    #pagefind-search .pagefind-ui__result-link:hover,
+    #pagefind-search .pagefind-ui__search-clear:hover {
+      color: var(--accent);
+    }
+
+    #pagefind-search .pagefind-ui__button:hover {
+      color: var(--accent);
+      border-color: var(--accent);
+    }
+  }
+
+  #pagefind-search .pagefind-ui__result-link:active,
+  #pagefind-search .pagefind-ui__search-clear:active {
+    color: var(--accent-strong);
+  }
+
+  #pagefind-search .pagefind-ui__button:active {
+    color: var(--accent-strong);
+    border-color: var(--accent-strong);
+  }
+
+  #pagefind-search mark {
+    color: inherit;
+    background-color: var(--accent-tint);
   }
 </style>

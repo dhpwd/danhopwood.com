@@ -19,12 +19,13 @@ const readingTime = body ? calculateReadingTime(body) : undefined;
   <a
     href={getPath(id, filePath)}
     class:list={[
-      "inline-block text-lg font-semibold text-foreground",
-      "decoration-dashed underline-offset-4 hover:text-accent hover:underline",
+      "inline-block interactive text-foreground",
+      "decoration-dashed underline-offset-4 hover:underline",
       "focus-visible:no-underline focus-visible:underline-offset-0",
     ]}
   >
     <Heading
+      class="title-item"
       style={{ viewTransitionName: slugifyStr(title.replaceAll(".", "-")) }}
     >
       {title}

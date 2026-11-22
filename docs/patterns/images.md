@@ -32,6 +32,6 @@ Alt text and caption do different jobs, so write both: alt describes the image f
 
 **Problem:** satori resolves no CSS custom properties, so the favicon generator cannot read the brand tokens and carries its own copy of their values.
 
-**Solution:** `pnpm generate:favicons` renders the "dh" monogram in Geist Mono on the teal accent, hand-mirroring the light-mode `--accent` and `--background` values. Changing either token means editing the script and regenerating – see `docs/patterns/design-system.md`.
+**Solution:** `pnpm generate:favicons` renders the "dh" monogram in Geist Mono on the accent, hand-mirroring the light-mode `--accent` and `--background` values. Changing either token means editing the script and regenerating – see `docs/patterns/design-system.md`.
 
 **When to use:** changing the accent or background token, or replacing the favicon.

@@ -9,6 +9,7 @@ Personal site for Dan Hopwood, a public lab notebook built on the AstroPaper v5.
 <!-- Only what changes engineering decisions in this repo, stated as rules, not narrative. Never replace a constraint with a link: sessions must be self-sufficient in the repo. -->
 
 - **The repo is public** – the "Edit on GitHub" link on every post depends on it. Everything committed is world-readable, including `docs/` and commit messages. Commit only what building the site needs, and keep business strategy, positioning and competitive context out of the repo
+- **Every page must read as made with care before a word is read: precise, calm and understated, never showy.** The site should look like a notebook kept with care, not a blog theme. One upgraded page makes the others look unfinished, so a change to one page holds every page to the bar. A phone is composed on its own terms at 390, with the same weight as 1440. The design rules that carry this are in `docs/patterns/design-system.md`, and the calls already settled are in `docs/design-decisions.md`
 
 ## Commands
 
@@ -31,10 +32,12 @@ pnpm generate:favicons  # regenerate public/ favicons from the brand tokens
 
 1. Preflight
 2. `pnpm run build` – `astro check`, the production build, then Pagefind, which writes its index into `public/`
+3. Browser check, for any change to what a page renders – serve the build with `pnpm preview`, load each affected page in the Playwright MCP at 1440 and 390 in light and dark, and confirm the layout, no sideways scroll and no console errors. A colour change also measures contrast from computed colours composited onto their ground. A change to a control also reads each state's computed style while the state is held. Method: "Testing client scripts and functions" in `docs/patterns/astro-build.md`
 
 ## Pattern index
 
-- styling a component, or changing a font, colour or theme token → read `docs/patterns/design-system.md`
+- styling a component, changing a font, colour or theme token, or a hover, press or focus state → read `docs/patterns/design-system.md`
+- any visual, layout, colour or motion change, or reviewing one → read `docs/design-decisions.md` before proposing
 - adding or replacing images, the avatar or favicons → read `docs/patterns/images.md`
 - editing `src/utils/og-templates/` → read `docs/patterns/og-images.md`
 - sitemap, `llms.txt`, JSON-LD or OG metadata → read `docs/patterns/machine-readability.md`

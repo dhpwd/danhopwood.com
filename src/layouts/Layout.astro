@@ -102,7 +102,7 @@ const structuredDataJSON = JSON.stringify(structuredData).replace(
 <html
   dir={SITE.dir}
   lang=`${SITE.lang ?? "en"}`
-  class={`${scrollSmooth && "scroll-smooth"}`}
+  class={`${scrollSmooth && "motion-safe:scroll-smooth"}`}
 >
   <head>
     <meta charset="UTF-8" />

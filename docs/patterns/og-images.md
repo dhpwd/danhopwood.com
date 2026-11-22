@@ -8,7 +8,7 @@ Five constraints bite when editing them. None of them fails the build – you ge
 
 **The font subset must contain every glyph you render, including ones you never wrote.** Fonts load from the Google Fonts API with `&text=`, which returns only the requested characters. Satori appends U+2026 when `lineClamp` truncates, so an ellipsis missing from the subset renders as a missing-glyph box. `CHROME_GLYPHS` in `shared.js` carries the ellipsis and the other fixed characters – concatenate it into every `loadGoogleFonts` call.
 
-**Every (fontFamily, fontWeight) pair a template sets must be loaded in `loadGoogleFont.ts`.** Satori matches loaded fonts by family name and weight, and a pair that isn't loaded falls back to whatever is, without warning. Currently loaded: Geist 400, Geist Mono 400 and Geist Mono 700. Adding a weight or a family to a template means adding it to `fontsConfig`.
+**Every (fontFamily, fontWeight) pair a template sets must be loaded in `loadGoogleFont.ts`.** Satori matches loaded fonts by family name and weight, and a pair that isn't loaded falls back to whatever is, without warning. Currently loaded: Geist 400, Geist 600, Geist Mono 400 and Geist Mono 700. Adding a weight or a family to a template means adding it to `fontsConfig`.
 
 **The gap above the post card's footer rule is reserved, not emergent.** The title and description block is centred in a `flexGrow` container, so without the wrapper's `paddingBottom: 40px` the space above the dashed rule is leftover flex space – it collapses towards zero as title and description approach their line limits. The padding looks redundant on short posts. Don't remove it.
 
