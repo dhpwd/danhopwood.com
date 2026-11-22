@@ -55,6 +55,8 @@ Where the form's spec puts focus on the submit button after every submit, call `
 - A control's state changes over the shared 150ms, so a computed style read straight after `focus()` or `hover()` is the start of the transition – a field's focus ring reads as transparent. Wait past the duration before reading
 - A full-page screenshot clipped to an element far below the viewport can show a post image as an empty box, even after it has loaded. Scroll the element into view and `await img.decode()` before the screenshot. Post images are `loading="lazy"`, so set them eager first
 - `textContent` runs a link's flex items together ("ai17 posts"). Read what a screen reader announces from `locator.ariaSnapshot()`, which separates them
+- `pnpm preview` answers a path with a trailing slash (`/about/`) with the 404 page rather than a redirect, because of `trailingSlash: "never"`. A check that queries the page then finds nothing and passes. Write test URLs without the slash
+- A position read from a screenshot's pixels, such as where a list marker's ink starts, differs by a pixel or more between Chromium builds and device scale factors, since each rasterises text its own way. Compare a before and an after build in the same browser at the same scale, not against a figure recorded in another browser
 - To compare an element pixel for pixel across two builds, hide the site header on both. A change in the header's height moves everything below it by a fraction of a pixel, which changes its anti-aliasing and reads as a difference
 - Node's `AbortSignal.timeout` timer doesn't keep the event loop alive. A stubbed `fetch` that hangs until aborted needs its own pending timer, or the test script exits before the timeout fires
 

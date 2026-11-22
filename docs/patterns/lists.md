@@ -17,7 +17,7 @@ How a bulleted or numbered list is indented, in posts and on the page parts. The
 
 A two-digit numeral is one tabular figure (0.588em) wider than the list's padding. `typography.css` starts a prose list's tenth item, and each one after it, a figure further in and takes the figure back from its padding, so the numeral stays on the edge and the text at 1.75rem. The rule counts items, not numerals, so a list that starts above 1 (`start="8"`) or counts down (`reversed`) puts some numerals a figure off the edge: a two-digit numeral before the tenth item reaches into the margin, and a one-digit numeral from the tenth item on sits a figure in. `MarkedList`'s mono numerals hold nine steps.
 
-Firefox draws a disc 3.5px further in than Chromium does, inside the same padding, so a bullet sits just inside the edge there. Numerals match.
+Firefox draws a disc 3.5px further in than Chromium does, inside the same padding, so a bullet sits just inside the edge there. Numerals match. Safari before 27.3 applies only `color` and `font-size` to `::marker`, so there `MarkedList`'s numerals fall back to the body face and a prose list's numerals lose their tabular figures, and neither sits exactly on the edge.
 
 Anti-patterns:
 
