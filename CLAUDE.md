@@ -44,7 +44,7 @@ pnpm generate:favicons  # regenerate public/ favicons from the brand tokens
 - sitemap, `llms.txt`, JSON-LD or OG metadata → read `docs/patterns/machine-readability.md`
 - a post's title block, body, tables, figures or what follows the article → read `docs/patterns/post-page.md`
 - adding routes, changing route config or writing internal links → read `docs/patterns/urls.md`
-- client-side scripts, server endpoints (`api/`), content collections or stale build output → read `docs/patterns/astro-build.md`
+- client-side scripts, server endpoints (`api/`), content collections (including any route that reads posts) or stale build output → read `docs/patterns/astro-build.md`
 
 ## Key references
 
