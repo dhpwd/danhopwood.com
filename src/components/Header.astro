@@ -3,12 +3,7 @@ import IconMoon from "@/assets/icons/IconMoon.svg";
 import IconSunHigh from "@/assets/icons/IconSunHigh.svg";
 import { SITE } from "@/config";
 
-const { pathname } = Astro.url;
-
-const currentPath =
-  pathname.endsWith("/") && pathname !== "/" ? pathname.slice(0, -1) : pathname;
-
-const section = currentPath.split("/").filter(p => p.trim())[0];
+const section = Astro.url.pathname.split("/")[1];
 
 // Tags and archives are ways into the posts, so they sit under Posts.
 const NAV = [
@@ -44,20 +39,17 @@ const NAV = [
     >
       <ul
         id="menu-items"
-        class:list={[
-          "mt-3 hidden flex-col border-t border-border pt-1",
-          "[&>li>a]:block [&>li>a]:py-3 [&>li>a]:font-medium [&>li>a]:interactive",
-          "sm:mt-0 sm:flex sm:flex-row sm:gap-x-6 sm:border-0 sm:pt-0 sm:[&>li>a]:px-1 sm:[&>li>a]:py-1",
-        ]}
+        class="mt-3 hidden flex-col border-t border-border pt-1 sm:mt-0 sm:flex sm:flex-row sm:gap-x-6 sm:border-0 sm:pt-0"
       >
         {
           NAV.map(({ href, label, sections }) => (
             <li>
               <a
                 {href}
-                class:list={{
-                  "active-nav": section && sections.includes(section),
-                }}
+                class:list={[
+                  "block py-3 font-medium interactive sm:px-1 sm:py-1",
+                  { "active-nav": sections.includes(section) },
+                ]}
               >
                 {label}
               </a>

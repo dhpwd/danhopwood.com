@@ -40,18 +40,17 @@ function elements(node: Node, tagName: string): Node[] {
 
 export function rehypeTableLabels() {
   return function (tree: Node) {
-    visit(tree as never, "element", (table: Node) => {
-      if (table.tagName !== "table") return;
+    visit(tree as never, "element", (node: Node) => {
+      const role = node.tagName && ROLES[node.tagName];
+      if (role) node.properties = { ...node.properties, role };
+
+      if (node.tagName !== "table") return;
+      const table = node;
 
       const headRow = elements(table, "thead").flatMap(head =>
         elements(head, "tr")
       )[0];
       const labels = headRow ? elements(headRow, "th").map(textOf) : [];
-
-      visit(table as never, "element", (node: Node) => {
-        const role = node.tagName && ROLES[node.tagName];
-        if (role) node.properties = { ...node.properties, role };
-      });
 
       for (const body of elements(table, "tbody")) {
         for (const row of elements(body, "tr")) {

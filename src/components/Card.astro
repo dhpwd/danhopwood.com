@@ -25,13 +25,8 @@ const { title, description, ...props } = data;
 const readingTime = body ? calculateReadingTime(body) : undefined;
 ---
 
-<li class:list={{ ledger: aside }}>
-  <Datetime
-    {...props}
-    {readingTime}
-    stack={aside}
-    class={aside ? "" : "mb-1.5"}
-  />
+<li class={aside ? "ledger" : "flex flex-col gap-1.5"}>
+  <Datetime {...props} {readingTime} stack={aside} />
   <div class="min-w-0">
     <a
       href={getPath(id, filePath)}

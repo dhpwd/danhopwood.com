@@ -8,7 +8,6 @@ dayjs.extend(utc);
 dayjs.extend(timezone);
 
 type Props = {
-  class?: string;
   // "eyebrow" is the accent line above a page's title, "meta" everywhere else
   tone?: "meta" | "eyebrow";
   // One item a line from 640px, for the ledger's label column
@@ -24,7 +23,6 @@ const {
   modDatetime,
   tone = "meta",
   stack = false,
-  class: className = "",
   timezone: postTimezone,
   readingTime,
 } = Astro.props;
@@ -38,14 +36,7 @@ const datetime = dayjs(isModified ? modDatetime : pubDatetime).tz(
 const date = datetime.format("D MMM YYYY"); // e.g., '22 Mar 2025'
 ---
 
-<div
-  class:list={[
-    tone,
-    "flex flex-wrap gap-x-2",
-    { "sm:flex-col": stack },
-    className,
-  ]}
->
+<div class:list={[tone, "flex flex-wrap gap-x-2", { "sm:flex-col": stack }]}>
   {isModified && <span>Updated</span>}
   <time datetime={datetime.toISOString()}>{date}</time>
   {

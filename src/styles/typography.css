@@ -32,8 +32,7 @@
     h1,
     h2,
     h3,
-    h4,
-    th {
+    h4 {
       @apply mb-3 text-foreground;
     }
 
@@ -50,7 +49,6 @@
     strong,
     ol,
     ul,
-    figcaption,
     table,
     code {
       @apply text-foreground;
@@ -60,7 +58,7 @@
       /* font-normal overrides the prose plugin's 500 default – see
          docs/patterns/design-system.md. */
       @apply font-normal wrap-break-word interactive text-foreground decoration-dashed underline-offset-4 focus-visible:no-underline;
-      /* Prose links get dashed via @apply, so the a[class~="decoration-dashed"]
+      /* Prose links get dashed via @apply, so the [class~="decoration-dashed"]
          base rule in global.css can't reach them – same token, stated here. */
       text-decoration-color: var(--dashed-decoration);
     }
@@ -81,9 +79,10 @@
       @apply mx-auto rounded-md border border-border;
     }
 
-    /* ImageZoom.astro makes each image a button that opens it at full size */
+    /* ImageZoom.astro makes each image a button that opens it at full size.
+       Its focus outline is the base rule for [role="button"] in global.css. */
     img[role="button"] {
-      @apply cursor-zoom-in outline-offset-1 outline-accent focus-visible:outline-2 focus-visible:outline-dashed;
+      @apply cursor-zoom-in;
     }
 
     figure {
@@ -103,11 +102,11 @@
       @apply my-9 w-full border-collapse text-[0.9375rem] leading-[1.55];
 
       th {
-        @apply border-b border-foreground/60 px-0 pt-0 pr-5 pb-2.5 text-left align-bottom label-caps text-foreground/75 last:pr-0;
+        @apply border-b border-foreground/60 pt-0 pr-5 pb-2.5 pl-0 text-left align-bottom label-caps text-foreground/75 last:pr-0;
       }
 
       td {
-        @apply border-b border-border px-0 py-3 pr-5 align-top last:pr-0;
+        @apply border-b border-border py-3 pr-5 pl-0 align-top last:pr-0;
       }
 
       code {

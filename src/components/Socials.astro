@@ -3,25 +3,21 @@ import { SOCIALS } from "@/constants";
 
 // The footer's row of profile links, with the feed last.
 const links = [
-  ...SOCIALS.map(({ name, href, linkTitle }) => ({
-    label: name,
-    href,
-    title: linkTitle,
-  })),
-  { label: "RSS", href: "/rss.xml", title: "RSS Feed" },
+  ...SOCIALS,
+  { name: "RSS", href: "/rss.xml", linkTitle: "RSS Feed" },
 ];
 ---
 
 <ul class="flex flex-wrap items-center gap-x-5 gap-y-1">
   {
-    links.map(({ label, href, title }) => (
+    links.map(({ name, href, linkTitle }) => (
       <li>
         <a
           {href}
-          {title}
+          title={linkTitle}
           class="inline-block py-2 interactive underline decoration-dashed underline-offset-4 sm:py-1"
         >
-          {label}
+          {name}
         </a>
       </li>
     ))

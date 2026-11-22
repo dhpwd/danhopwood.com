@@ -55,6 +55,8 @@ const recentPosts = sortedPosts.filter(({ data }) => !data.featured);
           alt="Dan Hopwood"
           width={352}
           height={352}
+          sizes="(min-width: 640px) 176px, 64px"
+          loading="eager"
           class="size-16 flex-none rounded-2xl ring-1 ring-border [grid-area:portrait] sm:size-44 sm:rounded-[1.75rem]"
         />
       </div>
@@ -93,10 +95,9 @@ const recentPosts = sortedPosts.filter(({ data }) => !data.featured);
           <h2 class="label-caps text-foreground/75">Recent posts</h2>
           <div>
             <ul class="flex flex-col gap-7">
-              {recentPosts.map(
-                (data, index) =>
-                  index < SITE.postPerIndex && <Card variant="h3" {...data} />
-              )}
+              {recentPosts.slice(0, SITE.postPerIndex).map(data => (
+                <Card variant="h3" {...data} />
+              ))}
             </ul>
             <LinkButton href="/posts" class="mt-7 mb-6">
               All posts
