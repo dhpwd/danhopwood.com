@@ -18,11 +18,20 @@
 
 ## Client scripts and View Transitions
 
-**Problem:** Astro bundles `<script>` blocks in `.astro` components as module scripts, which run once per full page load. With View Transitions (`<ClientRouter />` in `Layout.astro`), navigating swaps the DOM without re-running them, so listeners are never attached to the new nodes. The page looks correct and the handler never fires again.
+**Problem:** Astro bundles `<script>` blocks in `.astro` components as module scripts, which run once per full page load. With View Transitions (`<ClientRouter />` in `Layout.astro`), navigating swaps the DOM without re-running them, so listeners are never attached to the new nodes. The page looks correct and the handler never fires again. `astro:page-load` fires after every navigation, but on a full page load the router fires the first one from window `load` (`addEventListener("load", onPageLoad)` in `astro/dist/transitions/router.js`), and `load` waits for the async Plausible script, fonts and eager images. Astro's docs don't say so. A listener added only on `astro:page-load` is missing for that whole time, though the page is already readable: a share click sends no event, and a form submit falls through to its native POST.
 
-**Solution:** attach listeners inside `document.addEventListener("astro:page-load", init)`. The module script registers that listener once and the event fires on every navigation, including the first load. Guard elements with a `data-initialized` attribute so a node that survives the swap isn't bound twice. `NewsletterSignup.astro` is the worked example. `ImageZoom.astro` is a second: on each page load it binds every new `#article img`, marking each with `data-zoom`, and binds the dialog's own listener once, behind `data-initialized`.
+**Solution:** put the binding in a named init function, make it safe to run twice with a `data-initialized` guard on each node it binds, register it on `astro:page-load` and call it once at module run:
 
-**Anti-pattern for new work:** `is:inline data-astro-rerun`. It does re-run the script, at the cost of TypeScript, import resolution and deduplication. `document` and `window` survive the swap, so a listener the script adds to either is added again on every navigation: each move from one post to another adds another `scroll` and `astro:after-swap` listener from `PostDetails.astro`. `PostDetails.astro` and `BackToTopButton.astro` both take that route, so expect to find it in the tree – prefer `astro:page-load` for anything new, and keep inline scripts for pre-paint state such as the theme flash guard in `Layout.astro`.
+```ts
+document.addEventListener("astro:page-load", initShareLinks);
+initShareLinks();
+```
+
+Each part covers a case the others miss. The module-run call binds the page's nodes on a full load as soon as the document is parsed, and on a first client-side visit to a page whose script is new, since the router runs that script after the swap and before `astro:page-load`. The listener covers every later navigation, when the module doesn't run again. The guard makes the second call each time a no-op, and keeps a node that survives the swap from being bound twice. A listener on `document` or `window` is added once at module scope, outside the init function: init runs at module run and on every navigation, so a listener added inside it would be added again each time. `NewsletterSignup.astro` is the worked example. `ImageZoom.astro` is a second: each run binds every new `#article img`, marking each with `data-zoom`, and binds the dialog's own listener once, behind `data-initialized`. Work that is safe to repeat needs no guard – `BackButton.astro` sets its link's `href` from `sessionStorage` on each run.
+
+**Anti-pattern:** registering the init function on `astro:page-load` alone. Nothing it binds is bound until window `load`, so an early click or submit on a full page load is lost or falls through to the browser's default.
+
+**Anti-pattern for new work:** `is:inline data-astro-rerun`. It does re-run the script, at the cost of TypeScript, import resolution and deduplication. `document` and `window` survive the swap, so a listener the script adds to either is added again on every navigation: each move from one post to another adds another `scroll` and `astro:after-swap` listener from `PostDetails.astro`. `PostDetails.astro` and `BackToTopButton.astro` both take that route, so expect to find it in the tree – prefer the pattern above for anything new, and keep inline scripts for pre-paint state such as the theme flash guard in `Layout.astro`.
 
 **When to use:** any component that attaches client-side event listeners.
 
@@ -50,6 +59,7 @@ Where the form's spec puts focus on the submit button after every submit, call `
 - On `/search`, clicking Clear empties the results, so test "Load more results" before it
 - The fonts API registers each family under a hashed name, so `font-family` computes as `Geist-4350b8f6…` or `Geist Mono-1081b9fc…`. Match the face by prefix, with the hash stripped, not by equality
 - `<ClientRouter />` saves the scroll position with `history.replaceState`, which fires Playwright's `framenavigated` on the same URL. To assert that a submit didn't navigate, count navigation requests (`request.isNavigationRequest()`) or check a `window` marker survives, not `framenavigated`
+- To hold a page before window `load`, hold the `plausible.io` script request in a `route` handler and fulfil it with an empty body once the check is done. The async script holds back `load`, and an empty body leaves an init-script recorder in place of `window.plausible`. Assert `document.readyState` is `"interactive"` before each early action, so a check can't pass on a page that has already loaded
 - Submit forms by clicking the button as well as pressing Enter in a field. Only the click leaves focus on the button, so a bug in how the handler treats focus shows on that route alone
 - `locator.boundingBox()` is relative to the viewport, and a click can scroll the page. To assert an element didn't move, compare `getBoundingClientRect().top + scrollY`
 - A control's state changes over the shared 150ms, so a computed style read straight after `focus()` or `hover()` is the start of the transition – a field's focus ring reads as transparent. Wait past the duration before reading
