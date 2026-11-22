@@ -57,7 +57,6 @@ export default async () => {
                     style: {
                       display: "flex",
                       flexDirection: "column",
-                      flexShrink: 1,
                     },
                     children: [
                       {
