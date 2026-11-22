@@ -51,10 +51,15 @@ export default async post => {
                       {
                         type: "div",
                         props: {
+                          // Capped by height, not lineClamp – see
+                          // docs/patterns/og-images.md.
                           style: {
                             ...titleStyle,
-                            lineClamp: 3,
                             textWrap: "balance",
+                            maxHeight: Math.ceil(
+                              3 * titleStyle.fontSize * titleStyle.lineHeight
+                            ),
+                            overflow: "hidden",
                           },
                           children: post.data.title,
                         },

@@ -21,7 +21,7 @@ Three derived tokens mix the theme tokens, so they need no value per theme and n
 
 They sit on `:root` as plain custom properties and are then mapped in `@theme inline` (`--color-accent-strong` and so on), so plain CSS such as the Pagefind block in `search.astro` can use them. A colour defined only in `@theme inline` is inlined into the utilities and never reaches plain CSS.
 
-`--dashed-decoration` is the one token satori never sees, since the cards carry no links. It is restated in `typography.css` for prose links, because the `global.css` base rule can't reach them.
+`--dashed-decoration` needs no satori mirror either, since the cards carry no links. It is restated in `typography.css` for prose links, because the `global.css` base rule can't reach them.
 
 Code blocks are the one area with its own palette: the shiki themes `vitesse-light` and `vitesse-dark`, set in `astro.config.ts`. Swapping them means checking both modes.
 
@@ -37,9 +37,11 @@ Code blocks are the one area with its own palette: the shiki themes `vitesse-lig
 
 - **Prose** – Geist, via `font-app` and the body default. Links carry dashed underlines (`decoration-dashed underline-offset-4`), the site's signature, at body weight
 - **Titles** – Geist at 600 with balanced wrapping, from the global `h1`–`h6` rule in `global.css`. Two `@utility` blocks there set the scale: `title-page` for a page's `h1`, fluid between 30px and 40px, and `title-item` for a card title or a section heading. In-post headings keep the prose plugin's sizes. Its own heading weights (800, 700, 600) outrank the global rule, so `typography.css` restates the weight and tracking on `.app-prose h1` to `h4`
-- **Mono** – Geist Mono, for the site name, labels, the eyebrow, dates, metadata and the breadcrumb, via an explicit `font-mono` or a shared utility. `eyebrow` is the small mono accent line above a page's title. `label-caps` is the small uppercase label for a group, with `text-foreground/75` where the label is muted. A numeral set large, like the 404 page's, takes `font-mono` explicitly, since headings are no longer mono. UI state markers such as `.active-nav` use solid underlines, not dashed
+- **Mono** – Geist Mono, for the site name, labels, the eyebrow, dates, metadata and the breadcrumb, via an explicit `font-mono` or a shared utility. `eyebrow` is the small mono accent line above a page's title. `label-caps` is the small uppercase label for a group, with `text-foreground/75` where the label is muted. A numeral set large, like the 404 page's, takes `font-mono` explicitly, since headings are set in Geist. UI state markers such as `.active-nav` use solid underlines, not dashed
 
 Nav links are Geist at 500 (`font-medium`), not mono.
+
+The share cards set their titles through `titleStyle` in `src/utils/og-templates/shared.js`, which restates `title-page`'s weight, line-height and tracking by hand at card scale. A change to the title treatment updates it too.
 
 Both faces load through Astro's experimental fonts API (Google provider, configured in `astro.config.ts`, preloaded by `<Font>` in `Layout.astro`) at weights 400/500/600/700, from one variable file per family. A new weight in that range loads nothing new.
 
@@ -66,7 +68,7 @@ No italic Geist face is loaded. Semantic emphasis (`em`, blockquotes) renders as
 
 **Solution:** each control moves one colour step on hover and one more on press, from two `@utility` blocks in `global.css`.
 
-- `interactive`, for text and icon controls: the text steps to `accent` on hover and `accent-strong` on press. Icon SVGs stroke `currentColor`, so an icon follows its anchor with no rule of its own. `LinkButton.astro` applies it, so every `LinkButton` has it
+- `interactive`, for text and icon controls: the text steps to `accent` on hover and `accent-strong` on press. Icon SVGs stroke `currentColor`, so an icon follows its anchor with no rule of its own. `LinkButton.astro` applies it, so every enabled `LinkButton` has it
 - `interactive-fill`, for filled accent buttons: the fill steps to `accent-strong` on hover and `accent-stronger` on press, only while the button is enabled, and the button settles 1px on press. Subscribe in `NewsletterSignup.astro` and Request setup in `cloud-box-setup.astro` use it. The label is `text-background`, never `text-white`: white on the dark accent is 2.61:1. `disabled:opacity-60` dims the button while a submit is pending, and disabled controls are exempt from the contrast minimum
 - `.active-nav` rests on the accent, so it steps to `accent-strong` on hover and `accent-stronger` on press. The active Search and Archives icon links take it too, and their icons follow. It sits outside any layer in `global.css`, so it outranks the `interactive` on the same link
 
@@ -84,7 +86,7 @@ The steps mix the accent towards `--foreground`. That darkens the light theme's 
 
 Timing: `--default-transition-duration` and `--default-transition-timing-function` (150ms, decelerating) sit in a `@theme` block, so every Tailwind transition utility takes them. A control names only the properties it transitions (`transition-colors`, `transition-[border-color,box-shadow]`).
 
-A muted control rests on a colour, not an opacity (`text-foreground/75`), so its hover reaches the full accent. Decoration beside a control's text can keep an opacity, like the hash in `Tag.astro`.
+A muted control rests on a colour, not an opacity (`text-foreground/75`), so its hover reaches the full accent. Two exceptions keep an opacity: decoration beside a control's text, like the hash in `Tag.astro`, and the heading anchor that `PostDetails.astro` adds, which is hidden until its heading is hovered at `md` and up and rests at `opacity-75` below that.
 
 Focus: links and buttons take the base rule's 2px dashed accent outline. `Tag.astro` hides its dashed bottom border on focus with `focus-visible:border-transparent`, which keeps its height. Fields focus differently – see "Form fields".
 
@@ -93,26 +95,35 @@ Reduced motion keeps the colour steps and drops the motion: the press settle is 
 Anti-patterns:
 
 - A bare `hover:text-accent`, with no press and no timing. Use `interactive`
+- `hover:bg-accent-hover` on a filled button. The `accent-hover` colour no longer exists, and Tailwind generates nothing for an unknown colour, so copied code loses its hover and nothing warns you. Use `interactive-fill`
 - A hover that moves the control, like `hover:rotate-6` or `hover:-mt-0.5`
 - An opacity fade, on hover or at rest (`hover:opacity-75`, `opacity-90` on an icon or a filled button). A fade blends the control with the page behind, so it lowers contrast where a step raises it: `opacity-90` takes a filled button's label from 6.93:1 to 5.70:1 in light theme. And a fade is not a step of the one behaviour
 - `transition-all`, which also animates layout and any property added later
 - A duration or easing class on a component (`duration-200`, `ease-out`), which drifts from the shared timing
 
-### A theme change flips every colour in one frame
-
-With a colour transition on every control, a theme change fades the controls about 110ms behind the text around them. `reflectPreference()` in `src/scripts/theme.ts` sets `data-theme-switching` on `<html>` with the theme and removes it after two animation frames. A base rule sets `transition-duration: 0s !important` on `html[data-theme-switching] *:not(#theme-btn > svg)`, so every colour flips together and the toggle's icons keep their morph. Transitioning the whole page's colours instead smears text that inherits its colour.
-
-### Pagefind's controls
-
-`/search` is Pagefind's markup, so it takes the same behaviour as plain CSS in the `#pagefind-search` block of `search.astro`, with the transition timed from `var(--default-transition-duration)` and `var(--default-transition-timing-function)`. Result links and Clear step to `var(--accent)` on hover, inside `@media (hover: hover)` as Tailwind's `hover:` variant is, and to `var(--accent-strong)` on press. "Load more results" rests on `var(--foreground)` with a 60% text-colour border and steps its text and border the same way. Clear and "Load more results" take the 2px dashed accent focus outline. Write new rules there as flat `#pagefind-search …` selectors after the nested block. The build ships that block's nesting as written, and Safari before 17.2 and Chrome before 120 drop a nested rule that starts with a type selector.
-
 **When to use:** any new interactive element, and any AstroPaper component being restyled.
+
+## A theme change flips every colour in one frame
+
+**Problem:** with a colour transition on every control, a theme change fades the controls about 110ms behind the text around them.
+
+**Solution:** `reflectPreference()` in `src/scripts/theme.ts` sets `data-theme-switching` on `<html>` whenever it changes `data-theme`, and removes it after two animation frames. A base rule sets `transition-duration: 0s !important` on `html[data-theme-switching] *:not(#theme-btn > svg)`, so every colour flips together and the toggle's icons keep their morph. Transitioning the whole page's colours instead smears text that inherits its colour.
+
+**When to use:** adding a transition to anything that changes with the theme, or changing how the theme is applied.
+
+## Pagefind's controls
+
+**Problem:** `/search` is Pagefind's markup, so Tailwind utilities can't reach its controls.
+
+**Solution:** `/search` takes the same behaviour as plain CSS in the `#pagefind-search` block of `search.astro`, with the transition timed from `var(--default-transition-duration)` and `var(--default-transition-timing-function)`. Result links and Clear step to `var(--accent)` on hover, inside `@media (hover: hover)` as Tailwind's `hover:` variant is, and to `var(--accent-strong)` on press. "Load more results" rests on `var(--foreground)` with a 60% text-colour border and steps its text and border the same way. Clear and "Load more results" take the 2px dashed accent focus outline. Write new rules there as flat `#pagefind-search …` selectors after the nested block. The build ships that block's nesting as written, and Safari before 17.2 and Chrome before 120 drop a nested rule that starts with a type selector.
+
+**When to use:** any change to the search page's styles.
 
 ## The accent at rest is a closed list
 
 **Problem:** in a red accent, colour at rest reads as a signal. A frame, a chip or a link title in brick reads as an error or a warning.
 
-**Solution:** at rest, the accent appears only on:
+**Solution:** at rest on a page, the accent appears only on:
 
 - The `eyebrow` line above a page's title
 - The one filled action (`interactive-fill`)
@@ -120,7 +131,7 @@ With a colour transition on every control, a theme change fades the controls abo
 - The active nav item (`.active-nav`)
 - The reading progress bar on a post
 
-Everything else rests on the text colour or a mix of it. Frames take `border-border`, or `border-foreground/60` where one card leads another (the setup page's "After" card). Status chips take `border-foreground/60 text-foreground` ("Open") or sit on `--muted` ("Held", "Taken"). Link titles, search result titles and the 404 numeral take the text colour. Selected text (`selection:bg-accent-tint selection:text-foreground` on `body`), search matches (`#pagefind-search mark`) and the tap flash (`-webkit-tap-highlight-color` on `html`) sit on `--accent-tint` with the text in the text colour: 10.51:1 in light theme and 9.52:1 in dark.
+Everything else rests on the text colour or a mix of it. Frames take `border-border`, or `border-foreground/60` where one card leads another (the setup page's "After" card). Status chips take `border-foreground/60 text-foreground` ("Open") or sit on `--muted` ("Held", "Taken"). Link titles, search result titles and the 404 numeral take the text colour. Selected text (`selection:bg-accent-tint selection:text-foreground` on `body`), search matches (`#pagefind-search mark`) and the tap flash (`-webkit-tap-highlight-color` on `html`) sit on `--accent-tint` with the text in the text colour: 10.51:1 in light theme and 9.52:1 in dark. The favicon and the share cards' accent bar and hostname are brand marks, outside the list.
 
 The anti-pattern is the accent at rest on anything off the list – a frame, a chip, a link title, a heading. A new use is a design call, recorded in `docs/design-decisions.md` first.
 

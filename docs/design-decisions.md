@@ -23,7 +23,7 @@ Rejected: neutral `#1a1a1a`, which has nothing of the site's own in it.
 
 ## The accent at rest is a closed list
 
-At rest, the accent appears only on the mono line above a page's title (the `eyebrow`), the one filled action, prose marks (list markers and the blockquote rule), the active nav item and the reading progress bar. Hover, press and focus use it on every control.
+At rest, the accent appears only on the mono line above a page's title (the `eyebrow`), the one filled action, prose marks (list markers and the blockquote rule), the active nav item and the reading progress bar. Hover, press and focus use it on every control, except that text fields focus in the text colour.
 
 Rejected: frames, status chips, link titles and search result titles in the accent. Each reads as an error or a warning in a red.
 
@@ -47,7 +47,7 @@ Rejected: mono headings throughout. Mono runs about a fifth wider, so a long tit
 
 ## Share-card titles are Geist
 
-The title on the site card and each post card is Geist at 600, matching the page titles. The cards' other text stays as it is.
+The title on the site card and each post card is Geist at 600, matching the page titles. The cards' other text keeps its own faces and sizes.
 
 Rejected: Geist Mono 700 titles, which left the cards the one place a title stayed mono.
 
