@@ -1,4 +1,8 @@
-type Font = { name: string; data: ArrayBuffer; weight: number; style: string };
+import type { Font } from "satori";
+
+// Every card waits on the same load, so a stalled request rejects (and is
+// retried) rather than holding them all until the platform's own timeout.
+const FETCH_TIMEOUT_MS = 30_000;
 
 async function loadGoogleFont(
   font: string,
@@ -6,22 +10,27 @@ async function loadGoogleFont(
 ): Promise<ArrayBuffer> {
   const API = `https://fonts.googleapis.com/css2?family=${font}:wght@${weight}`;
 
-  const css = await (
-    await fetch(API, {
-      headers: {
-        "User-Agent":
-          "Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10_6_8; de-at) AppleWebKit/533.21.1 (KHTML, like Gecko) Version/5.0.5 Safari/533.21.1",
-      },
-    })
-  ).text();
+  const cssRes = await fetch(API, {
+    headers: {
+      "User-Agent":
+        "Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10_6_8; de-at) AppleWebKit/533.21.1 (KHTML, like Gecko) Version/5.0.5 Safari/533.21.1",
+    },
+    signal: AbortSignal.timeout(FETCH_TIMEOUT_MS),
+  });
 
-  const resource = css.match(
+  if (!cssRes.ok) {
+    throw new Error("Failed to load font CSS. Status: " + cssRes.status);
+  }
+
+  const resource = (await cssRes.text()).match(
     /src: url\((.+?)\) format\('(opentype|truetype)'\)/
   );
 
   if (!resource) throw new Error("Failed to download dynamic font");
 
-  const res = await fetch(resource[1]);
+  const res = await fetch(resource[1], {
+    signal: AbortSignal.timeout(FETCH_TIMEOUT_MS),
+  });
 
   if (!res.ok) {
     throw new Error("Failed to download dynamic font. Status: " + res.status);
@@ -55,7 +64,7 @@ const fontsConfig = [
     weight: 700,
     style: "normal",
   },
-];
+] as const;
 
 // One download per font per build, shared by every card. A rejected load is
 // dropped so the next call retries rather than replaying the failure for the
