@@ -1,11 +1,59 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "trailingSlash": false,
-  "redirects": [
+  "routes": [
     {
-      "source": "/posts/writing-loops-is-a-ladder-not-a-command",
-      "destination": "/posts/writing-loops",
-      "permanent": true
+      "src": "^/posts/writing-loops-is-a-ladder-not-a-command/?$",
+      "headers": { "Location": "/posts/writing-loops" },
+      "status": 308
+    },
+    {
+      "src": "^/$",
+      "headers": {
+        "link": "</index.md>; rel=\"alternate\"; type=\"text/markdown\""
+      },
+      "continue": true
+    },
+    {
+      "src": "^/((?!_astro/|pagefind/|api/)[^.]+?)/?$",
+      "headers": {
+        "link": "</$1.md>; rel=\"alternate\"; type=\"text/markdown\""
+      },
+      "continue": true
+    },
+    {
+      "src": "^/.+\\.md$",
+      "headers": { "x-robots-tag": "noindex" },
+      "continue": true
+    },
+    {
+      "src": "^/$",
+      "has": [{ "type": "header", "key": "accept", "value": ".*text/markdown.*" }],
+      "dest": "/index.md",
+      "headers": {
+        "content-type": "text/markdown; charset=utf-8",
+        "vary": "Accept"
+      }
+    },
+    {
+      "src": "^/((?!_astro/|pagefind/|api/)[^.]+?)/?$",
+      "has": [{ "type": "header", "key": "accept", "value": ".*text/markdown.*" }],
+      "dest": "/$1.md",
+      "headers": {
+        "content-type": "text/markdown; charset=utf-8",
+        "vary": "Accept"
+      }
+    },
+    { "handle": "filesystem" },
+    {
+      "src": "^/.*$",
+      "has": [{ "type": "header", "key": "accept", "value": ".*text/markdown.*" }],
+      "status": 404,
+      "dest": "/404.md",
+      "headers": {
+        "content-type": "text/markdown; charset=utf-8",
+        "vary": "Accept"
+      }
     }
   ]
 }

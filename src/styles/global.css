@@ -1,6 +1,9 @@
 @import "tailwindcss";
 @import "./typography.css";
 
+/* Build-time code that names classes as selectors, so it adds no CSS */
+@source not "../utils/markdownTwins.ts";
+
 @custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
 
 :root,
