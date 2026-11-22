@@ -204,7 +204,6 @@ const nextPost =
     );
     for (const heading of headings) {
       heading.classList.add("group");
-      const text = heading.textContent.trim();
 
       // A link's name joins its heading's name, so the heading is named by
       // its text alone – see "After the article" in docs/patterns/post-page.md.
@@ -218,7 +217,10 @@ const nextPost =
       link.className =
         "heading-link interactive ms-2 text-foreground/60 no-underline transition-[color,opacity] pointer-fine:opacity-0 pointer-fine:group-hover:opacity-100 pointer-fine:focus-visible:opacity-100";
       link.href = "#" + heading.id;
-      link.setAttribute("aria-label", `Link to section: ${text}`);
+      link.setAttribute(
+        "aria-label",
+        `Link to section: ${headingText.textContent.trim()}`
+      );
 
       const span = document.createElement("span");
       span.ariaHidden = "true";
@@ -269,21 +271,22 @@ const nextPost =
       const code = block.querySelector("code");
       const text = code?.innerText;
 
-      let label = "Copied";
-      let holdMs = 700;
+      let copied = true;
       try {
         await navigator.clipboard.writeText(text ?? "");
       } catch {
-        // A failure label has to be read, so it holds for longer.
-        label = "Copy failed";
-        holdMs = 1500;
+        copied = false;
       }
 
-      button.innerText = label;
+      button.innerText = copied ? "Copied" : "Copy failed";
 
-      setTimeout(() => {
-        button.innerText = copyButtonLabel;
-      }, holdMs);
+      // A failure label has to be read, so it holds for longer.
+      setTimeout(
+        () => {
+          button.innerText = copyButtonLabel;
+        },
+        copied ? 700 : 1500
+      );
     }
   }
   attachCopyButtons();
