@@ -204,10 +204,25 @@ const nextPost =
     );
     for (const heading of headings) {
       heading.classList.add("group");
+
+      // A link's name joins its heading's name, so the heading is named by
+      // its text alone – see "After the article" in docs/patterns/post-page.md.
+      // Heading ids are lowercase slugs, so the capital keeps this id from
+      // matching another heading's.
+      const headingText = document.createElement("span");
+      headingText.id = `${heading.id}-Text`;
+      headingText.append(...heading.childNodes);
+      heading.appendChild(headingText);
+      heading.setAttribute("aria-labelledby", headingText.id);
+
       const link = document.createElement("a");
       link.className =
         "heading-link interactive ms-2 text-foreground/60 no-underline transition-[color,opacity] pointer-fine:opacity-0 pointer-fine:group-hover:opacity-100 pointer-fine:focus-visible:opacity-100";
       link.href = "#" + heading.id;
+      link.setAttribute(
+        "aria-label",
+        `Link to section: ${headingText.textContent.trim()}`
+      );
 
       const span = document.createElement("span");
       span.ariaHidden = "true";
@@ -220,6 +235,7 @@ const nextPost =
 
   function attachCopyButtons() {
     const copyButtonLabel = "Copy";
+    const resetTimers = new WeakMap();
     const codeBlocks = Array.from(document.querySelectorAll("pre"));
 
     for (const codeBlock of codeBlocks) {
@@ -242,6 +258,7 @@ const nextPost =
       const copyButton = document.createElement("button");
       copyButton.className = `copy-code absolute end-3 ${topClass} interactive rounded bg-muted border border-muted px-2 py-1 font-mono text-xs leading-4 text-foreground font-medium`;
       copyButton.innerHTML = copyButtonLabel;
+      copyButton.setAttribute("aria-live", "polite");
       codeBlock.setAttribute("tabindex", "0");
       codeBlock.appendChild(copyButton);
 
@@ -257,13 +274,27 @@ const nextPost =
       const code = block.querySelector("code");
       const text = code?.innerText;
 
-      await navigator.clipboard.writeText(text ?? "");
+      let copied = true;
+      try {
+        await navigator.clipboard.writeText(text ?? "");
+      } catch {
+        copied = false;
+      }
 
-      button.innerText = "Copied";
+      button.innerText = copied ? "Copied" : "Copy failed";
 
-      setTimeout(() => {
-        button.innerText = copyButtonLabel;
-      }, 700);
+      // A failure label has to be read, so it holds for longer. A repeat
+      // click cancels the last reset, so it can't cut the new label short.
+      clearTimeout(resetTimers.get(button));
+      resetTimers.set(
+        button,
+        setTimeout(
+          () => {
+            button.innerText = copyButtonLabel;
+          },
+          copied ? 700 : 1500
+        )
+      );
     }
   }
   attachCopyButtons();

@@ -48,11 +48,14 @@ The image itself is the button, rather than a `<button>` wrapped round it, becau
 
 **`addHeadingLinks()` is scoped to `#article`.** Broadening the selector puts anchor links on headings outside the article body, such as the newsletter card and the row labels.
 
+**A heading anchor carries its own name, and its heading is named by its text alone.** A heading's name is built from its content, which includes the name of any link inside it, so a name on the anchor alone becomes part of the heading's name. `addHeadingLinks()` moves the heading's content into a span with the id `{heading id}-Text` and sets the heading's `aria-labelledby` to it, then gives the anchor `aria-label` "Link to section: {heading text}". The heading reads "The team" and its anchor "Link to section: The team". The "#" inside the anchor stays `aria-hidden`.
+
 **Only the title, article and tags are indexed.** `data-pagefind-body` sits on the `<h1>`, `<article>` and the tag list, not on `<main>` or the rows round them, so the row labels stay out. Anything rendered on every post – the date line, the newsletter card, the share and edit links, the post navigation – would otherwise be indexed with each post, and a search for its text would match them all. A new element on the post page stays out of search unless it gets the attribute. Pagefind ignores CSS, so a `hidden` element inside a body element is indexed.
 
 Anti-patterns:
 
 - Icon rows for the tags or share links, and the `md:-ml-2` that pulled the first share icon back under its label. The rows are words in the ledger, which aligns them
 - A margin on a card or row to space a list, in place of `gap` on the list
+- An `aria-label` on the heading anchor with no `aria-labelledby` on the heading. The heading's name then carries the anchor's label after its own text, so a screen reader's headings list, which is how a screen-reader user skims a post, reads every heading twice
 
 **When to use:** changing a post's title block, body, tables, figures or what follows the article.
