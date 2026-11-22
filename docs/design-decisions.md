@@ -130,7 +130,7 @@ Rejected: a larger size at the full column, since 18px still runs to about 82 ch
 
 ## Every list's text starts 1.625em in, with the browser's markers inside the column
 
-Every bulleted and numbered list, in posts, on the About page and on the page parts, starts its text 1.625em (27.6px) in from the text above it, with wrapped lines under the text. The browser places each marker before the text at its own gap, and every marker sits inside the column, never left of the paragraphs' edge. 1.625em is the smallest indent at which a two-digit numeral and the page parts' mono steps stay inside it.
+Every bulleted and numbered list, in posts, on the About page and on the page parts, starts its text 1.625em (27.6px) in from the text above it, with wrapped lines under the text. The browser places each marker before the text at its own gap, and every marker sits inside the column, never left of the paragraphs' edge. 1.625em is the smallest indent at which a two-digit numeral and the page parts' mono steps stay inside it, which holds a prose list of up to 99 items and nine steps in a page part. How it is built is in `docs/patterns/lists.md`.
 
 Rejected:
 
