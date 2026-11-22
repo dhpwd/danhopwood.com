@@ -118,11 +118,15 @@ const recentPosts = sortedPosts.filter(({ data }) => !data.featured);
 </Layout>
 
 <script>
-  document.addEventListener("astro:page-load", () => {
+  function storeBackUrl() {
     const indexLayout = (document.querySelector("#main-content") as HTMLElement)
       ?.dataset?.layout;
     if (indexLayout) {
       sessionStorage.setItem("backUrl", "/");
     }
-  });
+  }
+
+  // See "Client scripts and View Transitions" in docs/patterns/astro-build.md
+  document.addEventListener("astro:page-load", storeBackUrl);
+  storeBackUrl();
 </script>
