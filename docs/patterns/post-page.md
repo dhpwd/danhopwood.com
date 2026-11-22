@@ -14,7 +14,7 @@ The date line sits above the title, as the mono accent line does on every page: 
 
 The rule takes direct children only (`> :where(…)`), so text nested in a table cell or a `blockquote` keeps the width of its container.
 
-A list's marker sits on the paragraphs' left edge and its text starts 1.75rem in, from the `list-edge` utility – see `docs/patterns/lists.md`.
+A list's text starts 1.625em in, with each marker inside the column, from the `list-indent` utility – see `docs/patterns/lists.md`.
 
 ## Tables
 

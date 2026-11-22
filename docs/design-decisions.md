@@ -128,16 +128,16 @@ About 68 characters a line at 1440. Figures, tables and code keep the full colum
 
 Rejected: a larger size at the full column, since 18px still runs to about 82 characters.
 
-## A list's marker sits on the text's left edge, with its text 28px in
+## Every list's text starts 1.625em in, with the browser's markers inside the column
 
-A bullet or a numeral lines up with the left edge of the paragraphs above, and every item's text starts 1.75rem (28px) in, in posts, on the About page and on the page parts alike. Wrapped lines hang under the item's text, and a nested list does the same from its parent item's text. 28px is one line of body text, and the smallest indent that holds a two-digit numeral and the page parts' mono numerals.
+Every bulleted and numbered list, in posts, on the About page and on the page parts, starts its text 1.625em (27.6px) in from the text above it, with wrapped lines under the text. The browser places each marker before the text at its own gap, and every marker sits inside the column, never left of the paragraphs' edge. 1.625em is the smallest indent at which a two-digit numeral and the page parts' mono steps stay inside it.
 
 Rejected:
 
-- The prose plugin's indent, which set bullets 10px and numerals 16px in from the paragraphs
-- Markers hanging outside the column. A phone's gutter is 16px and a bullet needs 18px, so the screen's edge cuts it off
-- 18px and 20px, which the page parts' mono numerals don't fit, leaving one page with two text edges
-- 24px, which fits the mono numerals only at a smaller size and leaves a tenth numeral reaching into a phone's gutter
+- An indent for each kind of list, as the prose plugin and the page parts had, which starts lists on different lines
+- Markers hanging outside the column, in the margin, which read as too far left and which a phone's 16px gutter cuts off
+- Markers pinned to the paragraphs' edge with the text 28px in, which leaves a bullet 22px from its words and needs a rule per marker kind
+- 1.5em, at which a two-digit numeral and the mono steps reach 1–2px into the margin
 
 ## A narrow image sits on the left edge, with its caption inside its width
 

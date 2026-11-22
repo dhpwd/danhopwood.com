@@ -71,24 +71,14 @@
       @apply marker:text-accent;
     }
 
-    /* A bullet or a numeral sits on the paragraphs' left edge and every
-       item's text starts one line in – see docs/patterns/lists.md */
+    /* Every list's text starts one indent in – see docs/patterns/lists.md */
     ul,
     ol {
-      @apply list-edge;
+      @apply list-indent;
     }
 
     ol > li::marker {
       font-variant-numeric: tabular-nums;
-    }
-
-    /* A two-digit numeral is one tabular figure wider, so its item starts a
-       figure further in and takes the figure back from its padding */
-    ol > li:nth-child(n + 10) {
-      margin-inline-start: 0.588em;
-      padding-inline-start: calc(
-        var(--list-indent) - var(--list-marker-width) - 0.588em
-      );
     }
 
     hr {
