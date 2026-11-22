@@ -107,3 +107,11 @@ Run Playwright against `pnpm build && pnpm preview`. To compare a base and a cha
 **Solution:** resolve project asset paths from `process.cwd()` in anything Astro bundles – see `og-templates/shared.js` loading the avatar. Standalone scripts run directly by node, such as `scripts/generate-favicons.mjs`, are the opposite case and correctly use `import.meta.url`.
 
 **When to use:** reading a file from disk in build-time code.
+
+## Class names in build-time code reach the CSS
+
+**Problem:** Tailwind v4 finds its classes by scanning every source file it isn't told to skip, not only templates. A build-time module that names classes as strings, such as a selector in an integration, is read the same way, and any name no page uses yet adds a rule to the site's CSS. The stylesheet's hashed file name then changes, and with it every page's HTML, though no page uses the rule. Nothing in the build reports it.
+
+**Solution:** exclude the module with `@source not "<path>"` in `src/styles/global.css`, beside the import of Tailwind. `src/utils/markdownTwins.ts` is excluded this way. To confirm a module adds nothing, diff the built CSS (or every page's HTML) against the base build.
+
+**When to use:** writing build-time code that names classes, such as selectors in an integration or a rehype plugin.
