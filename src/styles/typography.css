@@ -87,7 +87,7 @@
     ol > li:nth-child(n + 10) {
       margin-inline-start: 0.588em;
       padding-inline-start: calc(
-        var(--list-indent) - var(--list-marker, 1.055em) - 0.588em
+        var(--list-indent) - var(--list-marker-width) - 0.588em
       );
     }
 

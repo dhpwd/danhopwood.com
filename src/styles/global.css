@@ -189,11 +189,10 @@ html[data-theme="dark"] {
    numeral's ("1. ") */
 @utility list-edge {
   --list-indent: 1.75rem;
-  padding-inline-start: var(--list-marker, 1.055em);
+  --list-marker-width: var(--list-marker, 1.055em);
+  padding-inline-start: var(--list-marker-width);
   & > li {
-    padding-inline-start: calc(
-      var(--list-indent) - var(--list-marker, 1.055em)
-    );
+    padding-inline-start: calc(var(--list-indent) - var(--list-marker-width));
   }
 }
 
