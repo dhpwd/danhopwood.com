@@ -86,7 +86,9 @@
        figure further in and takes the figure back from its padding */
     ol > li:nth-child(n + 10) {
       margin-inline-start: 0.588em;
-      padding-inline-start: calc(var(--list-indent) - 1.643em);
+      padding-inline-start: calc(
+        var(--list-indent) - var(--list-marker, 1.055em) - 0.588em
+      );
     }
 
     hr {
