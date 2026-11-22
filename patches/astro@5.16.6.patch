@@ -12,7 +12,7 @@ index 759ecfcd3629ac5cc79e5a42d858f133e428dd10..60a4e1b74ecaba1786eeb84b3977c82a
        if (URL.canParse(decodedImagePath.src)) {
          image = await getImage(decodedImagePath);
 diff --git a/dist/vite-plugin-markdown/images.js b/dist/vite-plugin-markdown/images.js
-index a0bff80f59d959593a811aea37e1b75275ec63da..fbf515f13ea90dc02a9e5368d79678c1dc214bed 100644
+index a0bff80f59d959593a811aea37e1b75275ec63da..8d61bf68be076f18f671a9e7f833af439059e8e6 100644
 --- a/dist/vite-plugin-markdown/images.js
 +++ b/dist/vite-plugin-markdown/images.js
 @@ -16,7 +16,7 @@ function getMarkdownCodeForImages(localImagePaths, remoteImagePaths, html) {
@@ -33,12 +33,3 @@ index a0bff80f59d959593a811aea37e1b75275ec63da..fbf515f13ea90dc02a9e5368d79678c1
  													imageSources[matchKey] = await getImage(props);
  													occurrenceCounter++;
  											}
-@@ -47,7 +47,7 @@ function getMarkdownCodeForImages(localImagePaths, remoteImagePaths, html) {
- 			const imageSources = await images(html);
- 
- 			return html.replaceAll(/__ASTRO_IMAGE_="([^"]+)"/gm, (full, imagePath) => {
--				const decodedImagePath = JSON.parse(imagePath.replace(/&#x22;/g, '"'));
-+				const decodedImagePath = JSON.parse(imagePath.replace(/&(?:#x22|quot);/g, '"').replace(/&(?:#x27|apos);/g, "'").replace(/&(?:amp|#x26|#38);/g, '&'));
- 
- 				// Use the 'index' property for each image occurrence
- 				const srcKey = decodedImagePath.src + '_' + decodedImagePath.index;
