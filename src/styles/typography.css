@@ -71,12 +71,28 @@
       @apply marker:text-accent;
     }
 
+    /* A numeral sits on the paragraphs' left edge and wrapped lines hang
+       under the text: the padding is one tabular-figure marker ("1. ") wide */
+    ol {
+      padding-inline-start: 1.055em;
+    }
+
+    ol > li {
+      padding-inline-start: 0;
+    }
+
+    ol > li::marker {
+      font-variant-numeric: tabular-nums;
+    }
+
     hr {
       @apply border-border;
     }
 
+    /* An image narrower than the column sits on its left edge, under the
+       text, rather than centred */
     img {
-      @apply mx-auto rounded-md border border-border;
+      @apply rounded-md border border-border;
     }
 
     /* ImageZoom.astro makes each image a button that opens it at full size.
@@ -85,13 +101,17 @@
       @apply cursor-zoom-in;
     }
 
+    /* The figure takes its image's width, so a caption under a narrow image
+       stays within it */
     figure {
-      @apply my-9;
+      @apply my-9 w-fit max-w-full;
     }
 
     figcaption {
-      /* Every image fills the column, so the caption starts at its left
-         edge, on the reading measure. */
+      /* contain: inline-size keeps the caption's text from widening the
+         figure. It starts at the image's left edge and wraps at the image's
+         width or the reading measure, whichever is narrower. */
+      contain: inline-size;
       @apply mt-3 max-w-measure text-sm leading-normal text-foreground/75;
     }
 

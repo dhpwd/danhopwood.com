@@ -14,6 +14,8 @@ The date line sits above the title, as the mono accent line does on every page: 
 
 The rule takes direct children only (`> :where(…)`), so text nested in a table cell or a `blockquote` keeps the width of its container.
 
+A numbered list's numerals sit on the paragraphs' left edge, and wrapped lines hang under the item's text. The list's padding is the width of a one-digit marker ("1. "), and the markers take tabular figures so every numeral has that width. A tenth item's numeral reaches one figure into the margin. `MarkedList.astro`, on the setup page, does the same for its mono numerals, with three mono characters of padding.
+
 ## Tables
 
 **Problem:** a three-column table at 390 leaves each column about 120px, and a sideways-scrolling table hides its first column, which is usually the one that names the row.
@@ -26,7 +28,7 @@ The rule takes direct children only (`> :where(…)`), so text nested in a table
 
 ## Figures
 
-An image keeps its 1px border and radius and fills the column. A caption sits 0.75rem under it, left-aligned on the reading measure, in `text-sm` at 75%. A figure has 2.25rem above and below. Captions are written as described in `docs/patterns/images.md`.
+An image keeps its 1px border and radius and fills the column. An image narrower than the column shows at its own width on the column's left edge, under the text, rather than centred. A caption sits 0.75rem under its image, from the image's left edge, in `text-sm` at 75%, and wraps at the image's width or the reading measure, whichever is narrower. The figure takes its image's width (`w-fit`) and the caption sets `contain: inline-size`, so a long caption can't widen the figure past a narrow image. A figure has 2.25rem above and below. Captions are written as described in `docs/patterns/images.md`.
 
 In the dark theme `.app-prose img` takes `filter: brightness(0.88)`, which brings an image's white down to about the text colour, so a screenshot is never the brightest thing on the page.
 

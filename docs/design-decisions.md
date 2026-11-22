@@ -128,6 +128,18 @@ About 68 characters a line at 1440. Figures, tables and code keep the full colum
 
 Rejected: a larger size at the full column, since 18px still runs to about 82 characters.
 
+## Numerals sit on the text's left edge
+
+A numbered list's numerals line up with the left edge of the paragraphs above, and wrapped lines hang under the item's text, in posts and on the page parts alike.
+
+Rejected: the prose plugin's indent, which set the numerals 16px in from the paragraphs, and numerals hanging outside the column, which on a phone sit against the screen's gutter.
+
+## A narrow image sits on the left edge, with its caption inside its width
+
+An image narrower than the column shows at its own width on the column's left edge, and its caption wraps within the image's width.
+
+Rejected: centring the image, which leaves a left-aligned caption overhanging it on both sides, and centring the caption with it, which breaks the left edge every other block in a post keeps.
+
 ## A table's rows become labelled blocks on a phone
 
 Below 640px each row is a block, and each cell after the first carries its column heading as a mono label. The labels are set at build, so they are there before any script runs.

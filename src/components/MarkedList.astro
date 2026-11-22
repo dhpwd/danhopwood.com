@@ -11,10 +11,12 @@ const List = ordered ? "ol" : "ul";
 
 <List
   class:list={[
-    "flex flex-col gap-2.5 pl-5 marker:text-accent",
+    "flex flex-col gap-2.5 marker:text-accent",
     ordered
-      ? "list-decimal marker:font-mono marker:text-[0.9375rem]"
-      : "list-disc",
+      ? // Three mono characters ("1. ") at the marker's 15px, so a numeral
+        // sits on the text's left edge and wrapped lines hang under the text
+        "list-decimal pl-[1.6875rem] marker:font-mono marker:text-[0.9375rem]"
+      : "list-disc pl-5",
   ]}
 >
   <slot />
