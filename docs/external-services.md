@@ -9,7 +9,7 @@ Hosts the site from the `dhpwd/danhopwood.com` GitHub repo. `danhopwood.com` is 
 `vercel.json` at the project root holds the production-side routing:
 
 - `trailingSlash: false` – see `docs/patterns/urls.md`
-- `redirects` – permanent redirects for renamed post slugs
+- `routes` – the legacy post redirect, placed first (see `docs/patterns/urls.md`), then the Markdown routes: the alternate `link` headers, `noindex` on `.md` URLs, `Accept: text/markdown` negotiation, `{ "handle": "filesystem" }` and the Markdown 404 – see "Agents asking for Markdown" in `docs/patterns/machine-readability.md`
 
 The site is static apart from one Vercel function, `api/subscribe.ts`, served at `POST /api/subscribe` (see Buttondown below). Vercel builds the root `api/` folder alongside the Astro build. The function runs on the Node runtime and exports the web-standard `{ fetch(request) }` handler. `pnpm dev` and `pnpm preview` don't serve it, so locally `/api/subscribe` 404s and the signup form takes its fallback.
 
@@ -26,7 +26,7 @@ Custom events use Title Case with spaces, the Plausible convention. `plausible` 
 - **Newsletter Signup** – from the submit handler in `NewsletterSignup.astro`, once per submit on both the inline and fallback paths. It counts signups started, not confirmed – the reader may still abandon Buttondown's verification step
 - **Share Link** – on click in `ShareLinks.astro`, with `{ props: { platform } }` for a per-platform breakdown
 
-Each event needs a matching goal in the Plausible dashboard before it reports. The script loads from `plausible.io` directly, so ad blockers suppress it – proxying it through `danhopwood.com` with a `vercel.json` rewrite is the fix, and that is FID-548.
+Each event needs a matching goal in the Plausible dashboard before it reports. The script loads from `plausible.io` directly, so ad blockers suppress it – proxying it through `danhopwood.com` with a `vercel.json` route is the fix, and that is FID-548.
 
 ## Buttondown
 

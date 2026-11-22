@@ -41,7 +41,7 @@ pnpm generate:favicons  # regenerate public/ favicons from the brand tokens
 - any visual, layout, colour or motion change, or reviewing one → read `docs/design-decisions.md` before proposing
 - adding or replacing images, the avatar or favicons → read `docs/patterns/images.md`
 - editing `src/utils/og-templates/` or `src/utils/loadGoogleFont.ts`, or changing the satori version → read `docs/patterns/og-images.md`
-- sitemap, `llms.txt`, JSON-LD or OG metadata → read `docs/patterns/machine-readability.md`
+- sitemap, `llms.txt`, JSON-LD, OG metadata, `vercel.json` routes, response headers or the Markdown twins → read `docs/patterns/machine-readability.md`
 - a post's title block, body, tables, figures or what follows the article → read `docs/patterns/post-page.md`
 - adding routes, changing route config or writing internal links → read `docs/patterns/urls.md`
 - client-side scripts, server endpoints (`api/`), content collections (including any route that reads posts) or stale build output → read `docs/patterns/astro-build.md`

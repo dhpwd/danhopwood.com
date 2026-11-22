@@ -8,6 +8,8 @@
 2. `astro.config.ts` `trailingSlash: "never"` – makes the dev server and `Astro.url` behave like production, and makes `pnpm preview` answer a path with a trailing slash with the 404 page where production redirects it. For a static build it reaches no further than that, since trailing slashes on prerendered pages are the host's business
 3. `src/pages/rss.xml.ts` `trailingSlash: false` – Astro's RSS helper appends slashes by default, regardless of the Astro config
 
+**Renamed slugs:** the one legacy redirect is a `routes` entry placed first in `vercel.json`, a 308 from the old path with or without its trailing slash. A new renamed-slug redirect goes there too, never under a top-level `redirects` key. Beside `routes`, `vercel build` compiles `redirects` after `{ "handle": "filesystem" }` and the Markdown 404, so an agent asking for Markdown at the old URL would get the 404 – see "Agents asking for Markdown" in `docs/patterns/machine-readability.md`.
+
 **Writer convention:** omit trailing slashes on internal `/posts/...` links in markdown, anchors included – `/posts/slug#heading`, not `/posts/slug/#heading`.
 
 **When to use:** adding routes, changing route config or writing internal links.

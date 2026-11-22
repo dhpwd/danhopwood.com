@@ -13,6 +13,7 @@ import { remarkFigureCaptions } from "./src/utils/remarkFigureCaptions";
 import { rehypeTableLabels } from "./src/utils/rehypeTableLabels";
 import { SITE } from "./src/config";
 import { getPostModDates } from "./src/utils/getPostModDates";
+import { markdownTwins } from "./src/utils/markdownTwins";
 
 // Post URL path -> last-modified date, for sitemap <lastmod> freshness signals.
 const postModDates = getPostModDates();
@@ -30,6 +31,7 @@ export default defineConfig({
         return item;
       },
     }),
+    markdownTwins(),
   ],
   markdown: {
     remarkPlugins: [
