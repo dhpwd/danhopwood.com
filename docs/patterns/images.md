@@ -52,10 +52,11 @@ google-chrome --headless=new --disable-gpu --hide-scrollbars --no-sandbox \
 
 Commit the source and the PNG together.
 
-- The page is 1200 CSS pixels wide by default. A 2400 pixel image opens in the dialog at 1200 CSS pixels, so its text shows at the size it was drawn. Another width needs a reason
+- The page is 1200 CSS pixels wide by default, so the 2× render opens in the dialog with its text at the size it was drawn – see "Save screenshots at 2×". Another width needs a reason
+- Its type is Geist and Geist Mono at the image's own sizes, not the site's type utilities, which a standalone page can't load
 - The window's height is the value the file's script writes to `<body data-h>`. Read it in a browser at a 1200 pixel viewport once the page has loaded (`document.body.dataset.h`, through the Playwright MCP), and record it in the file's header. Chrome's `--dump-dom` is not a reliable way to read it: it often returns the page before the script has run
 - A re-render keeps the PNG's pixel size, so the post's layout doesn't move
-- One light image serves both themes. The dark theme dims it like any image – see "Figures" in `docs/patterns/post-page.md`
+- One light image serves both themes, as "A diagram is ink, with the accent on its level labels" in `docs/design-decisions.md` settles. The dark theme dims it like any image – see "Figures" in `docs/patterns/post-page.md`
 
 Anti-patterns:
 
