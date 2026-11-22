@@ -33,6 +33,9 @@ export default async post => {
                 display: "flex",
                 flexDirection: "column",
                 flexGrow: 1,
+                // Here and on the block's container, so a full title and
+                // description overflow without pushing the footer down –
+                // see docs/patterns/og-images.md.
                 minHeight: 0,
                 padding: "64px 72px 56px",
               },
