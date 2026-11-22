@@ -1,0 +1,24 @@
+---
+// A mono pill for a place's status. "Open" is an ink outline and the rest are
+// muted fills. None takes the accent – see docs/design-decisions.md
+type Props = {
+  status: "Held" | "Open" | "Taken";
+};
+
+const { status } = Astro.props;
+
+const chipClass = {
+  Open: "border-foreground/60 text-foreground",
+  Held: "border-border bg-muted text-foreground/75",
+  Taken: "border-border bg-muted text-foreground/75",
+};
+---
+
+<span
+  class:list={[
+    "inline-block rounded-full border px-2 py-[0.1875rem] font-mono text-xs tracking-[0.04em] uppercase",
+    chipClass[status],
+  ]}
+>
+  {status}
+</span>

@@ -9,7 +9,10 @@ dayjs.extend(timezone);
 
 type Props = {
   class?: string;
-  size?: "sm" | "lg";
+  // "eyebrow" is the accent line above a page's title, "meta" everywhere else
+  tone?: "meta" | "eyebrow";
+  // One item a line from 640px, for the ledger's label column
+  stack?: boolean;
   pubDatetime: string | Date;
   timezone?: string;
   modDatetime?: string | Date | null;
@@ -19,7 +22,8 @@ type Props = {
 const {
   pubDatetime,
   modDatetime,
-  size = "sm",
+  tone = "meta",
+  stack = false,
   class: className = "",
   timezone: postTimezone,
   readingTime,
@@ -31,28 +35,26 @@ const datetime = dayjs(isModified ? modDatetime : pubDatetime).tz(
   postTimezone || SITE.timezone
 );
 
-const date = datetime.format("D MMM, YYYY"); // e.g., '22 Mar, 2025'
+const date = datetime.format("D MMM YYYY"); // e.g., '22 Mar 2025'
 ---
 
-<div class:list={["flex items-center gap-x-2 font-mono opacity-70", className]}>
-  {
-    isModified && (
-      <span class:list={["text-sm", { "sm:text-base": size === "lg" }]}>
-        Updated:
-      </span>
-    )
-  }
-  <time
-    class:list={["text-sm", { "sm:text-base": size === "lg" }]}
-    datetime={datetime.toISOString()}>{date}</time
-  >
+<div
+  class:list={[
+    tone,
+    "flex flex-wrap gap-x-2",
+    { "sm:flex-col": stack },
+    className,
+  ]}
+>
+  {isModified && <span>Updated</span>}
+  <time datetime={datetime.toISOString()}>{date}</time>
   {
     readingTime && (
       <>
-        <span aria-hidden="true">·</span>
-        <span class:list={["text-sm", { "sm:text-base": size === "lg" }]}>
-          {readingTime}
+        <span aria-hidden="true" class:list={{ "sm:hidden": stack }}>
+          ·
         </span>
+        <span>{readingTime}</span>
       </>
     )
   }

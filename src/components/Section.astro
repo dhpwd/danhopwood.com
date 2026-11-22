@@ -1,0 +1,26 @@
+---
+// A titled section of an offer page, ruled off from the one above. `framed`
+// is the closing call to action: a bordered box in place of the rule, with
+// its lines closer together.
+type Props = {
+  // Prefix for the heading's id, which labels the section
+  id: string;
+  title: string;
+  framed?: boolean;
+};
+
+const { id, title, framed = false } = Astro.props;
+---
+
+<section
+  aria-labelledby={`${id}-h`}
+  class:list={[
+    "flex flex-col",
+    framed
+      ? "gap-1.5 rounded-md border border-border px-[1.375rem] py-5"
+      : "gap-5 border-t border-border pt-8",
+  ]}
+>
+  <h2 id={`${id}-h`} class="title-item">{title}</h2>
+  <slot />
+</section>

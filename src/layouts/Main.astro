@@ -1,32 +1,33 @@
 ---
-import Breadcrumb from "@/components/Breadcrumb.astro";
 import { SITE } from "@/config";
 
-type StringTitle = { pageTitle: string };
-type ArrayTitle = { pageTitle: [string, string]; titleTransition: string };
+type Props = {
+  pageTitle: string;
+  // The view-transition name the title shares with the link that led here
+  titleTransition?: string;
+  // The mono accent line above the title
+  eyebrow?: string;
+};
 
-type Props = (StringTitle | ArrayTitle) & { pageDesc?: string };
-
-const { props } = Astro;
+const { pageTitle, titleTransition, eyebrow } = Astro.props;
 
 const backUrl = SITE.showBackButton ? Astro.url.pathname : "/";
 ---
 
-<Breadcrumb />
 <main data-backUrl={backUrl} id="main-content" class="app-layout pb-4">
-  {
-    "titleTransition" in props ? (
-      <h1 class="title-page">
-        {props.pageTitle[0]}
-        <span transition:name={props.titleTransition}>
-          {props.pageTitle[1]}
-        </span>
-      </h1>
-    ) : (
-      <h1 class="title-page">{props.pageTitle}</h1>
-    )
-  }
-  <p class="mt-2 mb-6">{props.pageDesc}</p>
+  <div class="flex flex-col gap-3 pt-9 pb-8 sm:pt-14 sm:pb-10">
+    {eyebrow && <p class="eyebrow">{eyebrow}</p>}
+    <h1 class="title-page">
+      {
+        titleTransition ? (
+          <span transition:name={titleTransition}>{pageTitle}</span>
+        ) : (
+          pageTitle
+        )
+      }
+    </h1>
+    <slot name="intro" />
+  </div>
   <slot />
 </main>
 

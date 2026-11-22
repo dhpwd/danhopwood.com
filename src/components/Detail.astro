@@ -1,0 +1,13 @@
+---
+// One labelled fact: a mono label over a line or two of text.
+type Props = {
+  label: string;
+};
+
+const { label } = Astro.props;
+---
+
+<div class="flex min-w-0 flex-col gap-1.5">
+  <h3 class="label-caps text-foreground/75">{label}</h3>
+  <slot />
+</div>

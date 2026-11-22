@@ -1,19 +1,29 @@
 ---
 import { SOCIALS } from "@/constants";
-import LinkButton from "./LinkButton.astro";
+
+// The footer's row of profile links, with the feed last.
+const links = [
+  ...SOCIALS.map(({ name, href, linkTitle }) => ({
+    label: name,
+    href,
+    title: linkTitle,
+  })),
+  { label: "RSS", href: "/rss.xml", title: "RSS Feed" },
+];
 ---
 
-<div class="flex flex-wrap items-center gap-1">
+<ul class="flex flex-wrap items-center gap-x-5 gap-y-1">
   {
-    SOCIALS.map(social => (
-      <LinkButton
-        href={social.href}
-        class="p-2 sm:p-1"
-        title={social.linkTitle}
-      >
-        <social.icon class="inline-block size-6 scale-125 fill-transparent stroke-current stroke-2 sm:scale-110" />
-        <span class="sr-only">{social.linkTitle}</span>
-      </LinkButton>
+    links.map(({ label, href, title }) => (
+      <li>
+        <a
+          {href}
+          {title}
+          class="inline-block py-2 interactive underline decoration-dashed underline-offset-4 sm:py-1"
+        >
+          {label}
+        </a>
+      </li>
     ))
   }
-</div>
+</ul>

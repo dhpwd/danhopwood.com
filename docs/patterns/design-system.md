@@ -35,13 +35,15 @@ Code blocks are the one area with its own palette: the shiki themes `vitesse-lig
 
 **Solution:** every piece of text takes one of three treatments, each with a fixed style. Pick the treatment and use its shared style – new work adds no face, size or tracking of its own.
 
-- **Prose** – Geist, via `font-app` and the body default. Links carry dashed underlines (`decoration-dashed underline-offset-4`), the site's signature, at body weight
-- **Titles** – Geist at 600 with balanced wrapping, from the global `h1`–`h6` rule in `global.css`. Two `@utility` blocks there set the scale: `title-page` for a page's `h1`, fluid between 30px and 40px, and `title-item` for a card title or a section heading. In-post headings keep the prose plugin's sizes. Its own heading weights (800, 700, 600) outrank the global rule, so `typography.css` restates the weight and tracking on `.app-prose h1` to `h4`
-- **Mono** – Geist Mono, for the site name, labels, the eyebrow, dates, metadata and the breadcrumb, via an explicit `font-mono` or a shared utility. `eyebrow` is the small mono accent line above a page's title. `label-caps` is the small uppercase label for a group, with `text-foreground/75` where the label is muted. A numeral set large, like the 404 page's, takes `font-mono` explicitly, since headings are set in Geist. UI state markers such as `.active-nav` use solid underlines, not dashed
+- **Prose** – Geist, via `font-app` and the body default. Links carry dashed underlines (`decoration-dashed underline-offset-4`), the site's signature, at body weight. A row of links – the share row, the footer's links, a post's tags – is words with the dashed underline, never a row of icons
+- **Titles** – Geist at 600 with balanced wrapping, from the global `h1`–`h6` rule in `global.css`. Three `@utility` blocks there set the scale: `title-hero` for the homepage's headline only, fluid between 32px and 44px, `title-page` for every other page's `h1`, fluid between 30px and 40px, and `title-item` for a card title or a section heading. In-post headings take the sizes `typography.css` sets – see "Reading measure" in `docs/patterns/post-page.md`. The prose plugin's own heading weights (800, 700, 600) outrank the global rule, so `typography.css` restates the weight and tracking on `.app-prose h1` to `h4`
+- **Mono** – Geist Mono, for the site name, labels, the eyebrow, dates and metadata, via an explicit `font-mono` or a shared utility. `eyebrow` is the small mono accent line above a page's title. `meta` is the same line in the text colour at 75%, for dates, reading times, counts and the pagination line. `label-caps` is the small uppercase label for a group, with `text-foreground/75` where the label is muted. UI state markers such as `.active-nav` use solid underlines, not dashed
 
 Nav links are Geist at 500 (`font-medium`), not mono.
 
 The share cards set their titles through `titleStyle` in `src/utils/og-templates/shared.js`, which restates `title-page`'s weight, line-height and tracking by hand at card scale. A change to the title treatment updates it too.
+
+Pagefind's results on `/search` can't take the utilities either, so four flat `#pagefind-search …` rules in `search.astro` restate them: the count line in `meta`'s values, result titles in `title-item`'s at weight 600, nested titles at 16px and weight 500, and excerpts at 15px. Without them Pagefind sets a result title at weight 700 and an excerpt at 12.8px. A change to `meta` or `title-item` updates those rules too.
 
 Both faces load through Astro's experimental fonts API (Google provider, configured in `astro.config.ts`, preloaded by `<Font>` in `Layout.astro`) at weights 400/500/600/700, from one variable file per family. A new weight in that range loads nothing new.
 
@@ -62,6 +64,44 @@ No italic Geist face is loaded. Semantic emphasis (`em`, blockquotes) renders as
 
 **When to use:** any new component or restyle.
 
+## The title block
+
+**Problem:** every page opens with a title, and a page that composes its own opening drifts from the rest – a breadcrumb on one, a description line on another, a different gap above the title on a third.
+
+**Solution:** one title block on every page: an optional `eyebrow` line, then the `h1` in `title-page`, 0.75rem apart, with 2.25rem above (3.5rem from 640px). `Main.astro` renders it from `pageTitle`, `eyebrow` and an `intro` slot for one line under the title, which the Posts page uses for its Tags and Archives links and `/404` for its link home. `titleTransition` names the title's view transition, so a tag's title morphs from the tag link that led to it. The eyebrow holds data or a label, never copy: a count ("n posts", "Tag · n posts"), a code ("404") or a post's date line. Pages outside `Main.astro` keep the same block by hand: `PostDetails.astro` puts `<Datetime tone="eyebrow" />` above the title, and `AboutLayout.astro`'s `main` takes the same top padding. A page built from the setup page's parts opens with `PageIntro.astro`, which adds an opening paragraph on the reading measure.
+
+Anti-patterns:
+
+- A breadcrumb, which is a second kind of mono line above a title
+- A description line under the title that restates it ("All the tags used in posts.")
+
+**When to use:** any new page or layout.
+
+## The ledger
+
+**Problem:** the site has many labelled lists – the homepage's rows, the post lists, the archive's months, the rows after a post. Set as sections under full-width label headings, each list's text runs the full column, and each page ends up styling its list its own way.
+
+**Solution:** the `ledger` utility in `global.css`. One column on a phone, with the label above its content. From 640px, two columns, `8.5rem minmax(0, 1fr)`, with the label on the left and its content beside it, 2rem apart and aligned on their first baselines. The label is an `h2` (an `h3` under a year on `/archives`) in `label-caps text-foreground/75`. Rows are ruled above with `border-t border-border`. Lists inside a row space their items with `gap`, never a margin on the item.
+
+```astro
+<section class="ledger border-t border-border py-6">
+  <h2 class="label-caps text-foreground/75">Recent posts</h2>
+  <ul class="flex flex-col gap-7">…</ul>
+</section>
+```
+
+`<Card aside />` makes a post card a ledger row of its own: the date line in the label column, with one item a line, and above the title on a phone. A card in a list that already has a label puts the date above the title instead. `NewsletterSignup variant="row"`, `ShareLinks.astro` and `EditPost.astro` each render their own row.
+
+Prose and long lines take `max-w-measure` (38rem), the reading measure – see "Reading measure" in `docs/patterns/post-page.md`.
+
+**When to use:** any labelled list or group of rows.
+
+## Page parts
+
+A page beyond a list or a post builds from the parts `/cloud-box-setup` is made of, in `src/components/`: `PageIntro` (eyebrow, title and opening paragraph), `Section` (a ruled, titled section, or with `framed` the bordered closing call to action), `Panel` (a bordered card under a mono label, with `strong` for the card to end on), `Detail` (a mono label over a line or two), `MarkedList` (accent markers, mono numerals when `ordered`), `StatusChip`, `Field` and `Button`. Each uses the shared styles by name, so a page built from them needs no class constants of its own.
+
+**When to use:** building a new page that isn't a list or a post.
+
 ## One interaction behaviour
 
 **Problem:** every control needs a hover, a press and a focus state, on one timing. Written per component, they drift: one control fades, another rotates, a third has no press and each picks its own duration.
@@ -69,8 +109,8 @@ No italic Geist face is loaded. Semantic emphasis (`em`, blockquotes) renders as
 **Solution:** each control moves one colour step on hover and one more on press, from two `@utility` blocks in `global.css`.
 
 - `interactive`, for text and icon controls: the text steps to `accent` on hover and `accent-strong` on press. Icon SVGs stroke `currentColor`, so an icon follows its anchor with no rule of its own. `LinkButton.astro` applies it, so every enabled `LinkButton` has it
-- `interactive-fill`, for filled accent buttons: the fill steps to `accent-strong` on hover and `accent-stronger` on press, only while the button is enabled, and the button settles 1px on press. Subscribe in `NewsletterSignup.astro` and Request setup in `cloud-box-setup.astro` use it. The label is `text-background`, never `text-white`: white on the dark accent is 2.61:1. `disabled:opacity-60` dims the button while a submit is pending, and disabled controls are exempt from the contrast minimum
-- `.active-nav` rests on the accent, so it steps to `accent-strong` on hover and `accent-stronger` on press. The active Search and Archives icon links take it too, and their icons follow. It sits outside any layer in `global.css`, so it outranks the `interactive` on the same link
+- `interactive-fill`, for filled accent buttons: the fill steps to `accent-strong` on hover and `accent-stronger` on press, only while the button is enabled, and the button settles 1px on press. `Button.astro` carries it, and every filled action is a `Button`: Subscribe in `NewsletterSignup.astro` and Request setup in `cloud-box-setup.astro`. The label is `text-background`, never `text-white`: white on the dark accent is 2.61:1. `disabled:opacity-60` dims the button while a submit is pending, and disabled controls are exempt from the contrast minimum
+- `.active-nav` rests on the accent, so it steps to `accent-strong` on hover and `accent-stronger` on press. The header's word links are the only ones that take it. It sits outside any layer in `global.css`, so it outranks the `interactive` on the same link
 
 The steps mix the accent towards `--foreground`. That darkens the light theme's accent and lightens the dark theme's, away from the `text-background` label each time, so each step raises contrast. Measured in Chromium, light then dark:
 
@@ -86,9 +126,11 @@ The steps mix the accent towards `--foreground`. That darkens the light theme's 
 
 Timing: `--default-transition-duration` and `--default-transition-timing-function` (150ms, decelerating) sit in a `@theme` block, so every Tailwind transition utility takes them. A control names only the properties it transitions (`transition-colors`, `transition-[border-color,box-shadow]`).
 
-A muted control rests on a colour, not an opacity (`text-foreground/75`), so its hover reaches the full accent. Two exceptions keep an opacity: decoration beside a control's text, like the hash in `Tag.astro`, and the heading anchor that `PostDetails.astro` adds, which is hidden until its heading is hovered at `md` and up and rests at `opacity-75` below that.
+A muted control rests on a colour, not an opacity (`text-foreground/75`), so its hover reaches the full accent. The heading anchor that `PostDetails.astro` adds rests on `text-foreground/60`. Where the pointer is fine it is hidden at `opacity-0` until its heading is hovered or the link is focused, which is a reveal rather than a resting state, and on a touch screen it always shows. Gate a reveal like this on `pointer-fine:`, not on a width, since a wide touch screen has no hover to reveal it.
 
-Focus: links and buttons take the base rule's 2px dashed accent outline. `Tag.astro` hides its dashed bottom border on focus with `focus-visible:border-transparent`, which keeps its height. Fields focus differently – see "Form fields".
+Text inside a control that sets its own colour doesn't inherit the control's steps. The count on a `/tags` row is `meta`, and the "Previous post" and "Next post" labels are `label-caps text-foreground/75`, so each takes `transition-colors group-hover:text-accent group-active:text-accent-strong` from its link, which carries `group`.
+
+Focus: links and buttons take the base rule's 2px dashed accent outline. A post's images take the same outline, since `ImageZoom.astro` makes each one a button. Fields focus differently – see "Form fields".
 
 Reduced motion keeps the colour steps and drops the motion: the press settle is `motion-safe:`, the theme toggle's icons morph with `transition-[scale,rotate] motion-reduce:transition-none`, and `html` takes `motion-safe:scroll-smooth` in `global.css` and `Layout.astro`. Astro's `ClientRouter` drops view-transition animation under reduced motion itself.
 
@@ -131,7 +173,7 @@ Anti-patterns:
 - The active nav item (`.active-nav`)
 - The reading progress bar on a post
 
-Everything else rests on the text colour or a mix of it. Frames take `border-border`, or `border-foreground/60` where one card leads another (the setup page's "After" card). Status chips take `border-foreground/60 text-foreground` ("Open") or sit on `--muted` ("Held", "Taken"). Link titles, search result titles and the 404 numeral take the text colour. Selected text (`selection:bg-accent-tint selection:text-foreground` on `body`), search matches (`#pagefind-search mark`) and the tap flash (`-webkit-tap-highlight-color` on `html`) sit on `--accent-tint` with the text in the text colour: 10.51:1 in light theme and 9.52:1 in dark. The favicon and the share cards' accent bar and hostname are brand marks, outside the list.
+Everything else rests on the text colour or a mix of it. Frames take `border-border`, or `border-foreground/60` where one card leads another (the setup page's "After" card). Status chips take `border-foreground/60 text-foreground` ("Open") or sit on `--muted` ("Held", "Taken"). Link titles and search result titles take the text colour. Selected text (`selection:bg-accent-tint selection:text-foreground` on `body`), search matches (`#pagefind-search mark`) and the tap flash (`-webkit-tap-highlight-color` on `html`) sit on `--accent-tint` with the text in the text colour: 10.51:1 in light theme and 9.52:1 in dark. The favicon and the share cards' accent bar and hostname are brand marks, outside the list.
 
 The anti-pattern is the accent at rest on anything off the list – a frame, a chip, a link title, a heading. A new use is a design call, recorded in `docs/design-decisions.md` first.
 
@@ -141,7 +183,7 @@ The anti-pattern is the accent at rest on anything off the list – a frame, a c
 
 **Problem:** `--border` is the divider token, about 1.2:1 against the background in light theme and 1.5:1 in dark. A text field outlined with it is close to invisible until it's focused, and WCAG 1.4.11 asks 3:1 for the boundary that identifies a control. Placeholders fall short too. Tailwind's preflight sets `::placeholder` to the text colour mixed 50% with transparent, about 3:1 in light theme against the 4.5:1 that WCAG 1.4.3 asks of text, and Safari before 17 skips that rule for the browser default. An opacity utility on the placeholder lowers it further.
 
-**Solution:** draw fields from `--foreground` at an opacity, and focus them in the text colour. Fields get no token of their own, and `--border` stays as it is for dividers.
+**Solution:** draw fields from `--foreground` at an opacity, and focus them in the text colour. Fields get no token of their own, and `--border` stays as it is for dividers. The `field` utility in `global.css` holds every class below, with the padding, radius and type size. `Field.astro` renders a labelled field on it (a textarea when `rows` is set), and the newsletter's inline email field takes `field min-w-0 flex-1`. The filled action beside or under a field is `Button.astro`.
 
 | Part        | Classes                                                                           | Light   | Dark    |
 | ----------- | --------------------------------------------------------------------------------- | ------- | ------- |
@@ -153,7 +195,10 @@ The field also takes `transition-[border-color,box-shadow]`. The figures are mea
 
 Focus uses the text colour because a red edge round a field reads as a validation error, and the accent stays on the action. The text-colour border is a step of 3.58:1 from the 60% border at rest in light theme but only 2.44:1 in dark, so the ring carries the change: `ring-1` is a box-shadow, so it thickens the focused edge to 2px without moving the layout. `outline-hidden` replaces `outline-none` for Windows contrast themes. Those drop box-shadows and force border colours, and in Tailwind 4 `outline-none` sets only `outline-style: none`, which leaves a focused field with no marker. `outline-hidden` also draws a 2px transparent outline under `forced-colors: active`, which the contrast theme paints in its own colour.
 
-The anti-pattern is an accent focus (`focus:border-accent focus:ring-accent`).
+Anti-patterns:
+
+- An accent focus (`focus:border-accent focus:ring-accent`)
+- A field's class string written out in a component in place of `field`. A copy misses the next change to the utility, and nothing in the build tells you
 
 The search box on `/search` is Pagefind's markup, so it takes the same 60% and 75% foreground mixes as plain CSS in the `#pagefind-search` block of `search.astro`. Its placeholder rule also sets `opacity: 1`, overriding the `opacity: 0.2` placeholder rule in `@pagefind/default-ui/css/ui.css`, which the ID selector outranks. Without it the 75% colour renders at a fifth of that. Its focus is the same edge: `input:focus` sets `border-color: var(--foreground)`, `box-shadow: 0 0 0 1px var(--foreground)` and `outline: 2px solid transparent`, which does what `outline-hidden` does. `--pagefind-ui-border` stays `var(--border)`, because Pagefind draws result dividers with it too.
 
@@ -163,7 +208,7 @@ The search box on `/search` is Pagefind's markup, so it takes the same 60% and 7
 
 **Problem:** iOS Safari zooms the page when a text field under 16px takes focus, and leaves it zoomed after the keyboard closes, so the reader has to pinch back out. `text-sm` is 14px, so a field sized to match the small text around it triggers the zoom. Desktop browsers show nothing, so check a field's computed `font-size` rather than looking for the zoom. `maximum-scale=1` in the viewport meta also stops it, but blocks pinch zoom in browsers that honour it.
 
-**Solution:** give text fields `text-base sm:pointer-fine:text-sm`. A field is 16px by default and drops to 14px only at 640px and up with a mouse or trackpad as the primary pointer, so a phone held sideways or a tablet keeps 16px. `inputClass` in `cloud-box-setup.astro` and the email field in `NewsletterSignup.astro` both do this. A button inline beside a field takes the same classes, so the row has one type size. A button on its own row, like "Request setup", stays `text-sm`, because buttons don't take text focus and so don't trigger the zoom.
+**Solution:** give text fields `text-base sm:pointer-fine:text-sm`. A field is 16px by default and drops to 14px only at 640px and up with a mouse or trackpad as the primary pointer, so a phone held sideways or a tablet keeps 16px. The `field` utility carries these classes, so every field built on it does this. A button inline beside a field takes the same classes, so the row has one type size: `<Button inline>`, as Subscribe is. A button on its own row, like "Request setup", is a plain `<Button>` and stays `text-sm`, because buttons don't take text focus and so don't trigger the zoom.
 
 `sm:text-sm` on its own is the anti-pattern. `sm` tests viewport width only, and every current iPhone is wider than 640px in landscape, so a phone held sideways gets the 14px field.
 

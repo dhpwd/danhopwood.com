@@ -34,13 +34,12 @@ const { page, tagName } = Astro.props;
 <Layout title={`Tag: ${tagName} | ${SITE.title}`}>
   <Header />
   <Main
-    pageTitle={[`Tag:`, `${tagName}`]}
+    pageTitle={tagName}
     titleTransition={tag}
-    pageDesc={`All the articles with the tag "${tagName}".`}
+    eyebrow={`Tag · ${page.total} ${page.total === 1 ? "post" : "posts"}`}
   >
-    <h1 slot="title" transition:name={tag}>{`Tag:${tag}`}</h1>
-    <ul>
-      {page.data.map(data => <Card {...data} />)}
+    <ul class="flex flex-col gap-8">
+      {page.data.map(data => <Card aside {...data} />)}
     </ul>
   </Main>
 

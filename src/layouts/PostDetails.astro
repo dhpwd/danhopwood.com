@@ -9,11 +9,10 @@ import EditPost from "@/components/EditPost.astro";
 import ShareLinks from "@/components/ShareLinks.astro";
 import NewsletterSignup from "@/components/NewsletterSignup.astro";
 import BackButton from "@/components/BackButton.astro";
+import ImageZoom from "@/components/ImageZoom.astro";
 import { getPath } from "@/utils/getPath";
 import { slugifyStr } from "@/utils/slugify";
 import { calculateReadingTime } from "@/utils/readingTime";
-import IconChevronLeft from "@/assets/icons/IconChevronLeft.svg";
-import IconChevronRight from "@/assets/icons/IconChevronRight.svg";
 import { SITE } from "@/config";
 
 type Props = {
@@ -83,62 +82,65 @@ const nextPost =
 <Layout {...layoutProps}>
   <Header />
   <BackButton />
-  <main
-    id="main-content"
-    class:list={["app-layout pb-12", { "mt-8": !SITE.showBackButton }]}
-  >
-    <h1
-      data-pagefind-body
-      transition:name={slugifyStr(title.replaceAll(".", "-"))}
-      class="inline-block title-page text-foreground"
+  <main id="main-content" class="app-layout pb-12">
+    <div
+      class:list={[
+        "flex flex-col gap-3",
+        { "pt-9 sm:pt-14": !SITE.showBackButton },
+      ]}
     >
-      {title}
-    </h1>
-    <div class="my-2">
       <Datetime
         {pubDatetime}
         {modDatetime}
         {timezone}
         {readingTime}
-        size="lg"
+        tone="eyebrow"
       />
+      <h1
+        data-pagefind-body
+        transition:name={slugifyStr(title.replaceAll(".", "-"))}
+        class="title-page text-foreground"
+      >
+        {title}
+      </h1>
     </div>
     <article
       data-pagefind-body
       id="article"
-      class="app-prose mt-8 w-full max-w-app prose-pre:bg-(--shiki-light-bg) dark:prose-pre:bg-(--shiki-dark-bg)"
+      class="app-prose mt-8 w-full max-w-app sm:mt-10 prose-pre:bg-(--shiki-light-bg) dark:prose-pre:bg-(--shiki-dark-bg)"
     >
       <Content />
     </article>
 
     <NewsletterSignup />
 
-    <hr class="my-8 border-dashed" />
-
-    <ul data-pagefind-body class="mt-4 mb-8 flex flex-wrap gap-4 sm:my-8">
-      {tags.map(tag => <Tag tag={slugifyStr(tag)} tagName={tag} size="sm" />)}
-    </ul>
+    <div class="ledger border-t border-border py-5">
+      <h2 class="label-caps text-foreground/75">Tags</h2>
+      <ul data-pagefind-body class="flex flex-wrap gap-x-5 gap-y-1">
+        {tags.map(tag => <Tag tag={slugifyStr(tag)} tagName={tag} />)}
+      </ul>
+    </div>
 
     <ShareLinks title={title} />
 
-    <EditPost {hideEditPost} {post} class="mt-6" />
+    <EditPost {hideEditPost} {post} />
 
-    <hr class="my-6 border-dashed" />
-
-    <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
+    <nav
+      aria-label="More posts"
+      class="grid grid-cols-1 gap-6 border-t border-border pt-6 sm:grid-cols-2 sm:gap-8"
+    >
       {
         prevPost && (
           <a
             href={getPath(prevPost.id, prevPost.filePath)}
-            class="group flex w-full gap-1 interactive"
+            class="group flex flex-col gap-1 interactive"
           >
-            <IconChevronLeft class="inline-block flex-none rtl:rotate-180" />
-            <div>
-              <span>Previous Post</span>
-              <div class="text-sm decoration-dashed underline-offset-4 group-hover:underline">
-                {prevPost.title}
-              </div>
-            </div>
+            <span class="label-caps text-foreground/75 transition-colors group-hover:text-accent group-active:text-accent-strong">
+              Previous post
+            </span>
+            <span class="font-medium decoration-dashed underline-offset-4 group-hover:underline">
+              {prevPost.title}
+            </span>
           </a>
         )
       }
@@ -146,20 +148,20 @@ const nextPost =
         nextPost && (
           <a
             href={getPath(nextPost.id, nextPost.filePath)}
-            class="group flex w-full justify-end gap-1 text-end interactive sm:col-start-2"
+            class="group flex flex-col gap-1 interactive sm:col-start-2 sm:items-end sm:text-end"
           >
-            <div>
-              <span>Next Post</span>
-              <div class="text-sm decoration-dashed underline-offset-4 group-hover:underline">
-                {nextPost.title}
-              </div>
-            </div>
-            <IconChevronRight class="inline-block flex-none rtl:rotate-180" />
+            <span class="label-caps text-foreground/75 transition-colors group-hover:text-accent group-active:text-accent-strong">
+              Next post
+            </span>
+            <span class="font-medium decoration-dashed underline-offset-4 group-hover:underline">
+              {nextPost.title}
+            </span>
           </a>
         )
       }
-    </div>
+    </nav>
   </main>
+  <ImageZoom />
   <Footer stealThisPost />
 </Layout>
 
@@ -204,7 +206,7 @@ const nextPost =
       heading.classList.add("group");
       const link = document.createElement("a");
       link.className =
-        "heading-link ms-2 no-underline opacity-75 transition-[color,opacity] md:opacity-0 md:group-hover:opacity-100 md:focus:opacity-100";
+        "heading-link interactive ms-2 text-foreground/60 no-underline transition-[color,opacity] pointer-fine:opacity-0 pointer-fine:group-hover:opacity-100 pointer-fine:focus-visible:opacity-100";
       link.href = "#" + heading.id;
 
       const span = document.createElement("span");

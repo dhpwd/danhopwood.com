@@ -1,15 +1,13 @@
 ---
 import type { CollectionEntry } from "astro:content";
-import IconEdit from "@/assets/icons/IconEdit.svg";
 import { SITE } from "@/config";
 
 type Props = {
   hideEditPost?: CollectionEntry<"blog">["data"]["hideEditPost"];
-  class?: string;
   post: CollectionEntry<"blog">;
 };
 
-const { hideEditPost, post, class: className = "" } = Astro.props;
+const { hideEditPost, post } = Astro.props;
 
 const href = `${SITE.editPost.url}${post.filePath}`;
 const showEditPost =
@@ -18,17 +16,18 @@ const showEditPost =
 
 {
   showEditPost && (
-    <a
-      href={href}
-      target="_blank"
-      rel="noopener noreferrer"
-      class:list={[
-        "flex items-center gap-1.5 interactive text-foreground/75",
-        className,
-      ]}
-    >
-      <IconEdit class="inline-block size-5" />
-      <span>{SITE.editPost.text}</span>
-    </a>
+    <div class="ledger border-t border-border py-5">
+      <h2 class="label-caps text-foreground/75">Source</h2>
+      <p>
+        <a
+          href={href}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="inline-block py-1 interactive underline decoration-dashed underline-offset-4"
+        >
+          {SITE.editPost.text}
+        </a>
+      </p>
+    </div>
   )
 }
