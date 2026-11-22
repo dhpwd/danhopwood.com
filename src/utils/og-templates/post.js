@@ -33,6 +33,10 @@ export default async post => {
                 display: "flex",
                 flexDirection: "column",
                 flexGrow: 1,
+                // Here and on the block's container, so a full title and
+                // description overflow without pushing the footer down –
+                // see docs/patterns/og-images.md.
+                minHeight: 0,
                 padding: "64px 72px 56px",
               },
               children: [
@@ -44,6 +48,7 @@ export default async post => {
                       flexDirection: "column",
                       justifyContent: "center",
                       flexGrow: 1,
+                      minHeight: 0,
                       paddingBottom: "40px",
                     },
                     children: [
@@ -54,6 +59,7 @@ export default async post => {
                           // docs/patterns/og-images.md.
                           style: {
                             ...titleStyle,
+                            flexShrink: 0,
                             textWrap: "balance",
                             maxHeight: Math.ceil(
                               3 * titleStyle.fontSize * titleStyle.lineHeight
@@ -68,6 +74,7 @@ export default async post => {
                         props: {
                           style: {
                             display: "block",
+                            flexShrink: 0,
                             lineClamp: 3,
                             marginTop: "28px",
                             fontSize: 26,
