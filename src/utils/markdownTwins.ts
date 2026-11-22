@@ -4,7 +4,11 @@ import { fileURLToPath } from "node:url";
 import type { AstroIntegration } from "astro";
 import { fromHtml } from "hast-util-from-html";
 import { select, selectAll } from "hast-util-select";
-import { toMdast } from "hast-util-to-mdast";
+import {
+  defaultHandlers,
+  toMdast,
+  type Options as ToMdastOptions,
+} from "hast-util-to-mdast";
 import { gfmToMarkdown } from "mdast-util-gfm";
 import { toMarkdown, type Options } from "mdast-util-to-markdown";
 
@@ -18,10 +22,45 @@ import { toMarkdown, type Options } from "mdast-util-to-markdown";
 type Root = ReturnType<typeof fromHtml>;
 type Element = NonNullable<ReturnType<typeof select>>;
 
-// Interface text that isn't page content, and on a post what follows the
-// article. `.sr-only` text stays, since it is what a screen reader reads.
+// Interface text that isn't page content. `.sr-only` text stays, since it
+// is what a screen reader reads.
 const DROP =
-  "[aria-hidden='true'], svg, script, style, button, form, nav, .newsletter-signup, #pagefind-search, [data-pagefind-ui], #article ~ *";
+  "[aria-hidden='true'], svg, script, style, button, form, nav, .newsletter-signup, #pagefind-search, [data-pagefind-ui]";
+
+const textOf = (node: Element["children"][number]): string =>
+  node.type === "text"
+    ? node.value
+    : node.type === "element"
+      ? node.children.map(textOf).join("")
+      : "";
+
+// A Shiki block keeps its language on `pre`, where hast-util-to-mdast doesn't
+// look, and a fence's file name (`file=`) as a label after `code`, which it
+// would read into the code. The label becomes a line above the block.
+const TO_MDAST: ToMdastOptions = {
+  handlers: {
+    pre(state, node) {
+      const code = node.children.filter(
+        child => child.type === "element" && child.tagName === "code"
+      );
+      if (!code.length) return defaultHandlers.pre(state, node);
+      const block = defaultHandlers.pre(state, { ...node, children: code });
+      const lang = node.properties.dataLanguage;
+      block.lang = lang && lang !== "plaintext" ? String(lang) : null;
+      const label = node.children
+        .filter(child => !code.includes(child))
+        .map(textOf)
+        .join("")
+        .trim();
+      return label
+        ? [
+            { type: "paragraph", children: [{ type: "text", value: label }] },
+            block,
+          ]
+        : block;
+    },
+  },
+};
 
 const MARKDOWN_OPTIONS: Options = {
   extensions: [gfmToMarkdown()],
@@ -39,7 +78,7 @@ function sitemapPaths(dist: string) {
         ...readFileSync(join(dist, f), "utf-8").matchAll(
           /<loc>([^<]+)<\/loc>/g
         ),
-      ].map(m => new URL(m[1]).pathname)
+      ].map(m => decodeURIComponent(new URL(m[1]).pathname))
     );
 }
 
@@ -67,30 +106,27 @@ function pageToMarkdown(
   if (headings.length !== 1)
     return { problem: `has ${headings.length} h1 elements in <main>, not one` };
   const [h1] = headings;
-  const root: Root = { type: "root", children: [h1, main] };
 
-  // hast-util-to-mdast reads a code block's language from `code`'s class,
-  // where Shiki puts it on `pre`.
-  for (const pre of selectAll("pre.astro-code[data-language]", main)) {
-    const code = pre.children.find(
-      (child): child is Element =>
-        child.type === "element" && child.tagName === "code"
-    );
-    const lang = String(pre.properties.dataLanguage);
-    if (code && lang !== "plaintext")
-      code.properties.className = [`language-${lang}`];
-  }
+  // A post's twin is its title block (the date line and the h1) and its
+  // article, so what follows the article (signup, tags, links) stays out.
+  const article = select("#article", main);
+  const titleBlock = select(":has(> h1)", main);
+  const content = article && titleBlock ? [titleBlock, article] : [main];
 
   // A flex or grid item is its own box, so on the page its text never runs
   // on from the item before it (a tag's name and its count on /tags).
-  for (const box of selectAll(".flex, .inline-flex, .grid, .ledger", main))
-    box.children = box.children.flatMap((child, i) =>
-      i === 0 ? [child] : [{ type: "text", value: " " }, child]
-    );
+  for (const node of content)
+    for (const box of selectAll(".flex, .inline-flex, .grid, .ledger", node))
+      box.children = box.children.flatMap((child, i) =>
+        i === 0 ? [child] : [{ type: "text", value: " " }, child]
+      );
 
   // The h1 leads the twin, so it leaves its place in the content. HTML
   // comments are notes in the source, not page text.
-  const drop = new Set<unknown>([...selectAll(DROP, main), h1]);
+  const drop = new Set<unknown>([
+    ...content.flatMap(node => selectAll(DROP, node)),
+    h1,
+  ]);
   const prune = (node: Element) => {
     node.children = node.children.filter(
       child => child.type !== "comment" && !drop.has(child)
@@ -99,9 +135,10 @@ function pageToMarkdown(
       if (child.type === "element") prune(child);
   };
   prune(h1);
-  prune(main);
+  content.forEach(prune);
 
-  return { markdown: toMarkdown(toMdast(root), MARKDOWN_OPTIONS) };
+  const root: Root = { type: "root", children: [h1, ...content] };
+  return { markdown: toMarkdown(toMdast(root, TO_MDAST), MARKDOWN_OPTIONS) };
 }
 
 /**
@@ -119,7 +156,7 @@ function writeTwins(dist: string) {
       readFileSync(join(dist, path, "index.html"), "utf-8")
     );
     if ("problem" in result) {
-      problems.push(`${path} has no twin: its page ${result.problem}`);
+      problems.push(`${path}'s page ${result.problem}`);
       continue;
     }
     if (!result.markdown.startsWith("# "))
@@ -130,6 +167,12 @@ function writeTwins(dist: string) {
     );
     twins.add(path);
   }
+
+  // Checked apart from the loop, so a page it skips without a problem fails
+  // too. The page regex check below never sees `/`.
+  for (const path of paths)
+    if (!twins.has(path))
+      problems.push(`${path} is in the sitemap but has no twin`);
 
   // vercel.json's `^/$` routes serve /index.md whatever the sitemap holds.
   if (!paths.includes("/"))
