@@ -71,14 +71,10 @@
       @apply marker:text-accent;
     }
 
-    /* A numeral sits on the paragraphs' left edge and wrapped lines hang
-       under the text: the padding is one tabular-figure marker ("1. ") wide */
+    /* Every list's text starts one indent in – see docs/patterns/lists.md */
+    ul,
     ol {
-      padding-inline-start: 1.055em;
-    }
-
-    ol > li {
-      padding-inline-start: 0;
+      @apply list-indent;
     }
 
     ol > li::marker {

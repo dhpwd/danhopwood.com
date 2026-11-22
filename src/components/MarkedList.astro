@@ -11,12 +11,12 @@ const List = ordered ? "ol" : "ul";
 
 <List
   class:list={[
-    "flex flex-col gap-2.5 marker:text-accent",
+    "flex flex-col gap-2.5 list-indent marker:text-accent",
     ordered
-      ? // Three mono characters ("1. ") at the marker's 15px, so a numeral
-        // sits on the text's left edge and wrapped lines hang under the text
-        "list-decimal pl-[1.6875rem] marker:font-mono marker:text-[0.9375rem]"
-      : "list-disc pl-5",
+      ? // 15px at the 17px body size, in em so the step scales with the
+        // list's indent – see docs/patterns/lists.md
+        "list-decimal marker:font-mono marker:text-[length:calc(15em/17)]"
+      : "list-disc",
   ]}
 >
   <slot />

@@ -183,6 +183,16 @@ html[data-theme="dark"] {
   max-width: 38rem;
 }
 
+/* Every list's text starts one indent in, and the browser hangs each marker
+   in that space at its own gap. 1.625em is the smallest indent that keeps
+   every marker inside the column – see docs/patterns/lists.md */
+@utility list-indent {
+  padding-inline-start: 1.625em;
+  & > li {
+    padding-inline-start: 0;
+  }
+}
+
 .active-nav {
   @apply text-accent underline decoration-2 underline-offset-8 hover:text-accent-strong active:text-accent-stronger;
 }
