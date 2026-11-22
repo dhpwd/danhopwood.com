@@ -73,14 +73,8 @@ export const accentBar = () => ({
     style: {
       height: "12px",
       width: "100%",
+      flexShrink: 0,
       background: palette.accent,
     },
   },
 });
-
-/**
- * Text the font subset must cover. Satori appends U+2026 when lineClamp
- * truncates, so the ellipsis has to be in the subset or it renders as a
- * missing-glyph box.
- */
-export const CHROME_GLYPHS = `${hostname}${tagline}·…`;

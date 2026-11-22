@@ -2,7 +2,6 @@ import satori from "satori";
 import { SITE } from "@/config";
 import loadGoogleFonts from "../loadGoogleFont";
 import {
-  CHROME_GLYPHS,
   accentBar,
   avatarSrc,
   dotGrid,
@@ -46,6 +45,7 @@ export default async () => {
                     width: 280,
                     height: 280,
                     style: {
+                      flexShrink: 0,
                       borderRadius: "9999px",
                       marginRight: "64px",
                     },
@@ -57,7 +57,6 @@ export default async () => {
                     style: {
                       display: "flex",
                       flexDirection: "column",
-                      flexShrink: 1,
                     },
                     children: [
                       {
@@ -141,7 +140,7 @@ export default async () => {
       width: 1200,
       height: 630,
       embedFont: true,
-      fonts: await loadGoogleFonts(SITE.title + SITE.desc + CHROME_GLYPHS),
+      fonts: await loadGoogleFonts(),
     }
   );
 };

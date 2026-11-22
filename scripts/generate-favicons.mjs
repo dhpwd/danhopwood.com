@@ -23,8 +23,7 @@ const ACCENT = "#a13124";
 const BACKGROUND = "#fdfdfd";
 const MONOGRAM = "dh";
 
-// Same subset mechanism as src/utils/loadGoogleFont.ts (not imported – that
-// file is TypeScript and this script runs under plain node).
+// MONOGRAM is the only text drawn, so the `&text=` subset can't miss a glyph.
 async function loadGeistMono700(text) {
   const api = `https://fonts.googleapis.com/css2?family=Geist+Mono:wght@700&text=${encodeURIComponent(text)}`;
   const css = await (
