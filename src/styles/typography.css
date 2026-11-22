@@ -71,18 +71,22 @@
       @apply marker:text-accent;
     }
 
-    /* A numeral sits on the paragraphs' left edge and wrapped lines hang
-       under the text: the padding is one tabular-figure marker ("1. ") wide */
+    /* A bullet or a numeral sits on the paragraphs' left edge and every
+       item's text starts one line in – see docs/patterns/lists.md */
+    ul,
     ol {
-      padding-inline-start: 1.055em;
-    }
-
-    ol > li {
-      padding-inline-start: 0;
+      @apply list-edge;
     }
 
     ol > li::marker {
       font-variant-numeric: tabular-nums;
+    }
+
+    /* A two-digit numeral is one tabular figure wider, so its item starts a
+       figure further in and takes the figure back from its padding */
+    ol > li:nth-child(n + 10) {
+      margin-inline-start: 0.588em;
+      padding-inline-start: calc(var(--list-indent) - 1.643em);
     }
 
     hr {

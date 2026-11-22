@@ -14,7 +14,7 @@ The date line sits above the title, as the mono accent line does on every page: 
 
 The rule takes direct children only (`> :where(…)`), so text nested in a table cell or a `blockquote` keeps the width of its container.
 
-A numbered list's numerals sit on the paragraphs' left edge, and wrapped lines hang under the item's text. The list's padding is the width of a one-digit marker ("1. "), and the markers take tabular figures so every numeral has that width. A tenth item's numeral reaches one figure into the margin. `MarkedList.astro`, on the setup page, does the same for its mono numerals, with three mono characters of padding.
+A list's marker sits on the paragraphs' left edge and its text starts 1.75rem in, from the `list-edge` utility – see `docs/patterns/lists.md`.
 
 ## Tables
 

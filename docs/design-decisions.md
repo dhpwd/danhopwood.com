@@ -128,11 +128,16 @@ About 68 characters a line at 1440. Figures, tables and code keep the full colum
 
 Rejected: a larger size at the full column, since 18px still runs to about 82 characters.
 
-## Numerals sit on the text's left edge
+## A list's marker sits on the text's left edge, with its text 28px in
 
-A numbered list's numerals line up with the left edge of the paragraphs above, and wrapped lines hang under the item's text, in posts and on the page parts alike.
+A bullet or a numeral lines up with the left edge of the paragraphs above, and every item's text starts 1.75rem (28px) in, in posts, on the About page and on the page parts alike. Wrapped lines hang under the item's text, and a nested list does the same from its parent item's text. 28px is one line of body text, and the smallest indent that holds a two-digit numeral and the page parts' mono numerals.
 
-Rejected: the prose plugin's indent, which set the numerals 16px in from the paragraphs, and numerals hanging outside the column, which on a phone sit against the screen's gutter.
+Rejected:
+
+- The prose plugin's indent, which set bullets 10px and numerals 16px in from the paragraphs
+- Markers hanging outside the column. A phone's gutter is 16px and a bullet needs 18px, so the screen's edge cuts it off
+- 18px and 20px, which the page parts' mono numerals don't fit, leaving one page with two text edges
+- 24px, which fits the mono numerals only at a smaller size and leaves a tenth numeral reaching into a phone's gutter
 
 ## A narrow image sits on the left edge, with its caption inside its width
 

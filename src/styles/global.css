@@ -183,6 +183,21 @@ html[data-theme="dark"] {
   max-width: 38rem;
 }
 
+/* A list's marker sits on the left edge of the text above it and every
+   item's text starts one 28px line in – see docs/patterns/lists.md. The
+   list's padding is the marker's width and the item's padding is the rest
+   of the indent. --list-marker defaults to a disc's width, which is also
+   one body-face numeral's ("1. ") */
+@utility list-edge {
+  --list-indent: 1.75rem;
+  padding-inline-start: var(--list-marker, 1.055em);
+  & > li {
+    padding-inline-start: calc(
+      var(--list-indent) - var(--list-marker, 1.055em)
+    );
+  }
+}
+
 .active-nav {
   @apply text-accent underline decoration-2 underline-offset-8 hover:text-accent-strong active:text-accent-stronger;
 }

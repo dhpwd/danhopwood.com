@@ -37,6 +37,7 @@ pnpm generate:favicons  # regenerate public/ favicons from the brand tokens
 ## Pattern index
 
 - styling a component, changing a font, colour or theme token, or a hover, press or focus state → read `docs/patterns/design-system.md`
+- adding a bulleted or numbered list, or changing how lists are indented → read `docs/patterns/lists.md`
 - any visual, layout, colour or motion change, or reviewing one → read `docs/design-decisions.md` before proposing
 - adding or replacing images, the avatar or favicons → read `docs/patterns/images.md`
 - editing `src/utils/og-templates/` → read `docs/patterns/og-images.md`
