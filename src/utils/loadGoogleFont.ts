@@ -1,9 +1,10 @@
+type Font = { name: string; data: ArrayBuffer; weight: number; style: string };
+
 async function loadGoogleFont(
   font: string,
-  text: string,
   weight: number
 ): Promise<ArrayBuffer> {
-  const API = `https://fonts.googleapis.com/css2?family=${font}:wght@${weight}&text=${encodeURIComponent(text)}`;
+  const API = `https://fonts.googleapis.com/css2?family=${font}:wght@${weight}`;
 
   const css = await (
     await fetch(API, {
@@ -29,44 +30,48 @@ async function loadGoogleFont(
   return res.arrayBuffer();
 }
 
-async function loadGoogleFonts(
-  text: string
-): Promise<
-  Array<{ name: string; data: ArrayBuffer; weight: number; style: string }>
-> {
-  const fontsConfig = [
-    {
-      name: "Geist",
-      font: "Geist",
-      weight: 400,
-      style: "normal",
-    },
-    {
-      name: "Geist",
-      font: "Geist",
-      weight: 600,
-      style: "normal",
-    },
-    {
-      name: "Geist Mono",
-      font: "Geist+Mono",
-      weight: 400,
-      style: "normal",
-    },
-    {
-      name: "Geist Mono",
-      font: "Geist+Mono",
-      weight: 700,
-      style: "normal",
-    },
-  ];
+const fontsConfig = [
+  {
+    name: "Geist",
+    font: "Geist",
+    weight: 400,
+    style: "normal",
+  },
+  {
+    name: "Geist",
+    font: "Geist",
+    weight: 600,
+    style: "normal",
+  },
+  {
+    name: "Geist Mono",
+    font: "Geist+Mono",
+    weight: 400,
+    style: "normal",
+  },
+  {
+    name: "Geist Mono",
+    font: "Geist+Mono",
+    weight: 700,
+    style: "normal",
+  },
+];
 
-  const fonts = await Promise.all(
+// One download per font per build, shared by every card. A rejected load is
+// dropped so the next call retries rather than replaying the failure for the
+// life of the process (`pnpm dev`).
+let fonts: Promise<Font[]> | undefined;
+
+function loadGoogleFonts(): Promise<Font[]> {
+  fonts ??= Promise.all(
     fontsConfig.map(async ({ name, font, weight, style }) => {
-      const data = await loadGoogleFont(font, text, weight);
+      const data = await loadGoogleFont(font, weight);
       return { name, data, weight, style };
     })
-  );
+  ).catch(error => {
+    fonts = undefined;
+    throw error;
+  });
 
   return fonts;
 }

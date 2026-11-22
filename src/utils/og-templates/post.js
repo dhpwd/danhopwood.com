@@ -1,7 +1,6 @@
 import satori from "satori";
 import loadGoogleFonts from "../loadGoogleFont";
 import {
-  CHROME_GLYPHS,
   accentBar,
   avatarSrc,
   dotGrid,
@@ -100,6 +99,7 @@ export default async post => {
                           width: 72,
                           height: 72,
                           style: {
+                            flexShrink: 0,
                             borderRadius: "9999px",
                             marginRight: "24px",
                           },
@@ -163,12 +163,7 @@ export default async post => {
       width: 1200,
       height: 630,
       embedFont: true,
-      fonts: await loadGoogleFonts(
-        post.data.title +
-          post.data.description +
-          post.data.author +
-          CHROME_GLYPHS
-      ),
+      fonts: await loadGoogleFonts(),
     }
   );
 };
