@@ -19,7 +19,7 @@ Three derived tokens mix the theme tokens, so they need no value per theme and n
 | `--accent-stronger` | accent 55% with `--foreground` | press on a filled button or the active nav                          |
 | `--accent-tint`     | accent 20% with transparent    | selected text, search matches and the tap flash                     |
 
-They sit on `:root` as plain custom properties and are then mapped in `@theme inline` (`--color-accent-strong` and so on), so plain CSS such as the Pagefind block in `search.astro` can use them. A colour defined only in `@theme inline` is inlined into the utilities and never reaches plain CSS.
+They sit on `:root` as plain custom properties and are then mapped in `@theme inline` (`--color-accent-strong` and so on), so plain CSS such as the Pagefind block in `search.astro` can use them. A colour defined only in `@theme inline` is inlined into the utilities and never reaches plain CSS. The build gives each a fallback of bare `--accent`, with the mix behind `@supports`, so a browser without `color-mix()` (below Tailwind 4's Safari 16.4 and Chrome 111 baseline) loses the press steps and the filled-button hover, and selects text on a solid accent.
 
 `--dashed-decoration` needs no satori mirror either, since the cards carry no links. It is restated in `typography.css` for prose links, because the `global.css` base rule can't reach them.
 
@@ -113,7 +113,7 @@ Anti-patterns:
 
 ## Pagefind's controls
 
-**Problem:** `/search` is Pagefind's markup, so Tailwind utilities can't reach its controls.
+**Problem:** `/search` is Pagefind's markup, so Tailwind utilities can't reach its controls. Its stylesheet is unlayered and resets every element inside it with `all: unset` and `outline: revert`, which beats the base `a, button` rule in `@layer base`, so its controls don't get the site's focus outline either.
 
 **Solution:** `/search` takes the same behaviour as plain CSS in the `#pagefind-search` block of `search.astro`, with the transition timed from `var(--default-transition-duration)` and `var(--default-transition-timing-function)`. Result links and Clear step to `var(--accent)` on hover, inside `@media (hover: hover)` as Tailwind's `hover:` variant is, and to `var(--accent-strong)` on press. "Load more results" rests on `var(--foreground)` with a 60% text-colour border and steps its text and border the same way. Clear and "Load more results" take the 2px dashed accent focus outline. Write new rules there as flat `#pagefind-search …` selectors after the nested block. The build ships that block's nesting as written, and Safari before 17.2 and Chrome before 120 drop a nested rule that starts with a type selector.
 
