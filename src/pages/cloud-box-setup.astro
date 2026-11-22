@@ -29,18 +29,17 @@ const places: Place[] = [
 ];
 
 const chipClass = {
-  Open: "border-accent text-accent",
+  Open: "border-foreground/60 text-foreground",
   Held: "border-border bg-muted text-foreground/75",
   Taken: "border-border bg-muted text-foreground/75",
 };
 
 const sectionClass = "flex flex-col gap-5 border-t border-border pt-8";
-const headingClass = "text-xl leading-[1.3] font-semibold";
-const labelClass =
-  "font-mono text-[0.8125rem] font-medium tracking-[0.04em] uppercase";
+const headingClass = "title-item";
+const labelClass = "label-caps";
 const listClass = "flex flex-col gap-2.5 pl-5 marker:text-accent";
 const inputClass =
-  "w-full rounded border border-foreground/60 bg-background px-3 py-2 text-base text-foreground placeholder:text-foreground/75 focus:border-accent focus:ring-1 focus:ring-accent focus:outline-hidden sm:pointer-fine:text-sm";
+  "w-full rounded border border-foreground/60 bg-background px-3 py-2 text-base text-foreground placeholder:text-foreground/75 transition-[border-color,box-shadow] focus:border-foreground focus:ring-1 focus:ring-foreground focus:outline-hidden sm:pointer-fine:text-sm";
 ---
 
 <Layout title={`${heading} | ${SITE.title}`} description={opening}>
@@ -50,12 +49,8 @@ const inputClass =
       class="flex flex-col gap-10 pt-9 pb-12 text-[1.0625rem] leading-[1.6] sm:gap-12 sm:pt-14 sm:pb-16"
     >
       <div class="flex flex-col gap-5">
-        <p class="font-mono text-[0.8125rem] tracking-[0.02em] text-accent">
-          Done-for-you setup
-        </p>
-        <h1
-          class="text-[clamp(1.75rem,5.2vw,2.5rem)] leading-[1.15] font-semibold text-balance"
-        >
+        <p class="eyebrow">Done-for-you setup</p>
+        <h1 class="title-page">
           {heading}
         </h1>
         <p class="max-w-[38rem] text-[1.1875rem] leading-[1.55]">{opening}</p>
@@ -74,9 +69,9 @@ const inputClass =
             </p>
           </div>
           <div
-            class="flex min-w-0 flex-col gap-2 rounded-md border border-accent px-5 py-[1.125rem]"
+            class="flex min-w-0 flex-col gap-2 rounded-md border border-foreground/60 px-5 py-[1.125rem]"
           >
-            <h3 class:list={[labelClass, "text-accent"]}>After</h3>
+            <h3 class={labelClass}>After</h3>
             <p>
               The work runs on a server that never sleeps. Close the lid, get on
               a train, open the Claude app on your phone and carry on in the
@@ -271,7 +266,7 @@ const inputClass =
 
       <section
         aria-labelledby="cta-h"
-        class="flex flex-col gap-1.5 rounded-md border border-accent px-[1.375rem] py-5"
+        class="flex flex-col gap-1.5 rounded-md border border-border px-[1.375rem] py-5"
       >
         <h2 id="cta-h" class={headingClass}>Get it set up</h2>
         <p>
@@ -343,7 +338,7 @@ const inputClass =
           <div class="flex flex-col items-start gap-2">
             <button
               type="submit"
-              class="rounded bg-accent px-4 py-2 text-sm font-medium text-background hover:bg-accent-hover disabled:opacity-60"
+              class="interactive-fill rounded bg-accent px-4 py-2 text-sm font-medium text-background disabled:opacity-60"
             >
               Request setup
             </button>
@@ -358,7 +353,7 @@ const inputClass =
         How the setup works and why I run mine this way:
         <a
           href="/posts/running-coding-agents-on-a-30-euro-linux-box"
-          class="text-foreground underline decoration-dashed underline-offset-4 hover:text-accent"
+          class="interactive text-foreground underline decoration-dashed underline-offset-4"
           >Running coding agents on a €30 Linux box</a
         >.
       </p>
@@ -378,7 +373,7 @@ const inputClass =
     link.target = "_blank";
     link.rel = "noopener noreferrer";
     link.className =
-      "underline decoration-dashed underline-offset-4 hover:text-accent";
+      "interactive underline decoration-dashed underline-offset-4";
     link.textContent = "LinkedIn";
     status.replaceChildren(
       "That didn't send. Try again, or message me on ",

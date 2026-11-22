@@ -1,6 +1,6 @@
 /**
  * Generates the favicon set in public/ from the brand tokens: "dh" in
- * Geist Mono 700 on the teal accent.
+ * Geist Mono 700 on the accent.
  *
  * Standalone script run directly by node (`pnpm generate:favicons`), so
  * paths resolve from import.meta.url, not process.cwd() – see
@@ -8,7 +8,7 @@
  * scripts" for the split.
  *
  * Colours mirror src/styles/global.css light-mode tokens by hand (satori
- * resolves no CSS custom properties): --accent #0f766e, --background
+ * resolves no CSS custom properties): --accent #a13124, --background
  * #fdfdfd. A token change there means regenerating here.
  */
 import { writeFileSync } from "node:fs";
@@ -19,7 +19,7 @@ import satori from "satori";
 
 const publicDir = join(dirname(fileURLToPath(import.meta.url)), "..", "public");
 
-const ACCENT = "#0f766e";
+const ACCENT = "#a13124";
 const BACKGROUND = "#fdfdfd";
 const MONOGRAM = "dh";
 

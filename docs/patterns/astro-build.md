@@ -42,7 +42,13 @@ Where the form's spec puts focus on the submit button after every submit, call `
 
 **Solution:**
 
-- `global.css` applies `scroll-smooth` to `html`, so after Playwright's `fill()` scrolls down a long post the target keeps moving for about a second, and `click()` fails with "element is not stable". Wait for the scroll to settle before clicking
+- `global.css` applies `motion-safe:scroll-smooth` to `html`, so after Playwright's `fill()` scrolls down a long post the target keeps moving for about a second, and `click()` fails with "element is not stable". Wait for the scroll to settle before clicking
+- `html` is `overflow-y-scroll`, and headless Chromium's scrollbar takes 15px at 390, where a phone's overlays the page. Hide it (`html { scrollbar-width: none }` from an init script) before measuring layout or sideways scroll
+- A context's `colorScheme` picks the theme only while `localStorage` has no `theme` key. A test click on the theme button writes one, and every later page in that context keeps that theme – remove the key after the click
+- A screenshot drops `:hover`, so read a state's computed style while the state is held, between `hover()` or `mouse.down()` and the next mouse move
+- A colour from a `/75` utility or a `color-mix()` token computes with alpha or in another space (`oklab(… / 0.75)`, `color(srgb …)`), which is not the colour on screen. To measure contrast, paint the ground's computed colour and then each layer onto a 1×1 canvas and read the pixel
+- On `/search`, clicking Clear empties the results, so test "Load more results" before it
+- The fonts API registers each family under a hashed name, so `font-family` computes as `Geist-4350b8f6…` or `Geist Mono-1081b9fc…`. Match the face by prefix, with the hash stripped, not by equality
 - `<ClientRouter />` saves the scroll position with `history.replaceState`, which fires Playwright's `framenavigated` on the same URL. To assert that a submit didn't navigate, count navigation requests (`request.isNavigationRequest()`) or check a `window` marker survives, not `framenavigated`
 - Submit forms by clicking the button as well as pressing Enter in a field. Only the click leaves focus on the button, so a bug in how the handler treats focus shows on that route alone
 - `locator.boundingBox()` is relative to the viewport, and a click can scroll the page. To assert an element didn't move, compare `getBoundingClientRect().top + scrollY`
@@ -50,7 +56,7 @@ Where the form's spec puts focus on the submit button after every submit, call `
 
 Run Playwright against `pnpm build && pnpm preview`, stub `api/` routes with `page.route` (preview doesn't serve them), and test a function by calling its default export's `fetch` from a Node script with a stubbed global `fetch`.
 
-**When to use:** browser-testing a client script, or testing an `api/` function.
+**When to use:** browser-testing a client script or a change to what a page renders, or testing an `api/` function.
 
 ## Markdown plugins and image optimisation
 

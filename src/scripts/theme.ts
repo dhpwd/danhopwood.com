@@ -25,7 +25,18 @@ function setPreference(): void {
 }
 
 function reflectPreference(): void {
-  document.firstElementChild?.setAttribute("data-theme", themeValue);
+  const root = document.documentElement;
+
+  // Held for one painted frame so controls flip with the text around them –
+  // see "A theme change flips every colour in one frame" in
+  // docs/patterns/design-system.md.
+  if (root.getAttribute("data-theme") !== themeValue) {
+    root.setAttribute("data-theme-switching", "");
+    root.setAttribute("data-theme", themeValue);
+    requestAnimationFrame(() =>
+      requestAnimationFrame(() => root.removeAttribute("data-theme-switching"))
+    );
+  }
 
   document.querySelector("#theme-btn")?.setAttribute("aria-label", themeValue);
 

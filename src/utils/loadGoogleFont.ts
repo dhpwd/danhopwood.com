@@ -42,6 +42,12 @@ async function loadGoogleFonts(
       style: "normal",
     },
     {
+      name: "Geist",
+      font: "Geist",
+      weight: 600,
+      style: "normal",
+    },
+    {
       name: "Geist Mono",
       font: "Geist+Mono",
       weight: 400,

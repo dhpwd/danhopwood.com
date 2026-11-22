@@ -8,6 +8,7 @@ import {
   hostname,
   palette,
   tagline,
+  titleStyle,
 } from "./shared";
 
 export default async post => {
@@ -50,13 +51,15 @@ export default async post => {
                       {
                         type: "div",
                         props: {
+                          // Capped by height, not lineClamp – see
+                          // docs/patterns/og-images.md.
                           style: {
-                            display: "block",
-                            lineClamp: 3,
-                            fontSize: 60,
-                            fontWeight: 700,
-                            lineHeight: 1.2,
-                            color: palette.foreground,
+                            ...titleStyle,
+                            textWrap: "balance",
+                            maxHeight: Math.ceil(
+                              3 * titleStyle.fontSize * titleStyle.lineHeight
+                            ),
+                            overflow: "hidden",
                           },
                           children: post.data.title,
                         },

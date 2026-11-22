@@ -40,12 +40,23 @@ export const tagline = "Showing my working.";
 export const palette = {
   background: "#fdfdfd", // --background
   foreground: "#282728", // --foreground
-  accent: "#0f766e", // --accent
+  accent: "#a13124", // --accent
   body: "#57565a", // no token – between --foreground and --muted, for body copy
   grid: "#d8d8d8", // no token – --muted (#e6e6e6) is invisible at thumbnail scale
   rule: "#d9d6d6", // no token – --border (#ece9e9) is invisible at thumbnail scale
   separator: "#b0adad", // no token – mid-grey for the "·" separator
   faint: "#8a8a8a", // no token – muted grey for the tagline
+};
+
+/** Card title – the site's page-title treatment at card scale. */
+export const titleStyle = {
+  display: "block",
+  fontSize: 64,
+  fontWeight: 600,
+  lineHeight: 1.12,
+  letterSpacing: "-0.028em",
+  color: palette.foreground,
+  fontFamily: "Geist",
 };
 
 /** Faint dot grid – the lab-notebook ground shared by both templates. */
