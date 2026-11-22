@@ -12,11 +12,11 @@
 
 **Problem:** `postFilter` (`src/utils/postFilter.ts`) decides which posts are public: not a draft and, in a production build, past its `pubDatetime` less `SITE.scheduledPostMargin`. A route that filters the blog collection on `!data.draft` alone builds a scheduled post in production. It gets a page, a share card, a sitemap entry and a search entry, while the listings hide it. `pnpm dev` hides the leak, because `postFilter` passes every non-draft post in dev.
 
-**Solution:** pass `postFilter` to `getCollection`: `getCollection("blog", postFilter)`, or `post => postFilter(post) && …` where the route adds a condition, as the share-card route `index.png.ts` does. A route that also needs the listing order calls `getSortedPosts`, which applies `postFilter` itself. The date check lives in `postFilter` alone.
+**Solution:** pass `postFilter` to `getCollection`: `getCollection("blog", postFilter)`, or `post => postFilter(post) && …` where the route adds a condition, as the share-card route `index.png.ts` does. A route that also needs the listing order calls `getSortedPosts`, which applies `postFilter` itself. The date check lives in `postFilter` alone. `postFilter` compares against a cut-off it reads once, when its module loads, so every route in one build agrees on which posts are public. Astro builds routes one after another, so a cut-off read on each call lets a build that runs across a post's go-live time list the post in some routes without building its page.
 
 To check a change here, add a temporary post with `draft: false` and a `pubDatetime` a day ahead, then run a production build. Confirm `dist/posts/<slug>/` doesn't exist and no other built file names the slug. Then on `pnpm preview`, look up a phrase from the post's body on `/search`: the Pagefind index is compressed, so a grep of `dist/` misses it. Delete `node_modules/.astro/data-store.json` before each build (see above).
 
-**Anti-pattern:** `getCollection("blog", ({ data }) => !data.draft)`. `src/pages/posts/[...page].astro` still has it, ahead of `getSortedPosts`, which makes it harmless there. A route that doesn't call `getSortedPosts` leaks scheduled posts with it.
+**Anti-pattern:** `getCollection("blog", ({ data }) => !data.draft)`, which leaks scheduled posts into any route that doesn't then call `getSortedPosts`. And a clock read outside `postFilter`'s cut-off, such as `Date.now()` in a route: routes built either side of a post's go-live time then disagree about it.
 
 **When to use:** writing or changing any route that reads the blog collection.
 
@@ -83,10 +83,12 @@ Where the form's spec puts focus on the submit button after every submit, call `
 - To compare an element pixel for pixel across two builds, hide the site header on both. A change in the header's height moves everything below it by a fraction of a pixel, which changes its anti-aliasing and reads as a difference
 - Headless Chromium on `localhost` writes to the clipboard without a permission grant, so an unstubbed copy test passes whatever the page does when a write fails. Replace `navigator.clipboard.writeText` from an init script to test the failure path, and grant `clipboard-read` to read the clipboard back after a real write
 - Node's `AbortSignal.timeout` timer doesn't keep the event loop alive. A stubbed `fetch` that hangs until aborted needs its own pending timer, or the test script exits before the timeout fires
+- `astro dev` and `astro preview` move to the next free port when the one passed to `--port` is taken, and say so only in their output ("Port 4391 is in use, trying another one..."). Read the port from the server's "Local" line before sending requests. A request to the port you asked for reaches another session's server, and its 404s read as yours
+- A `console.log` in build-time code can print on the same line as Astro's route listing (`└─ /index.htmlMARKER …`). To count how often a module or function runs in a build, count every match (`grep -o MARKER build.log | wc -l`), not lines that start with the marker
 
 Run Playwright against `pnpm build && pnpm preview`. To compare a base and a change, copy each build's `dist/` aside and serve both at once with `pnpm astro preview --port <port> --outDir <copy>`, on ports other sessions aren't using. Stub `api/` routes with `page.route` (preview doesn't serve them), and test a function by calling its default export's `fetch` from a Node script with a stubbed global `fetch`.
 
-**When to use:** browser-testing a client script or a change to what a page renders, or testing an `api/` function.
+**When to use:** browser-testing a client script or a change to what a page renders, testing an `api/` function, or checking build-time code with a temporary log.
 
 ## Markdown plugins and image optimisation
 
