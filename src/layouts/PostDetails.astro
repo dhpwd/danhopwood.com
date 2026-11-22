@@ -204,10 +204,21 @@ const nextPost =
     );
     for (const heading of headings) {
       heading.classList.add("group");
+      const text = heading.textContent.trim();
+
+      // A link's name joins its heading's name, so the heading is named by
+      // its text alone – see "After the article" in docs/patterns/post-page.md.
+      const headingText = document.createElement("span");
+      headingText.id = `${heading.id}-heading-text`;
+      headingText.append(...heading.childNodes);
+      heading.appendChild(headingText);
+      heading.setAttribute("aria-labelledby", headingText.id);
+
       const link = document.createElement("a");
       link.className =
         "heading-link interactive ms-2 text-foreground/60 no-underline transition-[color,opacity] pointer-fine:opacity-0 pointer-fine:group-hover:opacity-100 pointer-fine:focus-visible:opacity-100";
       link.href = "#" + heading.id;
+      link.setAttribute("aria-label", `Link to section: ${text}`);
 
       const span = document.createElement("span");
       span.ariaHidden = "true";
@@ -242,6 +253,7 @@ const nextPost =
       const copyButton = document.createElement("button");
       copyButton.className = `copy-code absolute end-3 ${topClass} interactive rounded bg-muted border border-muted px-2 py-1 font-mono text-xs leading-4 text-foreground font-medium`;
       copyButton.innerHTML = copyButtonLabel;
+      copyButton.setAttribute("aria-live", "polite");
       codeBlock.setAttribute("tabindex", "0");
       codeBlock.appendChild(copyButton);
 
@@ -257,13 +269,21 @@ const nextPost =
       const code = block.querySelector("code");
       const text = code?.innerText;
 
-      await navigator.clipboard.writeText(text ?? "");
+      let label = "Copied";
+      let holdMs = 700;
+      try {
+        await navigator.clipboard.writeText(text ?? "");
+      } catch {
+        // A failure label has to be read, so it holds for longer.
+        label = "Copy failed";
+        holdMs = 1500;
+      }
 
-      button.innerText = "Copied";
+      button.innerText = label;
 
       setTimeout(() => {
         button.innerText = copyButtonLabel;
-      }, 700);
+      }, holdMs);
     }
   }
   attachCopyButtons();
