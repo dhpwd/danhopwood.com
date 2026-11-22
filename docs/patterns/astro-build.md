@@ -22,7 +22,7 @@
 
 **Solution:** attach listeners inside `document.addEventListener("astro:page-load", init)`. The module script registers that listener once and the event fires on every navigation, including the first load. Guard elements with a `data-initialized` attribute so a node that survives the swap isn't bound twice. `NewsletterSignup.astro` is the worked example. `ImageZoom.astro` is a second: on each page load it binds every new `#article img`, marking each with `data-zoom`, and binds the dialog's own listener once, behind `data-initialized`.
 
-**Anti-pattern for new work:** `is:inline data-astro-rerun`. It does re-run the script, at the cost of TypeScript, import resolution and deduplication. `PostDetails.astro` and `BackToTopButton.astro` both take that route, so expect to find it in the tree – prefer `astro:page-load` for anything new, and keep inline scripts for pre-paint state such as the theme flash guard in `Layout.astro`.
+**Anti-pattern for new work:** `is:inline data-astro-rerun`. It does re-run the script, at the cost of TypeScript, import resolution and deduplication. `document` and `window` survive the swap, so a listener the script adds to either is added again on every navigation: each move from one post to another adds another `scroll` and `astro:after-swap` listener from `PostDetails.astro`. `PostDetails.astro` and `BackToTopButton.astro` both take that route, so expect to find it in the tree – prefer `astro:page-load` for anything new, and keep inline scripts for pre-paint state such as the theme flash guard in `Layout.astro`.
 
 **When to use:** any component that attaches client-side event listeners.
 
@@ -58,9 +58,10 @@ Where the form's spec puts focus on the submit button after every submit, call `
 - `pnpm preview` answers a path with a trailing slash (`/about/`) with the 404 page – see `docs/patterns/urls.md`. A check that queries the page then finds nothing and passes, so write test URLs without the slash
 - A position read from a screenshot's pixels, such as where a marker's ink starts, can differ by a pixel between Chromium builds and scale factors. Compare before and after in the same browser at the same scale
 - To compare an element pixel for pixel across two builds, hide the site header on both. A change in the header's height moves everything below it by a fraction of a pixel, which changes its anti-aliasing and reads as a difference
+- Headless Chromium on `localhost` writes to the clipboard without a permission grant, so an unstubbed copy test passes whatever the page does when a write fails. Replace `navigator.clipboard.writeText` from an init script to test the failure path, and grant `clipboard-read` to read the clipboard back after a real write
 - Node's `AbortSignal.timeout` timer doesn't keep the event loop alive. A stubbed `fetch` that hangs until aborted needs its own pending timer, or the test script exits before the timeout fires
 
-Run Playwright against `pnpm build && pnpm preview`, stub `api/` routes with `page.route` (preview doesn't serve them), and test a function by calling its default export's `fetch` from a Node script with a stubbed global `fetch`.
+Run Playwright against `pnpm build && pnpm preview`. To compare a base and a change, copy each build's `dist/` aside and serve both at once with `pnpm astro preview --port <port> --outDir <copy>`, on ports other sessions aren't using. Stub `api/` routes with `page.route` (preview doesn't serve them), and test a function by calling its default export's `fetch` from a Node script with a stubbed global `fetch`.
 
 **When to use:** browser-testing a client script or a change to what a page renders, or testing an `api/` function.
 
