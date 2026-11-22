@@ -57,6 +57,7 @@ Where the form's spec puts focus on the submit button after every submit, call `
 - `textContent` runs a link's flex items together ("ai17 posts"). Read what a screen reader announces from `locator.ariaSnapshot()`, which separates them
 - `pnpm preview` answers a path with a trailing slash (`/about/`) with the 404 page rather than a redirect, because of `trailingSlash: "never"`. A check that queries the page then finds nothing and passes. Write test URLs without the slash
 - A position read from a screenshot's pixels, such as where a list marker's ink starts, differs by a pixel or more between Chromium builds and device scale factors, since each rasterises text its own way. Compare a before and an after build in the same browser at the same scale, not against a figure recorded in another browser
+- A numeral marker's ink depends on its digits. A "1" has the most space beside it, so a list of ten to twelve items shows the most room any two-digit numeral gets, and "40." comes about 1px closer to the edge. To check where markers land, measure every digit a list can show (a 99-item fixture) and each kind of marker, in Chromium and Firefox
 - To compare an element pixel for pixel across two builds, hide the site header on both. A change in the header's height moves everything below it by a fraction of a pixel, which changes its anti-aliasing and reads as a difference
 - Node's `AbortSignal.timeout` timer doesn't keep the event loop alive. A stubbed `fetch` that hangs until aborted needs its own pending timer, or the test script exits before the timeout fires
 
