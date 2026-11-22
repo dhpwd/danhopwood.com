@@ -15,7 +15,13 @@ import avatar from "@/assets/images/avatar.jpeg";
 const posts = await getCollection("blog");
 
 const sortedPosts = getSortedPosts(posts);
-const featuredPosts = sortedPosts.filter(({ data }) => data.featured);
+// Lowest featuredOrder first. Posts without one follow, in date order, which
+// the stable sort keeps from sortedPosts.
+const featuredOrder = ({ data }: (typeof posts)[number]) =>
+  data.featuredOrder ?? Number.MAX_SAFE_INTEGER;
+const featuredPosts = sortedPosts
+  .filter(({ data }) => data.featured)
+  .sort((a, b) => featuredOrder(a) - featuredOrder(b));
 const recentPosts = sortedPosts.filter(({ data }) => !data.featured);
 ---
 

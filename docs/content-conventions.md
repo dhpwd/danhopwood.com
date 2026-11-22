@@ -14,6 +14,7 @@ The homepage opens on one first screen – the headline, the portrait, the newsl
 - `draft: true` keeps a post out of the build. A future `pubDatetime` does the same until it passes, with a 15-minute margin (`SITE.scheduledPostMargin`)
 - `modDatetime` feeds more than the post header. `getSortedPosts` sorts on `modDatetime ?? pubDatetime`, so it sets position on the homepage, the listings, RSS and `llms.txt`, and `rss.xml.ts` uses it as the item's `pubDate`. Setting it on an old post moves that post back to the top and re-notifies feed readers. It also drives the sitemap's `<lastmod>` – see `docs/patterns/machine-readability.md`. Set it only when a published post changes materially
 - `tags` defaults to `["others"]`
+- `featured: true` puts a post in the homepage's Featured row and takes it out of Recent posts. `featuredOrder` (a whole number from 1) sets its place in that row, lowest first. Featured posts without one follow, newest first by `modDatetime ?? pubDatetime`. Reordering needs no date edit, so it doesn't re-notify feed readers
 - `hideEditPost` suppresses the "Edit on GitHub" link on a single post
 
 ## Conventions

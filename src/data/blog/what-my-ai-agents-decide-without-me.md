@@ -2,6 +2,8 @@
 title: "What my AI agents decide without me"
 description: "A chief of staff, four PMs and a deals agent. Which calls each one makes alone, what still reaches me and what broke on the way."
 pubDatetime: 2026-11-21T15:34:34Z
+featured: true
+featuredOrder: 1
 draft: false
 tags: ["claude-code", "agentic-coding", "ai"]
 ---

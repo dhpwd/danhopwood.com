@@ -2,6 +2,8 @@
 title: "Running coding agents on a €30 Linux box"
 description: "Every hosted agent product ties you to one repo and one vendor. A plain VPS with Tailscale, mosh and tmux doesn't – close the laptop, pick the session up on your phone. The setup and the scripts."
 pubDatetime: 2026-09-08T20:14:50Z
+featured: true
+featuredOrder: 3
 draft: false
 tags: ["claude-code", "agentic-coding", "ai"]
 ---

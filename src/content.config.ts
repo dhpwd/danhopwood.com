@@ -13,6 +13,9 @@ const blog = defineCollection({
       modDatetime: z.date().optional().nullable(),
       title: z.string(),
       featured: z.boolean().optional(),
+      // A featured post's place on the homepage, lowest first – see
+      // docs/content-conventions.md
+      featuredOrder: z.number().int().positive().optional(),
       draft: z.boolean().optional(),
       tags: z.array(z.string()).default(["others"]),
       ogImage: image().or(z.string()).optional(),
