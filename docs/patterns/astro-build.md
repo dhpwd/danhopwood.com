@@ -72,10 +72,12 @@ Where the form's spec puts focus on the submit button after every submit, call `
 - To compare an element pixel for pixel across two builds, hide the site header on both. A change in the header's height moves everything below it by a fraction of a pixel, which changes its anti-aliasing and reads as a difference
 - Headless Chromium on `localhost` writes to the clipboard without a permission grant, so an unstubbed copy test passes whatever the page does when a write fails. Replace `navigator.clipboard.writeText` from an init script to test the failure path, and grant `clipboard-read` to read the clipboard back after a real write
 - Node's `AbortSignal.timeout` timer doesn't keep the event loop alive. A stubbed `fetch` that hangs until aborted needs its own pending timer, or the test script exits before the timeout fires
+- `astro dev` and `astro preview` move to the next free port when the one passed to `--port` is taken, and say so only in their output ("Port 4391 is in use, trying another one..."). Read the port from the server's "Local" line before sending requests. A request to the port you asked for reaches another session's server, and its 404s read as yours
+- A `console.log` in build-time code can print on the same line as Astro's route listing (`└─ /index.htmlMARKER …`). To count how often a module or function runs in a build, count every match (`grep -o MARKER build.log | wc -l`), not lines that start with the marker
 
 Run Playwright against `pnpm build && pnpm preview`. To compare a base and a change, copy each build's `dist/` aside and serve both at once with `pnpm astro preview --port <port> --outDir <copy>`, on ports other sessions aren't using. Stub `api/` routes with `page.route` (preview doesn't serve them), and test a function by calling its default export's `fetch` from a Node script with a stubbed global `fetch`.
 
-**When to use:** browser-testing a client script or a change to what a page renders, or testing an `api/` function.
+**When to use:** browser-testing a client script or a change to what a page renders, testing an `api/` function, or checking build-time code with a temporary log.
 
 ## Markdown plugins and image optimisation
 
