@@ -41,8 +41,11 @@ function elements(node: Node, tagName: string): Node[] {
 export function rehypeTableLabels() {
   return function (tree: Node) {
     visit(tree as never, "element", (node: Node) => {
+      // A role written into a raw HTML table is the author's, so it stays
       const role = node.tagName && ROLES[node.tagName];
-      if (role) node.properties = { ...node.properties, role };
+      if (role && !node.properties?.role) {
+        node.properties = { ...node.properties, role };
+      }
 
       if (node.tagName !== "table") return;
       const table = node;
@@ -54,7 +57,15 @@ export function rehypeTableLabels() {
 
       for (const body of elements(table, "tbody")) {
         for (const row of elements(body, "tr")) {
-          elements(row, "td").forEach((cell, index) => {
+          const cells = (row.children ?? []).filter(
+            cell => cell.tagName === "td" || cell.tagName === "th"
+          );
+          cells.forEach((cell, index) => {
+            if (cell.tagName === "th") {
+              // Visited after the table, so the walk above leaves it be
+              cell.properties = { role: "rowheader", ...cell.properties };
+              return;
+            }
             const label = labels[index]?.trim();
             if (label) {
               cell.properties = { ...cell.properties, dataLabel: label };

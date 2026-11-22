@@ -211,7 +211,9 @@ const backUrl = SITE.showBackButton ? `${Astro.url.pathname}` : "/";
     letter-spacing: -0.018em;
   }
 
-  #pagefind-search .pagefind-ui__result-nested .pagefind-ui__result-title {
+  /* The link too, since Pagefind sets a nested result's link at 0.9em */
+  #pagefind-search .pagefind-ui__result-nested .pagefind-ui__result-title,
+  #pagefind-search .pagefind-ui__result-nested .pagefind-ui__result-link {
     font-size: 1rem;
     font-weight: 500;
     letter-spacing: 0;

@@ -32,7 +32,10 @@ const months = [
 
 <Layout title={`Archives | ${SITE.title}`}>
   <Header />
-  <Main pageTitle="Archives" eyebrow={`${posts.length} posts`}>
+  <Main
+    pageTitle="Archives"
+    eyebrow={`${posts.length} ${posts.length === 1 ? "post" : "posts"}`}
+  >
     {
       Object.entries(
         getPostsByGroupCondition(posts, post =>

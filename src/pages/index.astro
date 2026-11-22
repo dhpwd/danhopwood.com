@@ -24,7 +24,7 @@ const recentPosts = sortedPosts.filter(({ data }) => !data.featured);
   <main id="main-content" data-layout="index" class="app-layout">
     <section id="hero" class="pt-7 pb-6 sm:pt-14">
       <!-- One block at both widths: on a phone the portrait shares a row with
-      the mono line, and from 640px it stands beside all three lines -->
+      the mono line, and from 640px it stands beside the text -->
       <div
         class="grid grid-cols-[auto_minmax(0,1fr)] items-center gap-x-4 gap-y-4 [grid-template-areas:'portrait_eyebrow'_'title_title'_'sub_sub'_'lede_lede'] sm:grid-cols-[minmax(0,1fr)_auto] sm:grid-rows-[auto_auto_auto_1fr] sm:items-start sm:gap-x-10 sm:[grid-template-areas:'eyebrow_portrait'_'title_portrait'_'sub_portrait'_'lede_portrait']"
       >

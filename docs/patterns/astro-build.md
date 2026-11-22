@@ -65,7 +65,7 @@ Run Playwright against `pnpm build && pnpm preview`, stub `api/` routes with `pa
 
 **Solution:** leave the mdast `image` node itself alone and change the structure around it. Set `data.hName` on the surrounding nodes to control the rendered tags instead of emitting raw HTML. `src/utils/remarkFigureCaptions.ts` wraps a captioned image in a `<figure>` this way, and its images still come out with WebP conversion, a responsive `srcset` and explicit dimensions.
 
-`src/utils/rehypeTableLabels.ts`, in `markdown.rehypePlugins`, sets attributes on table elements and touches nothing else, so it needs no such care – see "Tables" in `docs/patterns/post-page.md`. It types the few hast fields it reads in the file, since `@types/hast` isn't a dependency.
+`src/utils/rehypeTableLabels.ts`, in `markdown.rehypePlugins`, sets attributes on table elements and changes nothing else, so it needs no such care – see "Tables" in `docs/patterns/post-page.md`. It types the few hast fields it reads in the file, since `@types/hast` isn't a dependency.
 
 **When to use:** writing or changing a markdown plugin that restructures images.
 

@@ -68,7 +68,9 @@ No italic Geist face is loaded. Semantic emphasis (`em`, blockquotes) renders as
 
 **Problem:** every page opens with a title, and a page that composes its own opening drifts from the rest – a breadcrumb on one, a description line on another, a different gap above the title on a third.
 
-**Solution:** one title block on every page: an optional `eyebrow` line, then the `h1` in `title-page`, 0.75rem apart, with 2.25rem above (3.5rem from 640px). `Main.astro` renders it from `pageTitle`, `eyebrow` and an `intro` slot for one line under the title, which the Posts page uses for its Tags and Archives links and `/404` for its link home. `titleTransition` names the title's view transition, so a tag's title morphs from the tag link that led to it. The eyebrow holds data or a label, never copy: a count ("n posts", "Tag · n posts"), a code ("404") or a post's date line. Pages outside `Main.astro` keep the same block by hand: `PostDetails.astro` puts `<Datetime tone="eyebrow" />` above the title, and `AboutLayout.astro`'s `main` takes the same top padding. A page built from the setup page's parts opens with `PageIntro.astro`, which adds an opening paragraph on the reading measure.
+**Solution:** one title block on the list pages, posts, the About page and `/404`: an optional `eyebrow` line, then the `h1` in `title-page`, 0.75rem apart, with 2.25rem above (3.5rem from 640px). `Main.astro` renders it from `pageTitle`, `eyebrow` and an `intro` slot for one line under the title, which the Posts page uses for its Tags and Archives links and `/404` for its link home. `titleTransition` names the title's view transition, so a tag's title morphs from the tag link that led to it. On these pages the eyebrow holds data or a label, never copy: a count ("n posts", "Tag · n posts"), a code ("404") or a post's date line. `PostDetails.astro` keeps the same block by hand, with `<Datetime tone="eyebrow" />` above the title, and `AboutLayout.astro`'s `main` takes the same top padding.
+
+Two openings keep the accent line above the title but are composed on their own terms. The homepage's first screen puts its tagline in the eyebrow and sets the headline in `title-hero` – see "The homepage's first screen" in `docs/design-decisions.md`. `PageIntro.astro`, which opens a page built from the setup page's parts, keeps that page's spacing, with the eyebrow and title 1.25rem apart, and adds an opening paragraph on the reading measure.
 
 Anti-patterns:
 
@@ -98,7 +100,9 @@ Prose and long lines take `max-w-measure` (38rem), the reading measure – see "
 
 ## Page parts
 
-A page beyond a list or a post builds from the parts `/cloud-box-setup` is made of, in `src/components/`: `PageIntro` (eyebrow, title and opening paragraph), `Section` (a ruled, titled section, or with `framed` the bordered closing call to action), `Panel` (a bordered card under a mono label, with `strong` for the card to end on), `Detail` (a mono label over a line or two), `MarkedList` (accent markers, mono numerals when `ordered`), `StatusChip`, `Field` and `Button`. Each uses the shared styles by name, so a page built from them needs no class constants of its own.
+**Problem:** a page that is neither a list nor a post – an offer or a form – composes its own sections, cards and lists. Written inline, its classes become page constants that the next such page copies and changes.
+
+**Solution:** build it from the parts `/cloud-box-setup` is made of, in `src/components/`: `PageIntro`, `Section`, `Panel`, `Detail`, `MarkedList`, `StatusChip`, `Field` and `Button`. Each uses the shared styles by name, so the page needs no class constants of its own. A part that a new page needs and the set lacks joins `src/components/` rather than the page.
 
 **When to use:** building a new page that isn't a list or a post.
 

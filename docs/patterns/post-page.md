@@ -10,7 +10,7 @@ The date line sits above the title, as the mono accent line does on every page: 
 
 **Problem:** at the column's full 736px, body text runs about 92 characters a line, well past a comfortable measure. Raising the size to fill the column still leaves 18px at about 82.
 
-**Solution:** `.app-prose` sets body text at 1.0625rem (17px) on `line-height: calc(28 / 17)`, a whole 28px line, so whatever follows a paragraph lands on a whole pixel. Its direct `p`, `ul`, `ol`, `h2` to `h6`, `blockquote` and `details` take `max-w-measure` (38rem, 608px), which comes to about 68 characters a line. Figures, tables, code blocks and a paragraph holding an image keep the full column, so a screenshot or a table is as wide as the page allows. `h2` is 1.5rem at 1.25 and `h3` 1.25rem at 1.3.
+**Solution:** `.app-prose` sets body text at 1.0625rem (17px) on `line-height: calc(28 / 17)`, a 28px line, so every line box and every paragraph's height is a whole number of pixels. Its direct `p`, `ul`, `ol`, `h2` to `h6`, `blockquote` and `details` take `max-w-measure` (38rem, 608px), which comes to about 68 characters a line. Figures, tables, code blocks and a paragraph holding an image keep the full column, so a screenshot or a table is as wide as the page allows. `h2` is 1.5rem at 1.25 and `h3` 1.25rem at 1.3.
 
 The rule takes direct children only (`> :where(…)`), so text nested in a table cell or a `blockquote` keeps the width of its container.
 

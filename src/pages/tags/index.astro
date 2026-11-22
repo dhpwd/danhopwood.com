@@ -19,7 +19,10 @@ const tags = getUniqueTags(posts).map(tag => ({
 
 <Layout title={`Tags | ${SITE.title}`}>
   <Header />
-  <Main pageTitle="Tags" eyebrow={`${tags.length} tags`}>
+  <Main
+    pageTitle="Tags"
+    eyebrow={`${tags.length} ${tags.length === 1 ? "tag" : "tags"}`}
+  >
     <ul class="grid grid-cols-1 gap-x-8 border-t border-border sm:grid-cols-2">
       {
         tags.map(({ tag, tagName, count }) => (

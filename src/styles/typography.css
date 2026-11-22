@@ -8,7 +8,7 @@
        figures, tables and code at the full column – see "Reading measure" in
        docs/patterns/post-page.md */
     font-size: 1.0625rem;
-    /* A whole 28px line, so what follows a paragraph lands on a whole pixel */
+    /* A 28px line, so a paragraph's height is a whole number of pixels */
     line-height: calc(28 / 17);
 
     > :where(p, ul, ol, h2, h3, h4, h5, h6, blockquote, details) {

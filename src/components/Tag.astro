@@ -14,24 +14,25 @@ const { tag, tagName, variant = "inline", count } = Astro.props;
   variant === "row" ? (
     <li class="border-b border-border">
       <a
-        href={`/tags/${tag}/`}
+        href={`/tags/${tag}`}
         class="group flex items-baseline justify-between gap-4 py-3 interactive"
       >
         <span
           transition:name={tag}
-          class="underline decoration-dashed underline-offset-4"
+          class="underline decoration-dashed underline-offset-4 group-focus-visible:no-underline"
         >
           {tagName}
         </span>
         <span class="meta transition-colors group-hover:text-accent group-active:text-accent-strong">
           {count}
+          <span class="sr-only">{count === 1 ? " post" : " posts"}</span>
         </span>
       </a>
     </li>
   ) : (
     <li>
       <a
-        href={`/tags/${tag}/`}
+        href={`/tags/${tag}`}
         transition:name={tag}
         class="inline-block py-1 interactive underline decoration-dashed underline-offset-4"
       >

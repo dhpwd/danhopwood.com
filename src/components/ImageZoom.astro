@@ -5,16 +5,16 @@
 ---
 
 <dialog id="image-zoom" class="image-zoom" aria-label="Image at full size">
-  <div class="image-zoom-pan" data-zoom-close>
+  <div class="image-zoom-pan">
     <img alt="" />
   </div>
-  <form method="dialog">
-    <button
-      class="fixed end-4 top-4 rounded border border-border bg-background px-3 py-2 label-caps interactive"
-    >
-      Close
-    </button>
-  </form>
+  <button
+    type="button"
+    class="fixed end-4 top-4 rounded border border-border bg-background px-3 py-2 label-caps interactive"
+    data-zoom-close
+  >
+    Close
+  </button>
 </dialog>
 
 <script>
@@ -35,6 +35,8 @@
     const large = pan.querySelector("img")!;
 
     function open(image: HTMLImageElement) {
+      // Without this the previous image shows until the new file loads
+      large.removeAttribute("src");
       large.src = image.src;
       large.alt = image.alt;
       large.style.width = `${fullWidth(image)}px`;
@@ -65,6 +67,9 @@
     pan.addEventListener("click", event => {
       if (event.target === pan) dialog.close();
     });
+    dialog
+      .querySelector("[data-zoom-close]")!
+      .addEventListener("click", () => dialog.close());
   }
 
   // See "Client scripts and View Transitions" in docs/patterns/astro-build.md

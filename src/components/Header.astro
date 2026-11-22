@@ -32,6 +32,16 @@ const NAV = [
     >
       {SITE.title}
     </a>
+    <!-- Ahead of the links in the markup, so Tab from an opened menu reaches
+    them. order-1 still draws it after the theme toggle. -->
+    <button
+      id="menu-btn"
+      class="order-1 -me-2 px-2 py-3 label-caps interactive sm:hidden"
+      aria-expanded="false"
+      aria-controls="menu-items"
+    >
+      Menu
+    </button>
     <nav
       id="nav-menu"
       aria-label="Main"
@@ -72,14 +82,6 @@ const NAV = [
         </button>
       )
     }
-    <button
-      id="menu-btn"
-      class="-me-2 px-2 py-3 label-caps interactive sm:hidden"
-      aria-expanded="false"
-      aria-controls="menu-items"
-    >
-      Menu
-    </button>
   </div>
 </header>
 

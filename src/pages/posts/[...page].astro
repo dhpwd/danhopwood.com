@@ -20,7 +20,10 @@ const { page } = Astro.props;
 
 <Layout title={`Posts | ${SITE.title}`}>
   <Header />
-  <Main pageTitle="Posts" eyebrow={`${page.total} posts`}>
+  <Main
+    pageTitle="Posts"
+    eyebrow={`${page.total} ${page.total === 1 ? "post" : "posts"}`}
+  >
     <p slot="intro" class="flex gap-x-5">
       <a
         href="/tags"

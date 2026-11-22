@@ -97,13 +97,13 @@ Rejected:
 
 ## Every title block is a mono accent line, then the title
 
-The line holds a page's count or label ("n posts", "Tag · n posts", "n tags", "404"), or a post's date. Counts are data and labels, so they need no copy. There is no breadcrumb and no stock description line under the title.
+On a list page the line holds its count or label ("n posts", "Tag · n posts", "n tags", "404"), and on a post its date. Counts are data and labels, so they need no copy. The homepage's line is its tagline. There is no breadcrumb and no stock description line under the title.
 
 Rejected: a breadcrumb, which is a second kind of mono line above a title on a site two levels deep.
 
 ## The header is three words and the theme toggle
 
-Posts, About and Search, then the toggle. Tags and Archives are reached from the Posts page, and Posts is the active item on both. On a phone the links sit behind a mono "Menu" button as a plain list.
+Posts, About and Search, then the toggle. Tags and Archives are reached from the Posts page, and Posts is the active item on both. On a phone the links sit behind a mono "Menu" button as a plain list. A new destination joins the `NAV` list in `Header.astro`, whose `sections` say which paths make it the active item.
 
 Rejected:
 
