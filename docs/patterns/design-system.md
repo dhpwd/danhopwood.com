@@ -43,7 +43,7 @@ Nav links are Geist at 500 (`font-medium`), not mono.
 
 The share cards set their titles through `titleStyle` in `src/utils/og-templates/shared.js`, which restates `title-page`'s weight, line-height and tracking by hand at card scale. A change to the title treatment updates it too.
 
-Pagefind's results on `/search` can't take the utilities either, so four flat `#pagefind-search …` rules in `search.astro` restate them: the count line in `meta`'s values, result titles in `title-item`'s at weight 600, nested titles at 16px and weight 500, and excerpts at 15px. Without them Pagefind sets a result title at weight 700 and an excerpt at 12.8px. A change to `meta` or `title-item` updates those rules too.
+Pagefind's results on `/search` can't take the utilities either, so four flat `#pagefind-search …` rules in `search.astro` restate them: the count line in `meta`'s values, result titles in `title-item`'s at weight 600, nested titles at 16px and weight 500, and excerpts at 15px. Pagefind sizes a nested result's link at 0.9em of its title, so the nested rule sets the link as well. Without them Pagefind sets a result title at weight 700 and an excerpt at 12.8px. A change to `meta` or `title-item` updates those rules too.
 
 Both faces load through Astro's experimental fonts API (Google provider, configured in `astro.config.ts`, preloaded by `<Font>` in `Layout.astro`) at weights 400/500/600/700, from one variable file per family. A new weight in that range loads nothing new.
 

@@ -52,6 +52,8 @@ Where the form's spec puts focus on the submit button after every submit, call `
 - `<ClientRouter />` saves the scroll position with `history.replaceState`, which fires Playwright's `framenavigated` on the same URL. To assert that a submit didn't navigate, count navigation requests (`request.isNavigationRequest()`) or check a `window` marker survives, not `framenavigated`
 - Submit forms by clicking the button as well as pressing Enter in a field. Only the click leaves focus on the button, so a bug in how the handler treats focus shows on that route alone
 - `locator.boundingBox()` is relative to the viewport, and a click can scroll the page. To assert an element didn't move, compare `getBoundingClientRect().top + scrollY`
+- A control's state changes over the shared 150ms, so a computed style read straight after `focus()` or `hover()` is the start of the transition – a field's focus ring reads as transparent. Wait past the duration before reading
+- `textContent` runs a link's flex items together ("ai17 posts"). Read what a screen reader announces from `locator.ariaSnapshot()`, which separates them
 - To compare an element pixel for pixel across two builds, hide the site header on both. A change in the header's height moves everything below it by a fraction of a pixel, which changes its anti-aliasing and reads as a difference
 - Node's `AbortSignal.timeout` timer doesn't keep the event loop alive. A stubbed `fetch` that hangs until aborted needs its own pending timer, or the test script exits before the timeout fires
 
