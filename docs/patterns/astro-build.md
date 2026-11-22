@@ -100,6 +100,18 @@ Run Playwright against `pnpm build && pnpm preview`. To compare a base and a cha
 
 **When to use:** writing or changing a markdown plugin that restructures images.
 
+## Astro is patched for Markdown image alt text
+
+**Problem:** Astro's `rehypeImages` stores each local image's props, alt included, as JSON in an `__ASTRO_IMAGE_` attribute, which hast-util-to-html serialises with `"`, `'`, `&` and `` ` `` as `&#x22;`, `&#x27;`, `&#x26;` and `&#x60;`. For a post, Astro 5 decodes only `&#x22;` before `JSON.parse`, then escapes the alt into the `<img>`, so an apostrophe or ampersand reaches the page as `&amp;#x27;` or `&amp;#x26;`, and a screen reader reads the literal `Clara&#x27;s queue`. A Markdown page in `src/pages/` also decodes `&#x27;`, so only the ampersand breaks there.
+
+**Solution:** `patches/astro@5.16.6.patch`, registered under `patchedDependencies` in `pnpm-workspace.yaml`, backports the decode from withastro/astro#18086 to `dist/content/runtime.js`, which renders every post, and to the two `images()` loops in the code `dist/vite-plugin-markdown/images.js` generates for Markdown pages in `src/pages/`. The lookup in that code's `updateImageReferences` keeps its `&#x22;`-only decode: 5.16.6 stores each image under its path with `'` still encoded, so decoding the path there misses the key and the build fails on an image whose file name holds an apostrophe. Ampersands decode last, so an alt that holds an entity name as text (`&quot;`, written `&amp;quot;` in the source) comes out as written. Like upstream, the patch leaves `&#x60;` encoded, so a backtick escaped in the alt (`` \` ``) still reaches the page as `&amp;#x60;`. A code span in an alt loses its backticks before Astro sees it.
+
+The key carries Astro's exact version, so a change to the Astro version fails the install with `ERR_PNPM_UNUSED_PATCH` until the patch is dealt with. Nothing else guards the fix. Write or regenerate the patch with pnpm 10 (`npx pnpm@10 patch astro@<version>`, edit the copy, then `npx pnpm@10 patch-commit <dir>`), per "Adding a package without lockfile churn" in `docs/patterns/dependencies.md`. The patch comes out when Astro reaches a version carrying #18086 (7.3.4 or later): delete the file and its `patchedDependencies` entry in the upgrade.
+
+To check the patch, build a temporary post and a temporary Markdown page in `src/pages/` whose image alt holds `'`, `&`, `"` and `&amp;amp;`, each with a second image whose file name holds `'`. Confirm the build passes, and compare each image's accessible name (`locator.ariaSnapshot()`) with the source.
+
+**When to use:** upgrading Astro, or an install or build failing on `patches/`.
+
 ## Module paths in bundled code vs standalone scripts
 
 **Problem:** Astro bundles `src/utils/` modules into `dist/chunks/` at build time, so a path resolved from `import.meta.url` lands outside the project and throws ENOENT in the production build while working in dev.

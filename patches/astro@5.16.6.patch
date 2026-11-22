@@ -1,0 +1,35 @@
+diff --git a/dist/content/runtime.js b/dist/content/runtime.js
+index 759ecfcd3629ac5cc79e5a42d858f133e428dd10..60a4e1b74ecaba1786eeb84b3977c82ac4d04c42 100644
+--- a/dist/content/runtime.js
++++ b/dist/content/runtime.js
+@@ -476,7 +476,7 @@ async function updateImageReferencesInBody(html, fileName) {
+   const { getImage } = await import("astro:assets");
+   for (const [_full, imagePath] of html.matchAll(CONTENT_LAYER_IMAGE_REGEX)) {
+     try {
+-      const decodedImagePath = JSON.parse(imagePath.replaceAll("&#x22;", '"'));
++      const decodedImagePath = JSON.parse(imagePath.replace(/&(?:#x22|quot);/g, '"').replace(/&(?:#x27|apos);/g, "'").replace(/&(?:amp|#x26|#38);/g, "&"));
+       let image;
+       if (URL.canParse(decodedImagePath.src)) {
+         image = await getImage(decodedImagePath);
+diff --git a/dist/vite-plugin-markdown/images.js b/dist/vite-plugin-markdown/images.js
+index a0bff80f59d959593a811aea37e1b75275ec63da..8d61bf68be076f18f671a9e7f833af439059e8e6 100644
+--- a/dist/vite-plugin-markdown/images.js
++++ b/dist/vite-plugin-markdown/images.js
+@@ -16,7 +16,7 @@ function getMarkdownCodeForImages(localImagePaths, remoteImagePaths, html) {
+ 											let occurrenceCounter = 0;
+ 											while ((match = regex.exec(html)) !== null) {
+ 													const matchKey = ${rawUrl} + '_' + occurrenceCounter;
+-													const imageProps = JSON.parse(match[1].replace(/&#x22;/g, '"').replace(/&#x27;/g, "'"));
++													const imageProps = JSON.parse(match[1].replace(/&(?:#x22|quot);/g, '"').replace(/&(?:#x27|apos);/g, "'").replace(/&(?:amp|#x26|#38);/g, '&'));
+ 													const { src, ...props } = imageProps;
+ 													imageSources[matchKey] = await getImage({src: Astro__${entry.safeName}, ...props});
+ 													occurrenceCounter++;
+@@ -34,7 +34,7 @@ function getMarkdownCodeForImages(localImagePaths, remoteImagePaths, html) {
+ 											let occurrenceCounter = 0;
+ 											while ((match = regex.exec(html)) !== null) {
+ 													const matchKey = ${rawUrl} + '_' + occurrenceCounter;
+-													const props = JSON.parse(match[1].replace(/&#x22;/g, '"').replace(/&#x27;/g, "'"));
++													const props = JSON.parse(match[1].replace(/&(?:#x22|quot);/g, '"').replace(/&(?:#x27|apos);/g, "'").replace(/&(?:amp|#x26|#38);/g, '&'));
+ 													imageSources[matchKey] = await getImage(props);
+ 													occurrenceCounter++;
+ 											}

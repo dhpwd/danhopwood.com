@@ -4,6 +4,11 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
+patchedDependencies:
+  astro@5.16.6:
+    hash: 832c84dc67a85896461e0fe241ffacb6427f09f31ed3f77706ccfc730070417b
+    path: patches/astro@5.16.6.patch
+
 importers:
 
   .:
@@ -22,7 +27,7 @@ importers:
         version: 4.1.18(vite@6.4.1(jiti@2.6.1)(lightningcss@1.30.2)(yaml@2.7.1))
       astro:
         specifier: ^5.16.6
-        version: 5.16.6(jiti@2.6.1)(lightningcss@1.30.2)(rollup@4.41.1)(typescript@5.9.3)(yaml@2.7.1)
+        version: 5.16.6(patch_hash=832c84dc67a85896461e0fe241ffacb6427f09f31ed3f77706ccfc730070417b)(jiti@2.6.1)(lightningcss@1.30.2)(rollup@4.41.1)(typescript@5.9.3)(yaml@2.7.1)
       dayjs:
         specifier: ^1.11.19
         version: 1.11.19
@@ -3940,7 +3945,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  astro@5.16.6(jiti@2.6.1)(lightningcss@1.30.2)(rollup@4.41.1)(typescript@5.9.3)(yaml@2.7.1):
+  astro@5.16.6(patch_hash=832c84dc67a85896461e0fe241ffacb6427f09f31ed3f77706ccfc730070417b)(jiti@2.6.1)(lightningcss@1.30.2)(rollup@4.41.1)(typescript@5.9.3)(yaml@2.7.1):
     dependencies:
       '@astrojs/compiler': 2.13.0
       '@astrojs/internal-helpers': 0.7.5
