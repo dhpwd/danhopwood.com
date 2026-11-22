@@ -14,6 +14,7 @@ const { id, title, framed = false } = Astro.props;
 
 <section
   aria-labelledby={`${id}-h`}
+  data-rule={framed ? undefined : ""}
   class:list={[
     "flex flex-col",
     framed

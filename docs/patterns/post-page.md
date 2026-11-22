@@ -40,9 +40,9 @@ The image itself is the button, rather than a `<button>` wrapped round it, becau
 
 **The newsletter signup sits directly after `<Content />`, above the first rule.** It is the primary call to action, so it comes before the rows below it.
 
-**Then three ledger rows, each ruled above, with `h2` labels in `label-caps` at 75%:** Tags, Share and Source. Each tag and share link is a dashed text link. `EditPost.astro` renders the Source row whole, so a post with `hideEditPost` shows no empty label. Then "Previous post" and "Next post" in a two-column grid, each a `label-caps` label over the post's title at weight 500.
+**Then three ledger rows, each ruled above, with `h2` labels in `label-caps` at 75%:** Tags, Share and Source. Each tag is a dashed text link, and each share link an icon with its word as its name for screen readers – see "The icon's turn" in `docs/patterns/small-details.md`. `EditPost.astro` renders the Source row whole, so a post with `hideEditPost` shows no empty label. Then "Previous post" and "Next post" in a two-column grid, each a `label-caps` label over the post's title at weight 500.
 
-**A share link's `name` is the Plausible event's `platform` value.** `ShareLink.label` in `src/constants.ts` overrides the text shown where the two differ: "Mail" shows as "Email" and is still sent as `Mail`. Changing a `name` breaks the per-platform breakdown – see `docs/external-services.md`.
+**A share link's `name` is the Plausible event's `platform` value.** `ShareLink.label` in `src/constants.ts` is the link's name for screen readers where the two differ: "Mail" is named "Email" and is still sent as `Mail`. Changing a `name` breaks the per-platform breakdown – see `docs/external-services.md`.
 
 **There is no back-to-top button.** The fixed reading progress bar at the top of the article covers the same need. `BackToTopButton.astro` is left over from the theme and is wired to nothing.
 
@@ -54,7 +54,8 @@ The image itself is the button, rather than a `<button>` wrapped round it, becau
 
 Anti-patterns:
 
-- Icon rows for the tags or share links, and the `md:-ml-2` that pulled the first share icon back under its label. The rows are words in the ledger, which aligns them
+- Icons for a post's tags, which stay words
+- A margin that pulls the first share icon back under its label, like the theme's `md:-ml-2`. The ledger aligns the row, and the list's `-mx-3 sm:-mx-1.5` puts the first icon's ink on the column's edge
 - A margin on a card or row to space a list, in place of `gap` on the list
 - An `aria-label` on the heading anchor with no `aria-labelledby` on the heading. The heading's name then carries the anchor's label after its own text, so a screen reader's headings list, which is how a screen-reader user skims a post, reads every heading twice
 

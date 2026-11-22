@@ -58,7 +58,7 @@ const months = [
             )
               .sort(([monthA], [monthB]) => Number(monthB) - Number(monthA))
               .map(([month, monthGroup]) => (
-                <div class="ledger border-t border-border py-6">
+                <div data-rule class="ledger border-t border-border py-6">
                   <h3 class="label-caps text-foreground/75">
                     {months[Number(month) - 1]}
                   </h3>

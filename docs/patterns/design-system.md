@@ -36,7 +36,7 @@ Code blocks are the one area with its own palette: the shiki themes `vitesse-lig
 
 **Solution:** every piece of text takes one of three treatments, each with a fixed style. Pick the treatment and use its shared style – new work adds no face, size or tracking of its own.
 
-- **Prose** – Geist, via `font-app` and the body default. Links carry dashed underlines (`decoration-dashed underline-offset-4`), the site's signature, at body weight. A row of links – the share row, the footer's links, a post's tags – is words with the dashed underline, never a row of icons
+- **Prose** – Geist, via `font-app` and the body default. Links carry dashed underlines (`decoration-dashed underline-offset-4`), the site's signature, at body weight. A post's tags are words with the dashed underline. The share row and the footer's profile links are icons – see "Profile and share links are icons" in `docs/design-decisions.md`
 - **Titles** – Geist at 600 with balanced wrapping, from the global `h1`–`h6` rule in `global.css`. Three `@utility` blocks there set the scale: `title-hero` for the homepage's headline only, fluid between 32px and 44px, `title-page` for every other page's `h1`, fluid between 30px and 40px, and `title-item` for a card title or a section heading. In-post headings take the sizes `typography.css` sets – see "Reading measure" in `docs/patterns/post-page.md`. The prose plugin's own heading weights (800, 700, 600) outrank the global rule, so `typography.css` restates the weight and tracking on `.app-prose h1` to `h4`
 - **Mono** – Geist Mono, for the site name, labels, the eyebrow, dates and metadata, via an explicit `font-mono` or a shared utility. `eyebrow` is the small mono accent line above a page's title. `meta` is the same line in the text colour at 75%, for dates, reading times, counts and the pagination line. `label-caps` is the small uppercase label for a group, with `text-foreground/75` where the label is muted. UI state markers such as `.active-nav` use solid underlines, not dashed
 
@@ -84,10 +84,10 @@ Anti-patterns:
 
 **Problem:** the site has many labelled lists – the homepage's rows, the post lists, the archive's months, the rows after a post. Set as sections under full-width label headings, each list's text runs the full column, and each page ends up styling its list its own way.
 
-**Solution:** the `ledger` utility in `global.css`. One column on a phone, with the label above its content. From 640px, two columns, `8.5rem minmax(0, 1fr)`, with the label on the left and its content beside it, 2rem apart and aligned on their first baselines. The label is an `h2` (an `h3` under a year on `/archives`) in `label-caps text-foreground/75`. Rows are ruled above with `border-t border-border`. Lists inside a row space their items with `gap`, never a margin on the item.
+**Solution:** the `ledger` utility in `global.css`. One column on a phone, with the label above its content. From 640px, two columns, `8.5rem minmax(0, 1fr)`, with the label on the left and its content beside it, 2rem apart and aligned on their first baselines. The label is an `h2` (an `h3` under a year on `/archives`) in `label-caps text-foreground/75`. Rows are ruled above with `border-t border-border` and carry `data-rule`, so the rule draws as the visitor scrolls to it – see "The rule that draws" in `docs/patterns/small-details.md`. Lists inside a row space their items with `gap`, never a margin on the item.
 
 ```astro
-<section class="ledger border-t border-border py-6">
+<section data-rule class="ledger border-t border-border py-6">
   <h2 class="label-caps text-foreground/75">Recent posts</h2>
   <ul class="flex flex-col gap-7">…</ul>
 </section>
@@ -113,7 +113,7 @@ Prose and long lines take `max-w-measure` (38rem), the reading measure – see "
 
 **Solution:** each control moves one colour step on hover and one more on press, from two `@utility` blocks in `global.css`.
 
-- `interactive`, for text and icon controls: the text steps to `accent` on hover and `accent-strong` on press. Icon SVGs stroke `currentColor`, so an icon follows its anchor with no rule of its own. `LinkButton.astro` applies it, so every enabled `LinkButton` has it, and a disabled one rests on `text-foreground/45`
+- `interactive`, for text and icon controls: the text steps to `accent` on hover and `accent-strong` on press. Icon SVGs stroke `currentColor`, so an icon follows its anchor's colour with no rule of its own. An icon link is `size-11 sm:size-8`, with its word in an `sr-only` span as its name and a `title` as its tooltip, and an icon that turns or steps under the pointer follows "The icon's turn" in `docs/patterns/small-details.md`. `LinkButton.astro` applies it, so every enabled `LinkButton` has it, and a disabled one rests on `text-foreground/45`
 - `interactive-fill`, for filled accent buttons: the fill steps to `accent-strong` on hover and `accent-stronger` on press, only while the button is enabled, and the button settles 1px on press. `Button.astro` carries it, and every filled action is a `Button`: Subscribe in `NewsletterSignup.astro` and Request setup in `cloud-box-setup.astro`. The label is `text-background`, never `text-white`: white on the dark accent is 2.61:1. `disabled:opacity-60` dims the button while a submit is pending, and disabled controls are exempt from the contrast minimum
 - `.active-nav` rests on the accent, so it steps to `accent-strong` on hover and `accent-stronger` on press. The header's word links are the only ones that take it. It sits outside any layer in `global.css`, so it outranks the `interactive` on the same link
 
@@ -178,7 +178,7 @@ Anti-patterns:
 - The active nav item (`.active-nav`)
 - The reading progress bar on a post
 
-Everything else rests on the text colour or a mix of it. Frames take `border-border`, or `border-foreground/60` where one card leads another (the setup page's "After" card). Status chips take `border-foreground/60 text-foreground` ("Open") or sit on `--muted` ("Held", "Taken"). Link titles and search result titles take the text colour. Selected text (`selection:bg-accent-tint selection:text-foreground` on `body`), search matches (`#pagefind-search mark`) and the tap flash (`-webkit-tap-highlight-color` on `html`) sit on `--accent-tint` with the text in the text colour: 10.51:1 in light theme and 9.52:1 in dark. The favicon and the share cards' accent bar and hostname are brand marks, outside the list. A drawn diagram's level labels are on the list, as the `eyebrow`'s counterpart inside an image – see "A diagram is ink, with the accent on its level labels" in `docs/design-decisions.md`.
+Everything else rests on the text colour or a mix of it. Frames take `border-border`, or `border-foreground/60` where one card leads another (the setup page's "After" card). Status chips take `border-foreground/60 text-foreground` ("Open") or sit on `--muted` ("Held", "Taken"). Link titles and search result titles take the text colour. Selected text (`selection:bg-accent-tint selection:text-foreground` on `body`), search matches (`#pagefind-search mark`) and the tap flash (`-webkit-tap-highlight-color` on `html`) sit on `--accent-tint` with the text in the text colour: 10.51:1 in light theme and 9.52:1 in dark. The favicon and the share cards' accent bar and hostname are brand marks, outside the list. A drawn diagram's level labels are on the list, as the `eyebrow`'s counterpart inside an image – see "A diagram is ink, with the accent on its level labels" in `docs/design-decisions.md`. A row's rule and label take the accent for under 400ms as the visitor scrolls to the row, which is motion, not rest – see "The rule that draws" in `docs/patterns/small-details.md`.
 
 The anti-pattern is the accent at rest on anything off the list – a frame, a chip, a link title, a heading. A new use is a design call, recorded in `docs/design-decisions.md` first.
 

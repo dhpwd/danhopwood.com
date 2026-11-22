@@ -16,16 +16,18 @@ const showEditPost =
 
 {
   showEditPost && (
-    <div class="ledger border-t border-border py-5">
+    <div data-rule class="ledger border-t border-border py-5">
       <h2 class="label-caps text-foreground/75">Source</h2>
       <p>
         <a
           href={href}
           target="_blank"
           rel="noopener noreferrer"
-          class="inline-block py-1 interactive underline decoration-dashed underline-offset-4"
+          class="group inline-block py-1 interactive"
         >
-          {SITE.editPost.text}
+          <span class="underline decoration-dashed underline-offset-4 group-focus-visible:no-underline">
+            {SITE.editPost.text}
+          </span>
         </a>
       </p>
     </div>

@@ -204,3 +204,169 @@ html[data-theme="dark"] {
 :target {
   scroll-margin-block: 1rem;
 }
+
+/* The small details – see docs/patterns/small-details.md. Outside any layer,
+   as .active-nav is, so they outrank the utilities on the same element. */
+
+/* Links ink in: a solid line in the link's colour draws over the dashed
+   underline from the left, and leaves to the right. */
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  :is([class~="decoration-dashed"], .app-prose a:not(.heading-link)) {
+    /* An inline box ends one descent (about 0.28em) under the baseline, so
+       with this padding, which an inline box takes without moving anything,
+       the line sits 4 to 5px under the baseline at every type size. */
+    --ink-y: calc(100% - (0.28em - 3px));
+    padding-bottom: 2px;
+    background-image: linear-gradient(currentcolor, currentcolor);
+    background-repeat: no-repeat;
+    background-position: 100% var(--ink-y);
+    background-size: 0 1px;
+    transition-property: background-size, text-decoration-color;
+    transition-duration: 300ms, 150ms;
+    transition-timing-function: var(--default-transition-timing-function);
+  }
+  :is(a[class~="decoration-dashed"], .app-prose a:not(.heading-link)) {
+    transition-property: color, background-size, text-decoration-color;
+    transition-duration: 150ms, 300ms, 150ms;
+  }
+  :is(
+    a[class~="decoration-dashed"]:hover,
+    a:hover [class~="decoration-dashed"],
+    .app-prose a:not(.heading-link):hover
+  ) {
+    background-position: 0 var(--ink-y);
+    background-size: 100% 1px;
+    text-decoration-color: transparent;
+    transition-delay: 0s, 0s, 120ms;
+  }
+  a:hover [class~="decoration-dashed"] {
+    transition-delay: 0s, 120ms;
+  }
+  /* Keyboard focus keeps the outline on today's box, with no line */
+  :is(
+    a[class~="decoration-dashed"],
+    .app-prose a:not(.heading-link)
+  ):focus-visible {
+    padding-bottom: 0;
+    background-image: none;
+  }
+  /* A title has no underline at rest, so the line is all it gets */
+  a:hover [data-ink="title"] {
+    text-decoration-line: none;
+  }
+}
+
+/* The page rules itself: a row the visitor scrolls to draws its rule in the
+   accent, which dries to the border colour. src/scripts/rule-draw.ts arms a
+   row only when motion is allowed, so these need no media query. */
+[data-rule="pending"],
+[data-rule="run"] {
+  border-top-color: transparent;
+}
+[data-rule="run"] {
+  position: relative;
+}
+[data-rule="run"]::before {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  top: -1px;
+  height: 1px;
+  transform-origin: left center;
+  animation: rule-draw 400ms var(--default-transition-timing-function) both;
+}
+[data-rule="run"] > .label-caps {
+  animation: rule-label 400ms ease-in both;
+}
+@keyframes rule-draw {
+  from {
+    scale: 0 1;
+    background: var(--accent);
+  }
+  45% {
+    background: var(--accent);
+  }
+  to {
+    scale: 1 1;
+    background: var(--border);
+  }
+}
+@keyframes rule-label {
+  from,
+  35% {
+    color: var(--accent);
+  }
+}
+
+/* The phone menu draws its rule and lifts its rows as it opens. `hidden`
+   toggles display, so it plays on every open, and closing is instant. */
+@media (width < 40rem) and (prefers-reduced-motion: no-preference) {
+  #menu-items:not(.hidden) {
+    position: relative;
+    border-top-color: transparent;
+    animation: menu-rule-settle 0s 400ms both;
+  }
+  #menu-items:not(.hidden)::before {
+    content: "";
+    position: absolute;
+    inset-inline: 0;
+    top: -1px;
+    height: 1px;
+    transform-origin: left center;
+    animation: rule-draw 400ms var(--default-transition-timing-function) both;
+  }
+  #menu-items:not(.hidden) > li {
+    animation: menu-rise 280ms var(--default-transition-timing-function)
+      backwards;
+  }
+  #menu-items:not(.hidden) > li:nth-child(2) {
+    animation-delay: 40ms;
+  }
+  #menu-items:not(.hidden) > li:nth-child(3) {
+    animation-delay: 80ms;
+  }
+  #menu-items:not(.hidden) > li:nth-child(4) {
+    animation-delay: 120ms;
+  }
+}
+@keyframes menu-rule-settle {
+  to {
+    border-top-color: var(--border);
+  }
+}
+@keyframes menu-rise {
+  from {
+    opacity: 0;
+    translate: 0 6px;
+  }
+}
+
+/* Icons answer the pointer: an icon inside a control turns or steps, and the
+   control never moves. Keyed on a:hover, so a disabled LinkButton (a span)
+   doesn't answer. */
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  :is(.icon-step-forward, .icon-step-back) {
+    transition: translate var(--default-transition-duration)
+      var(--default-transition-timing-function);
+  }
+  a:hover .icon-step-forward {
+    translate: 3px 0;
+  }
+  a:hover .icon-step-back {
+    translate: -3px 0;
+  }
+  .icon-tilt {
+    transition: rotate var(--default-transition-duration)
+      var(--default-transition-timing-function);
+  }
+  a:hover > .icon-tilt {
+    rotate: 6deg;
+  }
+  /* One notch, so each ends looking as it started */
+  html[data-theme="light"] #theme-btn:hover > svg:first-of-type {
+    rotate: -16deg;
+  }
+  html[data-theme="dark"] #theme-btn:hover > svg:last-of-type {
+    rotate: 45deg;
+  }
+}
