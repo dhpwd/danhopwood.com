@@ -4,11 +4,35 @@
   .app-prose {
     @apply prose;
 
+    /* Body text a step up from 16px and held to the reading measure, with
+       figures, tables and code at the full column – see "Reading measure" in
+       docs/patterns/post-page.md */
+    font-size: 1.0625rem;
+    /* A 28px line, so a paragraph's height is a whole number of pixels */
+    line-height: calc(28 / 17);
+
+    > :where(p, ul, ol, h2, h3, h4, h5, h6, blockquote, details) {
+      @apply max-w-measure;
+    }
+
+    > p:has(> img) {
+      max-width: none;
+    }
+
+    h2 {
+      font-size: 1.5rem;
+      line-height: 1.25;
+    }
+
+    h3 {
+      font-size: 1.25rem;
+      line-height: 1.3;
+    }
+
     h1,
     h2,
     h3,
-    h4,
-    th {
+    h4 {
       @apply mb-3 text-foreground;
     }
 
@@ -25,7 +49,6 @@
     strong,
     ol,
     ul,
-    figcaption,
     table,
     code {
       @apply text-foreground;
@@ -35,7 +58,7 @@
       /* font-normal overrides the prose plugin's 500 default – see
          docs/patterns/design-system.md. */
       @apply font-normal wrap-break-word interactive text-foreground decoration-dashed underline-offset-4 focus-visible:no-underline;
-      /* Prose links get dashed via @apply, so the a[class~="decoration-dashed"]
+      /* Prose links get dashed via @apply, so the [class~="decoration-dashed"]
          base rule in global.css can't reach them – same token, stated here. */
       text-decoration-color: var(--dashed-decoration);
     }
@@ -48,31 +71,99 @@
       @apply marker:text-accent;
     }
 
+    /* A numeral sits on the paragraphs' left edge and wrapped lines hang
+       under the text: the padding is one tabular-figure marker ("1. ") wide */
+    ol {
+      padding-inline-start: 1.055em;
+    }
+
+    ol > li {
+      padding-inline-start: 0;
+    }
+
+    ol > li::marker {
+      font-variant-numeric: tabular-nums;
+    }
+
     hr {
       @apply border-border;
     }
 
+    /* An image narrower than the column sits on its left edge, under the
+       text, rather than centred */
     img {
-      @apply mx-auto rounded-md border border-border;
+      @apply rounded-md border border-border;
+    }
+
+    /* ImageZoom.astro makes each image a button that opens it at full size.
+       Its focus outline is the base rule for [role="button"] in global.css. */
+    img[role="button"] {
+      @apply cursor-zoom-in;
+    }
+
+    /* The figure takes its image's width, so a caption under a narrow image
+       stays within it */
+    figure {
+      @apply my-9 w-fit max-w-full;
     }
 
     figcaption {
-      /* Centred to sit under the images, which are themselves mx-auto. */
-      @apply text-center opacity-75;
+      /* contain: inline-size keeps the caption's text from widening the
+         figure. It starts at the image's left edge and wraps at the image's
+         width or the reading measure, whichever is narrower. */
+      contain: inline-size;
+      @apply mt-3 max-w-measure text-sm leading-normal text-foreground/75;
     }
 
+    /* Rows ruled across, with the column headings as mono labels. On a phone
+       each row is a block and each cell after the first carries its heading,
+       which rehypeTableLabels.ts sets as data-label. */
     table {
-      th,
-      td {
-        @apply border border-border p-2;
-      }
+      @apply my-9 w-full border-collapse text-[0.9375rem] leading-[1.55];
 
       th {
-        @apply py-1.5;
+        @apply border-b border-foreground/60 pt-0 pr-5 pb-2.5 pl-0 text-left align-bottom label-caps text-foreground/75 last:pr-0;
+      }
+
+      td {
+        @apply border-b border-border py-3 pr-5 pl-0 align-top last:pr-0;
       }
 
       code {
         @apply break-all sm:break-normal;
+      }
+
+      @media (width < 40rem) {
+        thead {
+          @apply sr-only;
+        }
+
+        tbody,
+        tr,
+        td {
+          @apply block;
+        }
+
+        tbody {
+          @apply border-t border-foreground/60;
+        }
+
+        tr {
+          @apply border-b border-border py-4;
+        }
+
+        td {
+          @apply border-0 p-0;
+        }
+
+        td + td {
+          @apply mt-3;
+        }
+
+        td + td[data-label]::before {
+          content: attr(data-label);
+          @apply mb-0.5 block label-caps text-foreground/75;
+        }
       }
     }
 
@@ -104,6 +195,48 @@
     pre {
       @apply focus-visible:border-transparent focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-dashed;
     }
+  }
+
+  /* The dark theme takes an image's white down to the text colour, so a
+     screenshot is never the brightest thing on the page. The full-size view
+     shows it as it was saved. */
+  html[data-theme="dark"] .app-prose img {
+    filter: brightness(0.88);
+  }
+
+  .image-zoom {
+    @apply m-0 h-dvh max-h-none w-screen max-w-none bg-background p-0 text-foreground;
+
+    &[open] {
+      animation: image-zoom-in var(--default-transition-duration)
+        var(--default-transition-timing-function);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      &[open] {
+        animation: none;
+      }
+    }
+  }
+
+  .image-zoom-pan {
+    @apply flex size-full cursor-zoom-out overflow-auto p-4 pt-16;
+
+    img {
+      /* Auto margins centre an image smaller than the screen and let a
+         larger one start at its top left, where it can be panned. */
+      @apply m-auto max-w-none flex-none cursor-default rounded-md border border-border;
+    }
+  }
+
+  @keyframes image-zoom-in {
+    from {
+      opacity: 0;
+    }
+  }
+
+  html:has(.image-zoom[open]) {
+    overflow: hidden;
   }
 
   .astro-code {

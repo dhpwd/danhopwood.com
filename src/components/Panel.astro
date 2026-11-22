@@ -1,0 +1,22 @@
+---
+// A bordered card under a mono label. `strong` draws the border and the
+// label in the text colour, for the card the reader should end on.
+type Props = {
+  label: string;
+  strong?: boolean;
+};
+
+const { label, strong = false } = Astro.props;
+---
+
+<div
+  class:list={[
+    "flex min-w-0 flex-col gap-2 rounded-md border px-5 py-[1.125rem]",
+    strong ? "border-foreground/60" : "border-border",
+  ]}
+>
+  <h3 class:list={["label-caps", { "text-foreground/75": !strong }]}>
+    {label}
+  </h3>
+  <slot />
+</div>

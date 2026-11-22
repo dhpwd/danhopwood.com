@@ -1,35 +1,43 @@
 ---
-import IconHash from "@/assets/icons/IconHash.svg";
-
 type Props = {
   tag: string;
   tagName: string;
-  size?: "sm" | "lg";
+  // "row" is a line of the tags page, with the tag's post count at its end
+  variant?: "inline" | "row";
+  count?: number;
 };
 
-const { tag, tagName, size = "lg" } = Astro.props;
+const { tag, tagName, variant = "inline", count } = Astro.props;
 ---
 
-<li>
-  <a
-    href={`/tags/${tag}/`}
-    transition:name={tag}
-    class:list={[
-      "flex items-center gap-0.5",
-      "border-b-2 border-dashed border-foreground/40",
-      "interactive hover:border-accent active:border-accent-strong",
-      "focus-visible:border-transparent focus-visible:text-accent",
-      { "text-sm": size === "sm" },
-      { "text-lg": size === "lg" },
-    ]}
-  >
-    <IconHash
-      class:list={[
-        "opacity-80",
-        { "size-5": size === "lg" },
-        { "size-4": size === "sm" },
-      ]}
-    />
-    {tagName}
-  </a>
-</li>
+{
+  variant === "row" ? (
+    <li class="border-b border-border">
+      <a
+        href={`/tags/${tag}`}
+        class="group flex items-baseline justify-between gap-4 py-3 interactive"
+      >
+        <span
+          transition:name={tag}
+          class="underline decoration-dashed underline-offset-4 group-focus-visible:no-underline"
+        >
+          {tagName}
+        </span>
+        <span class="meta transition-colors group-hover:text-accent group-active:text-accent-strong">
+          {count}
+          <span class="sr-only">{count === 1 ? " post" : " posts"}</span>
+        </span>
+      </a>
+    </li>
+  ) : (
+    <li>
+      <a
+        href={`/tags/${tag}`}
+        transition:name={tag}
+        class="inline-block py-1 interactive underline decoration-dashed underline-offset-4"
+      >
+        {tagName}
+      </a>
+    </li>
+  )
+}

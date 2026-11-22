@@ -6,18 +6,29 @@ import Tag from "@/components/Tag.astro";
 import Header from "@/components/Header.astro";
 import Footer from "@/components/Footer.astro";
 import getUniqueTags from "@/utils/getUniqueTags";
+import getPostsByTag from "@/utils/getPostsByTag";
 import { SITE } from "@/config";
 
 const posts = await getCollection("blog");
 
-let tags = getUniqueTags(posts);
+const tags = getUniqueTags(posts).map(tag => ({
+  ...tag,
+  count: getPostsByTag(posts, tag.tag).length,
+}));
 ---
 
 <Layout title={`Tags | ${SITE.title}`}>
   <Header />
-  <Main pageTitle="Tags" pageDesc="All the tags used in posts.">
-    <ul class="flex flex-wrap gap-6">
-      {tags.map(({ tag, tagName }) => <Tag {tag} {tagName} />)}
+  <Main
+    pageTitle="Tags"
+    eyebrow={`${tags.length} ${tags.length === 1 ? "tag" : "tags"}`}
+  >
+    <ul class="grid grid-cols-1 gap-x-8 border-t border-border sm:grid-cols-2">
+      {
+        tags.map(({ tag, tagName, count }) => (
+          <Tag {tag} {tagName} {count} variant="row" />
+        ))
+      }
     </ul>
   </Main>
   <Footer />

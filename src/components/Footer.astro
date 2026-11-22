@@ -24,27 +24,28 @@ const {
 >
   <div
     class:list={[
-      "py-6 sm:py-4",
+      "py-5 text-[0.9375rem]",
       "border-t border-border",
-      "flex flex-col items-center justify-between sm:flex-row-reverse",
+      "flex flex-col gap-x-8 gap-y-1 sm:flex-row sm:items-center sm:justify-between",
     ]}
   >
-    <Socials />
     {
       stealThisPost ? (
         <a
           href="https://github.com/dhpwd/danhopwood.com"
           target="_blank"
           rel="noopener noreferrer"
-          class="my-2 interactive"
+          class="py-2 interactive text-foreground/75 sm:py-1"
         >
           Steal this post → CC BY 4.0 · Code MIT
         </a>
       ) : (
-        <span class="my-2">
-          &#169; {currentYear} {SITE.author}
+        <span class="py-2 text-foreground/75 sm:py-1">
+          &#169; {currentYear}
+          {SITE.author}
         </span>
       )
     }
+    <Socials />
   </div>
 </footer>

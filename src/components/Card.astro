@@ -6,31 +6,43 @@ import { calculateReadingTime } from "@/utils/readingTime";
 import Datetime from "./Datetime.astro";
 
 type Props = {
-  variant?: "h2" | "h3";
+  variant?: "h2" | "h3" | "h4";
+  // The date sits in the ledger's label column from 640px. Without it the
+  // date is a line above the title, for a list that already has a label.
+  aside?: boolean;
 } & CollectionEntry<"blog">;
 
-const { variant: Heading = "h2", id, body, data, filePath } = Astro.props;
+const {
+  variant: Heading = "h2",
+  aside = false,
+  id,
+  body,
+  data,
+  filePath,
+} = Astro.props;
 
 const { title, description, ...props } = data;
 const readingTime = body ? calculateReadingTime(body) : undefined;
 ---
 
-<li class="my-8">
-  <a
-    href={getPath(id, filePath)}
-    class:list={[
-      "inline-block interactive text-foreground",
-      "decoration-dashed underline-offset-4 hover:underline",
-      "focus-visible:no-underline focus-visible:underline-offset-0",
-    ]}
-  >
-    <Heading
-      class="title-item"
-      style={{ viewTransitionName: slugifyStr(title.replaceAll(".", "-")) }}
+<li class={aside ? "ledger" : "flex flex-col gap-1.5"}>
+  <Datetime {...props} {readingTime} stack={aside} />
+  <div class="min-w-0">
+    <a
+      href={getPath(id, filePath)}
+      class:list={[
+        "inline-block interactive text-foreground",
+        "decoration-dashed underline-offset-4 hover:underline",
+        "focus-visible:no-underline focus-visible:underline-offset-0",
+      ]}
     >
-      {title}
-    </Heading>
-  </a>
-  <Datetime {...props} {readingTime} class="mt-1" />
-  <p class="mt-2">{description}</p>
+      <Heading
+        class="title-item"
+        style={{ viewTransitionName: slugifyStr(title.replaceAll(".", "-")) }}
+      >
+        {title}
+      </Heading>
+    </a>
+    <p class="mt-1.5">{description}</p>
+  </div>
 </li>

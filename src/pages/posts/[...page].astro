@@ -20,9 +20,29 @@ const { page } = Astro.props;
 
 <Layout title={`Posts | ${SITE.title}`}>
   <Header />
-  <Main pageTitle="Posts" pageDesc="All the articles I've posted.">
-    <ul>
-      {page.data.map(data => <Card {...data} />)}
+  <Main
+    pageTitle="Posts"
+    eyebrow={`${page.total} ${page.total === 1 ? "post" : "posts"}`}
+  >
+    <p slot="intro" class="flex gap-x-5">
+      <a
+        href="/tags"
+        class="interactive underline decoration-dashed underline-offset-4"
+        >Tags</a
+      >
+      {
+        SITE.showArchives && (
+          <a
+            href="/archives"
+            class="interactive underline decoration-dashed underline-offset-4"
+          >
+            Archives
+          </a>
+        )
+      }
+    </p>
+    <ul class="flex flex-col gap-8">
+      {page.data.map(data => <Card aside {...data} />)}
     </ul>
   </Main>
 

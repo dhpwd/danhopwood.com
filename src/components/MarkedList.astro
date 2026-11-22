@@ -1,0 +1,23 @@
+---
+// A list with accent markers: bullets, or mono numerals when `ordered`.
+type Props = {
+  ordered?: boolean;
+};
+
+const { ordered = false } = Astro.props;
+
+const List = ordered ? "ol" : "ul";
+---
+
+<List
+  class:list={[
+    "flex flex-col gap-2.5 marker:text-accent",
+    ordered
+      ? // Three mono characters ("1. ") at the marker's 15px, so a numeral
+        // sits on the text's left edge and wrapped lines hang under the text
+        "list-decimal pl-[1.6875rem] marker:font-mono marker:text-[0.9375rem]"
+      : "list-disc pl-5",
+  ]}
+>
+  <slot />
+</List>

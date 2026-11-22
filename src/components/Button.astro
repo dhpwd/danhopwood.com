@@ -1,0 +1,21 @@
+---
+import type { HTMLAttributes } from "astro/types";
+
+// The one filled action. `inline` sizes it to sit on a row with a text field,
+// which stays at 16px on a touch screen – see "Fields stay at 16px on touch
+// screens" in docs/patterns/design-system.md
+type Props = { inline?: boolean } & HTMLAttributes<"button">;
+
+const { inline = false, class: className, ...attrs } = Astro.props;
+---
+
+<button
+  class:list={[
+    "interactive-fill rounded bg-accent px-4 py-2 font-medium text-background disabled:opacity-60",
+    inline ? "text-base sm:pointer-fine:text-sm" : "text-sm",
+    className,
+  ]}
+  {...attrs}
+>
+  <slot />
+</button>

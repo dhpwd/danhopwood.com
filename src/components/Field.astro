@@ -1,0 +1,52 @@
+---
+// A labelled text field, or a textarea when `rows` is set. The field's own
+// styles are the `field` utility – see "Form fields" in
+// docs/patterns/design-system.md
+type Props = {
+  id: string;
+  name: string;
+  label: string;
+  type?: "text" | "email";
+  rows?: number;
+  autocomplete?: string;
+  placeholder?: string;
+  required?: boolean;
+};
+
+const {
+  id,
+  name,
+  label,
+  type = "text",
+  rows,
+  autocomplete,
+  placeholder,
+  required = false,
+} = Astro.props;
+---
+
+<div class="flex flex-col gap-1.5">
+  <label for={id} class="font-mono text-sm">{label}</label>
+  {
+    rows ? (
+      <textarea
+        {id}
+        {name}
+        {rows}
+        {placeholder}
+        {required}
+        class="w-full field"
+      />
+    ) : (
+      <input
+        {id}
+        {type}
+        {name}
+        {autocomplete}
+        {placeholder}
+        {required}
+        class="w-full field"
+      />
+    )
+  }
+</div>

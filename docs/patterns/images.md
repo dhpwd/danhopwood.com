@@ -28,6 +28,14 @@ Alt text and caption do different jobs, so write both: alt describes the image f
 
 **When to use:** adding a caption to a post image.
 
+## Save screenshots at 2×
+
+**Problem:** a post image opens at full size on a click, a tap, Enter or Space (`ImageZoom.astro` – see "Figures" in `docs/patterns/post-page.md`). The dialog sizes the image on the rule that a screenshot is saved at twice its on-screen size: it shows the image at half its pixel width, so its text reads at the size it was captured, and never less than one and a half times what the page shows. A screenshot saved at 1× opens at no more than its own pixel width, so on a desktop its text gets little larger than on the page.
+
+**Solution:** save screenshots and diagrams at 2×, the default on a Retina or other high-density screen. The page itself shows the image at the column's width whatever its source size, since Astro generates the smaller widths in the `srcset`.
+
+**When to use:** adding a screenshot or diagram to a post.
+
 ## Favicons
 
 **Problem:** satori resolves no CSS custom properties, so the favicon generator cannot read the brand tokens and carries its own copy of their values.

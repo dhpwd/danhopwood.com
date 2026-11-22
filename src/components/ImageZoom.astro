@@ -1,0 +1,77 @@
+---
+// Opens a post's image at its full size in a dialog, where it can be panned.
+// Rendered once by PostDetails.astro – see "Figures" in
+// docs/patterns/post-page.md
+---
+
+<dialog id="image-zoom" class="image-zoom" aria-label="Image at full size">
+  <div class="image-zoom-pan">
+    <img alt="" />
+  </div>
+  <button
+    type="button"
+    class="fixed end-4 top-4 rounded border border-border bg-background px-3 py-2 label-caps interactive"
+    data-zoom-close
+  >
+    Close
+  </button>
+</dialog>
+
+<script>
+  // A screenshot is saved at twice the size it was on screen, so half its
+  // pixel width shows its text at the size it was captured. Never less than
+  // one and a half times what the page already shows.
+  function fullWidth(image: HTMLImageElement) {
+    const natural = Number(image.getAttribute("width")) || image.naturalWidth;
+    const shown = image.getBoundingClientRect().width;
+    return Math.round(Math.max(natural / 2, Math.min(natural, shown * 1.5)));
+  }
+
+  function initImageZoom() {
+    const dialog = document.querySelector<HTMLDialogElement>("#image-zoom");
+    if (!dialog || typeof dialog.showModal !== "function") return;
+
+    const pan = dialog.querySelector<HTMLElement>(".image-zoom-pan")!;
+    const large = pan.querySelector("img")!;
+
+    function open(image: HTMLImageElement) {
+      // Without this the previous image shows until the new file loads
+      large.removeAttribute("src");
+      large.src = image.src;
+      large.alt = image.alt;
+      large.style.width = `${fullWidth(image)}px`;
+      dialog!.showModal();
+      pan.scrollTo(0, 0);
+    }
+
+    document
+      .querySelectorAll<HTMLImageElement>("#article img")
+      .forEach(image => {
+        if (image.dataset.zoom) return;
+        image.dataset.zoom = "true";
+        image.tabIndex = 0;
+        image.setAttribute("role", "button");
+        image.addEventListener("click", () => open(image));
+        image.addEventListener("keydown", event => {
+          if (event.key !== "Enter" && event.key !== " ") return;
+          event.preventDefault();
+          open(image);
+        });
+      });
+
+    if (dialog.dataset.initialized) return;
+    dialog.dataset.initialized = "true";
+
+    // A click beside the image closes the dialog. One on the image doesn't,
+    // because a phone pans by dragging it.
+    pan.addEventListener("click", event => {
+      if (event.target === pan) dialog.close();
+    });
+    dialog
+      .querySelector("[data-zoom-close]")!
+      .addEventListener("click", () => dialog.close());
+  }
+
+  // See "Client scripts and View Transitions" in docs/patterns/astro-build.md
+  document.addEventListener("astro:page-load", initImageZoom);
+</script>

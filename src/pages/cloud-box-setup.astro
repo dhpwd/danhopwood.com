@@ -3,6 +3,14 @@ import { PUBLIC_WEB3FORMS_ACCESS_KEY } from "astro:env/client";
 import Layout from "@/layouts/Layout.astro";
 import Header from "@/components/Header.astro";
 import Footer from "@/components/Footer.astro";
+import PageIntro from "@/components/PageIntro.astro";
+import Section from "@/components/Section.astro";
+import Panel from "@/components/Panel.astro";
+import Detail from "@/components/Detail.astro";
+import MarkedList from "@/components/MarkedList.astro";
+import StatusChip from "@/components/StatusChip.astro";
+import Field from "@/components/Field.astro";
+import Button from "@/components/Button.astro";
 import { SITE } from "@/config";
 import { SOCIALS } from "@/constants";
 
@@ -13,7 +21,7 @@ const opening =
   "I'll set up an always-on server for you that runs Claude Code with your repos, skills and connectors on it. You start sessions and pick them up from the Claude app on your laptop or your phone.";
 
 // One row per place. Changing a place's status is a one-line edit here: the
-// table and its chip style both follow from it. The empty status marks the
+// table and its chip both follow from it. The empty status marks the
 // regular-price row.
 type Place = {
   place: string;
@@ -27,19 +35,6 @@ const places: Place[] = [
   { place: "Third", price: "£650", status: "Open" },
   { place: "After that", price: "£950", status: "" },
 ];
-
-const chipClass = {
-  Open: "border-foreground/60 text-foreground",
-  Held: "border-border bg-muted text-foreground/75",
-  Taken: "border-border bg-muted text-foreground/75",
-};
-
-const sectionClass = "flex flex-col gap-5 border-t border-border pt-8";
-const headingClass = "title-item";
-const labelClass = "label-caps";
-const listClass = "flex flex-col gap-2.5 pl-5 marker:text-accent";
-const inputClass =
-  "w-full rounded border border-foreground/60 bg-background px-3 py-2 text-base text-foreground placeholder:text-foreground/75 transition-[border-color,box-shadow] focus:border-foreground focus:ring-1 focus:ring-foreground focus:outline-hidden sm:pointer-fine:text-sm";
 ---
 
 <Layout title={`${heading} | ${SITE.title}`} description={opening}>
@@ -48,42 +43,30 @@ const inputClass =
     <div
       class="flex flex-col gap-10 pt-9 pb-12 text-[1.0625rem] leading-[1.6] sm:gap-12 sm:pt-14 sm:pb-16"
     >
-      <div class="flex flex-col gap-5">
-        <p class="eyebrow">Done-for-you setup</p>
-        <h1 class="title-page">
-          {heading}
-        </h1>
-        <p class="max-w-[38rem] text-[1.1875rem] leading-[1.55]">{opening}</p>
-      </div>
+      <PageIntro eyebrow="Done-for-you setup" title={heading}>
+        {opening}
+      </PageIntro>
 
-      <section aria-labelledby="shift-h" class={sectionClass}>
-        <h2 id="shift-h" class={headingClass}>What changes</h2>
+      <Section id="shift" title="What changes">
         <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
-          <div
-            class="flex min-w-0 flex-col gap-2 rounded-md border border-border px-5 py-[1.125rem]"
-          >
-            <h3 class:list={[labelClass, "text-foreground/75"]}>Today</h3>
+          <Panel label="Today">
             <p>
               Your agents only run while your laptop is open and online. Close
               the lid part-way through a long job and the job stops.
             </p>
-          </div>
-          <div
-            class="flex min-w-0 flex-col gap-2 rounded-md border border-foreground/60 px-5 py-[1.125rem]"
-          >
-            <h3 class={labelClass}>After</h3>
+          </Panel>
+          <Panel label="After" strong>
             <p>
               The work runs on a server that never sleeps. Close the lid, get on
               a train, open the Claude app on your phone and carry on in the
               same session.
             </p>
-          </div>
+          </Panel>
         </div>
-      </section>
+      </Section>
 
-      <section aria-labelledby="get-h" class={sectionClass}>
-        <h2 id="get-h" class={headingClass}>What you get</h2>
-        <ul class:list={[listClass, "list-disc"]}>
+      <Section id="get" title="What you get">
+        <MarkedList>
           <li>
             A server in your own account, running Claude Code all the time on
             your own Claude subscription
@@ -106,17 +89,11 @@ const inputClass =
             A 45-minute handover call where we get it running from your phone
           </li>
           <li>14 days of fixes after the call</li>
-        </ul>
-      </section>
+        </MarkedList>
+      </Section>
 
-      <section aria-labelledby="how-h" class={sectionClass}>
-        <h2 id="how-h" class={headingClass}>How it works</h2>
-        <ol
-          class:list={[
-            listClass,
-            "list-decimal marker:font-mono marker:text-[0.9375rem]",
-          ]}
-        >
+      <Section id="how" title="How it works">
+        <MarkedList ordered>
           <li>
             <strong class="font-semibold">You order the server.</strong> It takes
             about 10 minutes with the steps I send you. It goes in your own account
@@ -136,12 +113,11 @@ const inputClass =
             <strong class="font-semibold">I remove my access.</strong> The server
             and every account it uses are yours, and nothing about it depends on me
           </li>
-        </ol>
-      </section>
+        </MarkedList>
+      </Section>
 
-      <section aria-labelledby="why-h" class={sectionClass}>
-        <h2 id="why-h" class={headingClass}>Why a server</h2>
-        <ul class:list={[listClass, "list-disc"]}>
+      <Section id="why" title="Why a server">
+        <MarkedList>
           <li>
             <strong class="font-semibold">A keep-awake app</strong> works while the
             laptop sits on your desk. Once it goes in a bag there's no wifi, and the
@@ -156,11 +132,10 @@ const inputClass =
             a copy of one GitHub repo. They don't have your connectors, your other
             repos or anything else from your own setup
           </li>
-        </ul>
-      </section>
+        </MarkedList>
+      </Section>
 
-      <section aria-labelledby="price-h" class={sectionClass}>
-        <h2 id="price-h" class={headingClass}>Price</h2>
+      <Section id="price" title="Price">
         <p>
           The price is one-off, plus VAT. The first three places are at a
           founding price, because you'd be among the first people I've set this
@@ -173,10 +148,7 @@ const inputClass =
                 ["Place", "Price", "Status"].map(column => (
                   <th
                     scope="col"
-                    class:list={[
-                      labelClass,
-                      "border-b border-border py-3 pr-2 text-left text-foreground/75 last:pr-0 last:text-right",
-                    ]}
+                    class="border-b border-border py-3 pr-2 text-left label-caps text-foreground/75 last:pr-0 last:text-right"
                   >
                     {column}
                   </th>
@@ -200,16 +172,7 @@ const inputClass =
                     {price}
                   </td>
                   <td class="border-b border-border py-3 text-right">
-                    {status && (
-                      <span
-                        class:list={[
-                          "inline-block rounded-full border px-2 py-[0.1875rem] font-mono text-xs tracking-[0.04em] uppercase",
-                          chipClass[status],
-                        ]}
-                      >
-                        {status}
-                      </span>
-                    )}
+                    {status && <StatusChip {status} />}
                   </td>
                 </tr>
               ))
@@ -217,58 +180,45 @@ const inputClass =
           </tbody>
         </table>
         <div class="grid grid-cols-1 gap-x-8 gap-y-6 sm:grid-cols-2">
-          <div class="flex min-w-0 flex-col gap-1.5">
-            <h3 class:list={[labelClass, "text-foreground/75"]}>Timing</h3>
+          <Detail label="Timing">
             <p>I'll offer you a call within a week of payment.</p>
-          </div>
-          <div class="flex min-w-0 flex-col gap-1.5">
-            <h3 class:list={[labelClass, "text-foreground/75"]}>
-              Holding a place
-            </h3>
+          </Detail>
+          <Detail label="Holding a place">
             <p>
               A yes holds your place for 48 hours from when I send the invoice.
               Work starts once it's paid.
             </p>
-          </div>
-          <div class="flex min-w-0 flex-col gap-1.5">
-            <h3 class:list={[labelClass, "text-foreground/75"]}>Guarantee</h3>
+          </Detail>
+          <Detail label="Guarantee">
             <p>
               If you can't operate Claude Code from your phone with your laptop
               shut once we're done, I refund you in full.
             </p>
-          </div>
-          <div class="flex min-w-0 flex-col gap-1.5">
-            <h3 class:list={[labelClass, "text-foreground/75"]}>
-              Running costs
-            </h3>
+          </Detail>
+          <Detail label="Running costs">
             <p>
               You pay for the server, about €31 a month on a one-month contract,
               and for your Claude plan, both direct.
             </p>
-          </div>
+          </Detail>
         </div>
-      </section>
+      </Section>
 
-      <section aria-labelledby="need-h" class={sectionClass}>
-        <h2 id="need-h" class={headingClass}>What you need</h2>
-        <ul class:list={[listClass, "list-disc"]}>
+      <Section id="need" title="What you need">
+        <MarkedList>
           <li>A paid Claude plan</li>
           <li>Your work in GitHub</li>
           <li>The Claude app on your phone</li>
-        </ul>
+        </MarkedList>
         <p class="text-[0.9375rem] text-foreground/75">
           The fixed price covers up to 10 repos and 5 connectors that use their
           own API keys. It doesn't cover maintenance after the 14 days, or
           designing and building agents, skills or loops. That's separate work,
           so ask me if you want it.
         </p>
-      </section>
+      </Section>
 
-      <section
-        aria-labelledby="cta-h"
-        class="flex flex-col gap-1.5 rounded-md border border-border px-[1.375rem] py-5"
-      >
-        <h2 id="cta-h" class={headingClass}>Get it set up</h2>
+      <Section id="cta" title="Get it set up" framed>
         <p>
           Tell me what you'd want running on it and I'll email you back to see
           if it fits.
@@ -301,51 +251,35 @@ const inputClass =
             tabindex="-1"
             autocomplete="off"
           />
-          <div class="flex flex-col gap-1.5">
-            <label for="setup-name" class="font-mono text-sm">Name</label>
-            <input
-              id="setup-name"
-              type="text"
-              name="name"
-              autocomplete="name"
-              required
-              class={inputClass}
-            />
-          </div>
-          <div class="flex flex-col gap-1.5">
-            <label for="setup-email" class="font-mono text-sm">Email</label>
-            <input
-              id="setup-email"
-              type="email"
-              name="email"
-              autocomplete="email"
-              required
-              class={inputClass}
-            />
-          </div>
-          <div class="flex flex-col gap-1.5">
-            <label for="setup-message" class="font-mono text-sm"
-              >What you'd want running on it</label
-            >
-            <textarea
-              id="setup-message"
-              name="message"
-              rows="4"
-              placeholder="e.g. 4 repos, Linear and Slack connectors, agents that review PRs while I'm away"
-              required
-              class={inputClass}></textarea>
-          </div>
+          <Field
+            id="setup-name"
+            name="name"
+            label="Name"
+            autocomplete="name"
+            required
+          />
+          <Field
+            id="setup-email"
+            name="email"
+            label="Email"
+            type="email"
+            autocomplete="email"
+            required
+          />
+          <Field
+            id="setup-message"
+            name="message"
+            label="What you'd want running on it"
+            rows={4}
+            placeholder="e.g. 4 repos, Linear and Slack connectors, agents that review PRs while I'm away"
+            required
+          />
           <div class="flex flex-col items-start gap-2">
-            <button
-              type="submit"
-              class="interactive-fill rounded bg-accent px-4 py-2 text-sm font-medium text-background disabled:opacity-60"
-            >
-              Request setup
-            </button>
+            <Button type="submit">Request setup</Button>
             <p class="text-sm" role="status" data-setup-status></p>
           </div>
         </form>
-      </section>
+      </Section>
 
       <p
         class="border-t border-border pt-6 text-[0.9375rem] text-foreground/75"

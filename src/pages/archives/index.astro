@@ -32,7 +32,10 @@ const months = [
 
 <Layout title={`Archives | ${SITE.title}`}>
   <Header />
-  <Main pageTitle="Archives" pageDesc="All the articles I've archived.">
+  <Main
+    pageTitle="Archives"
+    eyebrow={`${posts.length} ${posts.length === 1 ? "post" : "posts"}`}
+  >
     {
       Object.entries(
         getPostsByGroupCondition(posts, post =>
@@ -41,9 +44,11 @@ const months = [
       )
         .sort(([yearA], [yearB]) => Number(yearB) - Number(yearA))
         .map(([year, yearGroup]) => (
-          <div>
-            <span class="text-2xl font-bold">{year}</span>
-            <sup class="text-sm">{yearGroup.length}</sup>
+          <section class="mb-10">
+            <h2 class="flex items-baseline gap-2 pb-4 title-item">
+              {year}
+              <span class="meta font-normal">{yearGroup.length}</span>
+            </h2>
             {Object.entries(
               getPostsByGroupCondition(
                 yearGroup,
@@ -52,12 +57,11 @@ const months = [
             )
               .sort(([monthA], [monthB]) => Number(monthB) - Number(monthA))
               .map(([month, monthGroup]) => (
-                <div class="flex flex-col sm:flex-row">
-                  <div class="mt-6 min-w-36 text-lg sm:my-6">
-                    <span class="font-bold">{months[Number(month) - 1]}</span>
-                    <sup class="text-xs">{monthGroup.length}</sup>
-                  </div>
-                  <ul>
+                <div class="ledger border-t border-border py-6">
+                  <h3 class="label-caps text-foreground/75">
+                    {months[Number(month) - 1]}
+                  </h3>
+                  <ul class="flex flex-col gap-7">
                     {monthGroup
                       .sort(
                         (a, b) =>
@@ -69,12 +73,12 @@ const months = [
                           )
                       )
                       .map(data => (
-                        <Card {...data} />
+                        <Card variant="h4" {...data} />
                       ))}
                   </ul>
                 </div>
               ))}
-          </div>
+          </section>
         ))
     }
   </Main>

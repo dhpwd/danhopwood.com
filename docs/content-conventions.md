@@ -4,7 +4,7 @@ Posts are markdown files in `src/data/blog/`, loaded by the glob `**/[^_]*.md`. 
 
 The underscore only works on filenames. `[^_]` tests that segment alone, so a `_drafts/` directory is still walked and every post inside it publishes – with the underscore stripped from the URL, so `_drafts/my-post.md` lands at `/posts/my-post`. Prefix the filename, or set `draft: true`.
 
-The homepage is the post list. There is no splash page, no hero and no "blog" label.
+The homepage opens on one first screen – the headline, the portrait, the newsletter signup and the advisory row – with the post lists directly below it. There is no splash page and no "blog" label.
 
 ## Frontmatter
 
@@ -14,6 +14,7 @@ The homepage is the post list. There is no splash page, no hero and no "blog" la
 - `draft: true` keeps a post out of the build. A future `pubDatetime` does the same until it passes, with a 15-minute margin (`SITE.scheduledPostMargin`)
 - `modDatetime` feeds more than the post header. `getSortedPosts` sorts on `modDatetime ?? pubDatetime`, so it sets position on the homepage, the listings, RSS and `llms.txt`, and `rss.xml.ts` uses it as the item's `pubDate`. Setting it on an old post moves that post back to the top and re-notifies feed readers. It also drives the sitemap's `<lastmod>` – see `docs/patterns/machine-readability.md`. Set it only when a published post changes materially
 - `tags` defaults to `["others"]`
+- `featured: true` puts a post in the homepage's Featured row and takes it out of Recent posts. `featuredOrder` (a whole number from 1) sets its place in that row, lowest first. Featured posts without one follow, newest first by `modDatetime ?? pubDatetime`. Reordering needs no date edit, so it doesn't re-notify feed readers
 - `hideEditPost` suppresses the "Edit on GitHub" link on a single post
 
 ## Conventions

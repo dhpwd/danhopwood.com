@@ -73,13 +73,97 @@ Rejected: a solid accent selection. With `bg-accent/75` and `text-background` it
 
 Rejected: warming the code ground, which needs `!important` over shiki's inline styles.
 
+## The homepage's first screen
+
+A mono accent line, the headline, the rest of its sentence and a short paragraph, with the portrait beside them as a rounded tile. Below a rule, Build Notes and advisory sit as two ledger rows. At 390 the portrait is a small tile on a row with the mono line, and the headline, the signup and the advisory line fit one screen. The post lists follow.
+
+Rejected: a type-led composition with the portrait as a byline and the boxed signup, which at 1440 ends the first screen on the "Featured" label with no post in view.
+
+## The homepage's headline is its h1
+
+"Building Fidero entirely with AI agents" is the page's only `h1`, with the rest of the sentence directly under it, so the two read as one.
+
+Rejected: a visually hidden name as the `h1`, which leaves the page's largest line outside the heading outline.
+
+## One layout for every labelled list: the ledger
+
+A mono label in an 8.5rem left column with its content beside it, and above it on a phone. The homepage's rows, the post lists, the archive's months and the rows after a post all use it. On a post list the date sits in the label column. Everywhere else the date is a line above the title, as on the post page.
+
+Rejected:
+
+- Sections under label headings at the full column, which leaves a description at about 92 characters a line
+- Restyling each page's list on its own
+- The date under the title
+
+## Every title block is a mono accent line, then the title
+
+On a list page the line holds its count or label ("n posts", "Tag · n posts", "n tags", "404"), and on a post its date. Counts are data and labels, so they need no copy. The homepage's line is its tagline. There is no breadcrumb and no stock description line under the title.
+
+Rejected: a breadcrumb, which is a second kind of mono line above a title on a site two levels deep.
+
+## The header is three words and the theme toggle
+
+Posts, About and Search, then the toggle. Tags and Archives are reached from the Posts page, and Posts is the active item on both. On a phone the links sit behind a mono "Menu" button as a plain list. A new destination joins the `NAV` list in `Header.astro`, whose `sections` say which paths make it the active item.
+
+Rejected:
+
+- Five destinations in the header, and icons for them. As words they read as a blog theme's navigation and leave no room for another at 390
+- A second header row of links on a phone, which takes about 44px from the homepage's first screen
+
+## Icon rows are dashed text links
+
+The share row, the footer's links and a post's tags are words with the dashed underline.
+
+Rejected: icon rows, which are the theme's.
+
+## The RSS link sits in the footer's row
+
+Last, after the profile links, so it is on every page.
+
+Rejected: under the Posts title, which reaches one page.
+
+## Body text is 17px on a 28px line and a 38rem measure
+
+About 68 characters a line at 1440. Figures, tables and code keep the full column.
+
+Rejected: a larger size at the full column, since 18px still runs to about 82 characters.
+
+## Numerals sit on the text's left edge
+
+A numbered list's numerals line up with the left edge of the paragraphs above, and wrapped lines hang under the item's text, in posts and on the page parts alike.
+
+Rejected: the prose plugin's indent, which set the numerals 16px in from the paragraphs, and numerals hanging outside the column, which on a phone sit against the screen's gutter.
+
+## A narrow image sits on the left edge, with its caption inside its width
+
+An image narrower than the column shows at its own width on the column's left edge, and its caption wraps within the image's width.
+
+Rejected: centring the image, which leaves a left-aligned caption overhanging it on both sides, and centring the caption with it, which breaks the left edge every other block in a post keeps.
+
+## A table's rows become labelled blocks on a phone
+
+Below 640px each row is a block, and each cell after the first carries its column heading as a mono label. The labels are set at build, so they are there before any script runs.
+
+Rejected: sideways scroll inside the table, which hides a prose table's first column.
+
+## The dark theme dims a post's images
+
+`filter: brightness(0.88)`, which brings an image's white down to about the text colour. The full-size view shows the image as it was saved.
+
+Rejected: no filter, which leaves a white screenshot as the brightest thing on the page.
+
 ## Motion answers the visitor
 
 Motion runs only in response to something the visitor does, lasts 400ms or less, is hand-rolled rather than a library and is removed under `prefers-reduced-motion: reduce`.
 
 ## Small details are a closed set
 
-The site carries one or two small details that answer the visitor, for the whole site rather than per page. The set is empty today. A detail joins it by an entry here, with what it answers.
+The site carries two small details that answer the visitor, for the whole site rather than per page. The set is filled. Later work adds a detail only by replacing a member, with an entry here.
+
+1. Selected text, search matches and the phone's tap flash share the accent tint
+2. A post's image opens at full size on a click, a tap, Enter or Space. Rejected: a link to the image file, which leaves the site, and a sideways-scrolling figure, which loses the overview
+
+The reading progress bar, the theme toggle's icon morph and the copy button's "Copied" label predate the set and sit outside it.
 
 ## Not adopted
 

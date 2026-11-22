@@ -20,7 +20,7 @@
 
 **Problem:** Astro bundles `<script>` blocks in `.astro` components as module scripts, which run once per full page load. With View Transitions (`<ClientRouter />` in `Layout.astro`), navigating swaps the DOM without re-running them, so listeners are never attached to the new nodes. The page looks correct and the handler never fires again.
 
-**Solution:** attach listeners inside `document.addEventListener("astro:page-load", init)`. The module script registers that listener once and the event fires on every navigation, including the first load. Guard elements with a `data-initialized` attribute so a node that survives the swap isn't bound twice. `NewsletterSignup.astro` is the worked example.
+**Solution:** attach listeners inside `document.addEventListener("astro:page-load", init)`. The module script registers that listener once and the event fires on every navigation, including the first load. Guard elements with a `data-initialized` attribute so a node that survives the swap isn't bound twice. `NewsletterSignup.astro` is the worked example. `ImageZoom.astro` is a second: on each page load it binds every new `#article img`, marking each with `data-zoom`, and binds the dialog's own listener once, behind `data-initialized`.
 
 **Anti-pattern for new work:** `is:inline data-astro-rerun`. It does re-run the script, at the cost of TypeScript, import resolution and deduplication. `PostDetails.astro` and `BackToTopButton.astro` both take that route, so expect to find it in the tree – prefer `astro:page-load` for anything new, and keep inline scripts for pre-paint state such as the theme flash guard in `Layout.astro`.
 
@@ -52,6 +52,10 @@ Where the form's spec puts focus on the submit button after every submit, call `
 - `<ClientRouter />` saves the scroll position with `history.replaceState`, which fires Playwright's `framenavigated` on the same URL. To assert that a submit didn't navigate, count navigation requests (`request.isNavigationRequest()`) or check a `window` marker survives, not `framenavigated`
 - Submit forms by clicking the button as well as pressing Enter in a field. Only the click leaves focus on the button, so a bug in how the handler treats focus shows on that route alone
 - `locator.boundingBox()` is relative to the viewport, and a click can scroll the page. To assert an element didn't move, compare `getBoundingClientRect().top + scrollY`
+- A control's state changes over the shared 150ms, so a computed style read straight after `focus()` or `hover()` is the start of the transition – a field's focus ring reads as transparent. Wait past the duration before reading
+- A full-page screenshot clipped to an element far below the viewport can show a post image as an empty box, even after it has loaded. Scroll the element into view and `await img.decode()` before the screenshot. Post images are `loading="lazy"`, so set them eager first
+- `textContent` runs a link's flex items together ("ai17 posts"). Read what a screen reader announces from `locator.ariaSnapshot()`, which separates them
+- To compare an element pixel for pixel across two builds, hide the site header on both. A change in the header's height moves everything below it by a fraction of a pixel, which changes its anti-aliasing and reads as a difference
 - Node's `AbortSignal.timeout` timer doesn't keep the event loop alive. A stubbed `fetch` that hangs until aborted needs its own pending timer, or the test script exits before the timeout fires
 
 Run Playwright against `pnpm build && pnpm preview`, stub `api/` routes with `page.route` (preview doesn't serve them), and test a function by calling its default export's `fetch` from a Node script with a stubbed global `fetch`.
@@ -63,6 +67,8 @@ Run Playwright against `pnpm build && pnpm preview`, stub `api/` routes with `pa
 **Problem:** a markdown plugin that rewrites images can cost them Astro's build-time optimisation, with nothing in the build output to say so. Astro collects local image paths in `remarkCollectImages` and marks the `<img>` elements in `rehypeImages`, both of which run after the plugins configured in `markdown.remarkPlugins` and `markdown.rehypePlugins`. A plugin that replaces an image with raw HTML leaves those passes nothing to find, and the image is then served unprocessed. The ordering lives in `@astrojs/markdown-remark`'s processor rather than the public docs, so read the package to confirm it.
 
 **Solution:** leave the mdast `image` node itself alone and change the structure around it. Set `data.hName` on the surrounding nodes to control the rendered tags instead of emitting raw HTML. `src/utils/remarkFigureCaptions.ts` wraps a captioned image in a `<figure>` this way, and its images still come out with WebP conversion, a responsive `srcset` and explicit dimensions.
+
+`src/utils/rehypeTableLabels.ts`, in `markdown.rehypePlugins`, sets attributes on table elements and changes nothing else, so it needs no such care – see "Tables" in `docs/patterns/post-page.md`. It types the few hast fields it reads in the file, since `@types/hast` isn't a dependency.
 
 **When to use:** writing or changing a markdown plugin that restructures images.
 

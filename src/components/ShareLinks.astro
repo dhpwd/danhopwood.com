@@ -1,6 +1,5 @@
 ---
 import { SHARE_LINKS } from "@/constants";
-import LinkButton from "./LinkButton.astro";
 
 interface Props {
   title?: string;
@@ -12,23 +11,24 @@ const pageUrl = Astro.url.href;
 
 {
   SHARE_LINKS.length > 0 && (
-    <div class="flex flex-none flex-col items-center justify-center gap-1 md:items-start">
-      <span>Share this post on:</span>
-      <div class="text-center md:-ml-2">
+    <div class="ledger border-t border-border py-5">
+      <h2 class="label-caps text-foreground/75">Share</h2>
+      <ul class="flex flex-wrap gap-x-5 gap-y-1">
         {SHARE_LINKS.map(social => (
-          <LinkButton
-            href={social.buildHref(pageUrl, title)}
-            class="p-3 sm:p-2"
-            title={social.linkTitle}
-            target="_blank"
-            rel="noopener noreferrer"
-            data-share={social.name}
-          >
-            <social.icon class="inline-block size-8 fill-transparent stroke-current stroke-2 sm:size-6" />
-            <span class="sr-only">{social.linkTitle}</span>
-          </LinkButton>
+          <li>
+            <a
+              href={social.buildHref(pageUrl, title)}
+              class="inline-block py-1 interactive underline decoration-dashed underline-offset-4"
+              title={social.linkTitle}
+              target="_blank"
+              rel="noopener noreferrer"
+              data-share={social.name}
+            >
+              {social.label ?? social.name}
+            </a>
+          </li>
         ))}
-      </div>
+      </ul>
     </div>
   )
 }
