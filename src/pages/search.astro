@@ -26,6 +26,19 @@ import { SITE } from "@/config";
   let held: Restore | null = null;
   let observer: MutationObserver | undefined;
 
+  // The search root whose page is current. On a Back or Forward the browser
+  // moves location and history.state to the entry being moved to before
+  // astro:before-preparation, while the old root stays in the page until
+  // the swap, so live is cleared there. A link moves the URL only at the
+  // swap, where initSearch replaces live. Every write to the history entry
+  // but the skip listener's put-back names the root it came from and is
+  // dropped unless that root is live.
+  let live: HTMLElement | null = null;
+
+  function replaceEntry(root: Element | null, state: unknown, url?: string) {
+    if (root && root === live) history.replaceState(state, "", url);
+  }
+
   function savedRestore(): Restore | null {
     const { scrollY: y = 0, searchShown: shown = 0 } = history.state ?? {};
     return y > 0 || shown > 0 ? { y, shown } : null;
@@ -34,6 +47,7 @@ import { SITE } from "@/config";
   function cancelRestore() {
     pending = null;
     observer?.disconnect();
+    observer = undefined;
   }
 
   function restoreWhenLoaded(root: HTMLElement) {
@@ -65,27 +79,28 @@ import { SITE } from "@/config";
   // when the visitor types a new search, which starts again at one page.
   // triggerSearch fills the field without an input event.
   document.addEventListener("input", event => {
+    const target = event.target as Element;
     if (
       history.state?.searchShown &&
-      (event.target as Element).matches(
-        "#pagefind-search .pagefind-ui__search-input"
-      )
+      target.matches("#pagefind-search .pagefind-ui__search-input")
     )
-      history.replaceState({ ...history.state, searchShown: 0 }, "");
+      replaceEntry(target.closest("#pagefind-search"), {
+        ...history.state,
+        searchShown: 0,
+      });
   });
 
   document.addEventListener("click", event => {
-    if (
-      !(event.target as Element).closest?.(
-        "#pagefind-search .pagefind-ui__button"
-      )
-    )
-      return;
+    const button = (event.target as Element).closest?.(
+      "#pagefind-search .pagefind-ui__button"
+    );
+    if (!button) return;
+    const root = button.closest("#pagefind-search");
     requestAnimationFrame(() => {
       const shown = document.querySelectorAll(
         "#pagefind-search .pagefind-ui__result"
       ).length;
-      history.replaceState({ ...history.state, searchShown: shown }, "");
+      replaceEntry(root, { ...history.state, searchShown: shown });
     });
   });
 
@@ -100,7 +115,7 @@ import { SITE } from "@/config";
       const link = (event.target as Element).closest?.('a[href^="#"]');
       if (
         !(link instanceof HTMLAnchorElement) ||
-        !document.querySelector("#pagefind-search") ||
+        !live ||
         event.button !== 0 ||
         event.metaKey ||
         event.ctrlKey ||
@@ -111,18 +126,23 @@ import { SITE } from "@/config";
       event.preventDefault();
       const { state } = history;
       location.replace(link.href);
-      // A fragment navigation leaves the entry with no state.
+      // A fragment navigation leaves the entry with no state. Put it back
+      // directly, not through replaceEntry: this is the entry's own state,
+      // and the router ignores a popstate to an entry with null state.
       if (!history.state) history.replaceState(state, "");
     },
     { capture: true }
   );
 
-  // Read the saved position as a Back or Forward to /search starts, and
-  // apply it at the swap, which also ends a restore still waiting on the
-  // page being left.
+  // On a Back or Forward, drop this page's root here, since anything it did
+  // now would land on the entry being moved to. End any restore still
+  // waiting on the page being left. Read the saved position as a Back or
+  // Forward to /search starts, and apply it at the swap.
   document.addEventListener(
     "astro:before-preparation",
     ({ navigationType, to }) => {
+      if (navigationType === "traverse") live = null;
+      cancelRestore();
       held =
         navigationType === "traverse" && to.pathname === "/search"
           ? savedRestore()
@@ -131,7 +151,6 @@ import { SITE } from "@/config";
   );
 
   document.addEventListener("astro:before-swap", () => {
-    cancelRestore();
     pending = held;
   });
 
@@ -143,6 +162,7 @@ import { SITE } from "@/config";
     const pageFindSearch: HTMLElement | null =
       document.querySelector("#pagefind-search");
 
+    live = pageFindSearch;
     if (!pageFindSearch) return;
 
     const params = new URLSearchParams(window.location.search);
@@ -153,9 +173,9 @@ import { SITE } from "@/config";
       // @ts-expect-error — Missing types for @pagefind/default-ui package.
       const { PagefindUI } = await import("@pagefind/default-ui");
 
-      // Another swap during the idle wait and import has replaced this
-      // root. The run for the new root mounts the UI.
-      if (!pageFindSearch.isConnected) return;
+      // A Back or Forward started, or another swap replaced this root, during
+      // the idle wait and import. The run for the new root mounts the UI.
+      if (pageFindSearch !== live) return;
 
       // Pagefind indexes the built site, so dev has no index to search.
       if (import.meta.env.DEV) {
@@ -172,14 +192,10 @@ import { SITE } from "@/config";
         showImages: false,
         showSubResults: true,
         processTerm: function (term: string) {
-          // A search typed just before leaving runs after the swap, on a
-          // root no longer in the page, so it leaves the new URL alone.
-          if (!pageFindSearch.isConnected) return term;
-
           // Mirror the term into the URL so a search is linkable, without
           // adding a history entry per keystroke.
           params.set("q", term);
-          history.replaceState(history.state, "", "?" + params.toString());
+          replaceEntry(pageFindSearch, history.state, "?" + params.toString());
 
           return term;
         },
@@ -198,12 +214,12 @@ import { SITE } from "@/config";
       // Pagefind empties the field on Escape without an input event.
       searchInput?.addEventListener("keydown", event => {
         if ((event as KeyboardEvent).key === "Escape")
-          history.replaceState(history.state, "", window.location.pathname);
+          replaceEntry(pageFindSearch, history.state, window.location.pathname);
       });
 
       function resetSearchParam(e: Event) {
         if ((e.target as HTMLInputElement)?.value.trim() === "") {
-          history.replaceState(history.state, "", window.location.pathname);
+          replaceEntry(pageFindSearch, history.state, window.location.pathname);
         }
       }
     });
