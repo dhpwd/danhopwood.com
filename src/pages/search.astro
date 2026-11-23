@@ -97,6 +97,9 @@ import { SITE } from "@/config";
     if (!button) return;
     const root = button.closest("#pagefind-search");
     requestAnimationFrame(() => {
+      // An entry with no state is one the router doesn't track – see
+      // "Scroll position and View Transitions" in docs/patterns/astro-build.md.
+      if (!history.state) return;
       const shown = document.querySelectorAll(
         "#pagefind-search .pagefind-ui__result"
       ).length;
