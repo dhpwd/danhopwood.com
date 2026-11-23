@@ -192,23 +192,19 @@ const nextPost =
   }
   createProgressBar();
 
-  function updateScrollProgress() {
+  if (!window.postProgressBound) {
+    window.postProgressBound = true;
     document.addEventListener("scroll", () => {
+      const myBar = document.getElementById("myBar");
+      if (!myBar) return;
       const winScroll =
         document.body.scrollTop || document.documentElement.scrollTop;
       const height =
         document.documentElement.scrollHeight -
         document.documentElement.clientHeight;
-      const scrolled = (winScroll / height) * 100;
-      if (document) {
-        const myBar = document.getElementById("myBar");
-        if (myBar) {
-          myBar.style.width = scrolled + "%";
-        }
-      }
+      myBar.style.width = (winScroll / height) * 100 + "%";
     });
   }
-  updateScrollProgress();
 
   function addHeadingLinks() {
     const headings = Array.from(
@@ -310,8 +306,4 @@ const nextPost =
     }
   }
   attachCopyButtons();
-
-  document.addEventListener("astro:after-swap", () =>
-    window.scrollTo({ left: 0, top: 0, behavior: "instant" })
-  );
 </script>
