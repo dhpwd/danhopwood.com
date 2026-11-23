@@ -8,7 +8,6 @@ import Datetime from "@/components/Datetime.astro";
 import EditPost from "@/components/EditPost.astro";
 import ShareLinks from "@/components/ShareLinks.astro";
 import NewsletterSignup from "@/components/NewsletterSignup.astro";
-import BackButton from "@/components/BackButton.astro";
 import ImageZoom from "@/components/ImageZoom.astro";
 import { getPath } from "@/utils/getPath";
 import { slugifyStr } from "@/utils/slugify";
@@ -83,14 +82,8 @@ const nextPost =
 
 <Layout {...layoutProps}>
   <Header />
-  <BackButton />
   <main id="main-content" class="app-layout pb-12">
-    <div
-      class:list={[
-        "flex flex-col gap-3",
-        { "pt-9 sm:pt-14": !SITE.showBackButton },
-      ]}
-    >
+    <div class="flex flex-col gap-3 pt-9 sm:pt-14">
       <Datetime
         {pubDatetime}
         {modDatetime}

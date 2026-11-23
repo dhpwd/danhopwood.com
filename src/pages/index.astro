@@ -27,7 +27,7 @@ const recentPosts = sortedPosts.filter(({ data }) => !data.featured);
 
 <Layout>
   <Header />
-  <main id="main-content" data-layout="index" class="app-layout">
+  <main id="main-content" class="app-layout">
     <section id="hero" class="pt-7 pb-6 sm:pt-14">
       <!-- One block at both widths: on a phone the portrait shares a row with
       the mono line, and from 640px it stands beside the text -->
@@ -127,17 +127,3 @@ const recentPosts = sortedPosts.filter(({ data }) => !data.featured);
   </main>
   <Footer />
 </Layout>
-
-<script>
-  function storeBackUrl() {
-    const indexLayout = (document.querySelector("#main-content") as HTMLElement)
-      ?.dataset?.layout;
-    if (indexLayout) {
-      sessionStorage.setItem("backUrl", "/");
-    }
-  }
-
-  // See "Client scripts and View Transitions" in docs/patterns/astro-build.md
-  document.addEventListener("astro:page-load", storeBackUrl);
-  storeBackUrl();
-</script>
