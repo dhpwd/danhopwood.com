@@ -115,7 +115,10 @@ const recentPosts = sortedPosts.filter(({ data }) => !data.featured);
             </ul>
             <LinkButton href="/posts" class="mt-7 mb-6">
               All posts
-              <IconArrowRight class="icon-step-forward inline-block rtl:-rotate-180" />
+              <IconArrowRight
+                class="icon-step-forward inline-block rtl:-rotate-180"
+                aria-hidden="true"
+              />
             </LinkButton>
           </div>
         </section>
