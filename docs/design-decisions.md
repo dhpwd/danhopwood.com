@@ -23,7 +23,7 @@ Rejected: neutral `#1a1a1a`, which has nothing of the site's own in it.
 
 ## The accent at rest is a closed list
 
-At rest, the accent appears only on the mono line above a page's title (the `eyebrow`), the one filled action, prose marks (list markers and the blockquote rule), the active nav item and the reading progress bar. A drawn diagram's level labels take it too – see "A diagram is ink, with the accent on its level labels". Hover, press and focus use it on every control, except that text fields focus in the text colour.
+At rest, the accent appears only on the mono line above a page's title (the `eyebrow`), the one filled action, prose marks (list markers and the blockquote rule), the active nav item and the reading progress bar. A drawn diagram's level labels take it too – see "A diagram is ink, with the accent on its level labels". Hover, press and focus use it on every control, except that text fields focus in the text colour. A row's rule and label take it for under 400ms as the visitor scrolls to the row, which is motion, not rest – see "Small details are a closed set".
 
 Rejected: frames, status chips, link titles and search result titles in the accent. Each reads as an error or a warning in a red.
 
@@ -53,7 +53,7 @@ Rejected: Geist Mono 700 titles, which left the cards the one place a title stay
 
 ## One interaction behaviour
 
-Every control moves one colour step on hover and one more on press, on 150ms with a decelerating curve. Filled buttons also settle 1px on press. Reduced motion keeps the colour steps and drops the settle.
+Every control moves one colour step on hover and one more on press, on 150ms with a decelerating curve. Filled buttons also settle 1px on press. An icon inside a control may turn or step under the pointer while the control itself never moves: an arrow steps 3px, a profile or share icon tilts and the theme toggle's icon turns one notch. Reduced motion keeps the colour steps and drops the settle and the icon's movement.
 
 Rejected:
 
@@ -103,18 +103,26 @@ Rejected: a breadcrumb, which is a second kind of mono line above a title on a s
 
 ## The header is three words and the theme toggle
 
-Posts, About and Search, then the toggle. Tags and Archives are reached from the Posts page, and Posts is the active item on both. On a phone the links sit behind a mono "Menu" button as a plain list. A new destination joins the `NAV` list in `Header.astro`, whose `sections` say which paths make it the active item.
+Posts, About and Search, then the toggle. Tags and Archives are reached from the Posts page, and Posts is the active item on both. On a phone the links sit behind a burger as a plain list. The burger is named "Menu" for screen readers when open and closed, with `aria-expanded` for the state, and turns to a cross while the menu is open. It is a taste call made on renders. A new destination joins the `NAV` list in `Header.astro`, whose `sections` say which paths make it the active item.
 
 Rejected:
 
 - Five destinations in the header, and icons for them. As words they read as a blog theme's navigation and leave no room for another at 390
 - A second header row of links on a phone, which takes about 44px from the homepage's first screen
+- The three links shown in the phone's header in place of a button. On the header's row they leave 8px between them at 375 wide, and on a row of their own they put the advisory link below the first screen at 390 by 844
+- A burger beside a mono "Menu", which keeps the label visible, the close second
+- The mono "Menu" word alone
+- A burger whose name changes to "Close" when open, which states the state twice
 
-## Icon rows are dashed text links
+## Profile and share links are icons
 
-The share row, the footer's links and a post's tags are words with the dashed underline.
+The footer's profile links and the share row after a post are icons alone, from one outline family in the text colour, with the colour step on hover and press. Each link keeps its word as its name for screen readers and its `title` as a tooltip, with a 44 by 44 target on a phone and 32 by 32 from 640px, as the theme toggle has. A post's tags stay words with the dashed underline. Icons alone are a taste call made on renders.
 
-Rejected: icon rows, which are the theme's.
+Rejected:
+
+- An icon beside each word. The label stays visible, which usability guidance asks for beside an icon, at the cost of the busiest row on the page
+- Words alone, the calmest, with a one-letter link ("X") 9px wide
+- A 44 by 44 target at every width, which stands the share row 12px taller than the rows beside it at 1440
 
 ## The RSS link sits in the footer's row
 
@@ -177,12 +185,25 @@ Motion runs only in response to something the visitor does, lasts 400ms or less,
 
 ## Small details are a closed set
 
-The site carries two small details that answer the visitor, for the whole site rather than per page. The set is filled. Later work adds a detail only by replacing a member, with an entry here.
+The site carries five small details that answer the visitor, for the whole site rather than per page. The set is closed. Later work adds a detail only by replacing a member, with an entry here. How the last three are built is in `docs/patterns/small-details.md`.
 
 1. Selected text, search matches and the phone's tap flash share the accent tint
 2. A post's image opens at full size on a click, a tap, Enter or Space. Rejected: a link to the image file, which leaves the site, and a sideways-scrolling figure, which loses the overview
+3. Links ink in. Under the pointer a solid 1px line in the link's colour draws over the dashed underline from the left, and leaves to the right. A post title, which has no underline at rest, gets the line alone. On a phone the tap flash answers the tap
+4. The page rules itself. The first time the visitor scrolls to a labelled row, its rule draws across in the accent and dries to the border colour, and its label with it. A row already in view on arrival stays still. On a phone, opening the menu draws its rule and lifts its rows
+5. Icons answer the pointer. An arrow steps 3px, a profile or share icon tilts, the moon tilts and the sun turns one notch, and the control itself never moves – see "One interaction behaviour". On a phone the theme toggle's morph answers a tap
 
 The reading progress bar, the theme toggle's icon morph and the copy button's "Copied" label predate the set and sit outside it.
+
+Rejected:
+
+- Titles of posts the visitor has read resting in grey (`:visited`). The author sees every title grey in their own browser
+- Every rule in the column drawing, which draws five lines in a row at the end of a post
+- A line that thickens under the pointer. The line is 1px in every state
+- A caret after the site name, which reads as an engineer's blog
+- The portrait tilting under the pointer
+- A theme change wiping across the page, against "A theme change flips every colour in one frame" in `docs/patterns/design-system.md`
+- The line above a title typing itself, or its count running up
 
 ## Not adopted
 

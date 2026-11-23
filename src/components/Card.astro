@@ -30,17 +30,17 @@ const readingTime = body ? calculateReadingTime(body) : undefined;
   <div class="min-w-0">
     <a
       href={getPath(id, filePath)}
-      class:list={[
-        "inline-block interactive text-foreground",
-        "decoration-dashed underline-offset-4 hover:underline",
-        "focus-visible:no-underline focus-visible:underline-offset-0",
-      ]}
+      class="group inline-block interactive text-foreground"
     >
       <Heading
         class="title-item"
         style={{ viewTransitionName: slugifyStr(title.replaceAll(".", "-")) }}
       >
-        {title}
+        <span
+          data-ink="title"
+          class="decoration-dashed underline-offset-4 group-hover:underline group-focus-visible:no-underline"
+          >{title}</span
+        >
       </Heading>
     </a>
     <p class="mt-1.5">{description}</p>

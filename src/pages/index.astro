@@ -69,7 +69,7 @@ const recentPosts = sortedPosts.filter(({ data }) => !data.featured);
       <div class="mt-8 border-t border-border pt-6 sm:mt-10">
         <NewsletterSignup variant="row" />
       </div>
-      <div class="mt-6 ledger border-t border-border pt-6">
+      <div data-rule class="mt-6 ledger border-t border-border pt-6">
         <h2 class="label-caps text-foreground/75">Advisory</h2>
         <p class="text-[0.9375rem] leading-normal">
           I also advise founders and leadership teams on AI agents and data.
@@ -84,7 +84,11 @@ const recentPosts = sortedPosts.filter(({ data }) => !data.featured);
 
     {
       featuredPosts.length > 0 && (
-        <section id="featured" class="ledger border-t border-border py-6">
+        <section
+          id="featured"
+          data-rule
+          class="ledger border-t border-border py-6"
+        >
           <h2 class="label-caps text-foreground/75">Featured</h2>
           <ul class="flex flex-col gap-7">
             {featuredPosts.map(data => (
@@ -97,7 +101,11 @@ const recentPosts = sortedPosts.filter(({ data }) => !data.featured);
 
     {
       recentPosts.length > 0 && (
-        <section id="recent-posts" class="ledger border-t border-border py-6">
+        <section
+          id="recent-posts"
+          data-rule
+          class="ledger border-t border-border py-6"
+        >
           <h2 class="label-caps text-foreground/75">Recent posts</h2>
           <div>
             <ul class="flex flex-col gap-7">
@@ -107,7 +115,7 @@ const recentPosts = sortedPosts.filter(({ data }) => !data.featured);
             </ul>
             <LinkButton href="/posts" class="mt-7 mb-6">
               All posts
-              <IconArrowRight class="inline-block rtl:-rotate-180" />
+              <IconArrowRight class="icon-step-forward inline-block rtl:-rotate-180" />
             </LinkButton>
           </div>
         </section>
