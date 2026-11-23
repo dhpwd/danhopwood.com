@@ -130,12 +130,19 @@ To check the patch, build a temporary post and a temporary Markdown page in `src
 
 ## Nested CSS and the CSS build target
 
-**Problem:** Astro sets Vite's `build.target` to `"esnext"` for its client and server builds, ahead of the project's own `vite.build` (`node_modules/astro/dist/core/build/static-build.js`), and Vite's `build.cssTarget` defaults to `build.target`. Left at that, esbuild's CSS minify lowers nothing, and nested CSS in an Astro `<style>` block reaches the browser as written. Chrome before 120 and Safari before 17.2 drop some or all of the nested rules. Tailwind's stylesheet comes out flat because Tailwind lowers its own output, so only hand-written CSS ships nested, and nothing in the build reports it.
+**Problem:** Astro builds its client and server bundles with Vite's `build.target` set to `"esnext"`, which the project's own `vite.build` overrides key by key (`node_modules/astro/dist/core/build/static-build.js`), and Vite's `build.cssTarget` defaults to `build.target`. Left at that, esbuild's CSS minify lowers nothing, and nested CSS in an Astro `<style>` block reaches the browser as written: Chrome before 120 and Safari before 17.2 drop some or all of its nested rules. Tailwind lowers its own stylesheet, so what ships nested is CSS written in `<style>` blocks, and nothing in the build reports it.
 
-**Solution:** `astro.config.ts` sets `vite.build.cssTarget` to Tailwind v4's browser floor, since the site's CSS depends on cascade layers, `@property` and `color-mix()` and can't work in an older browser whatever the build does. esbuild's CSS minify then lowers nesting, and any other syntax those browsers lack, in every stylesheet Vite builds, Astro `<style>` blocks included: `#pagefind-search { input { … } }` in `search.astro` ships as `#pagefind-search input{…}`. Nested CSS is fine to write in any `<style>` block except `<style is:inline>`, which skips Vite and ships as written.
+**Solution:** `astro.config.ts` sets `vite.build.cssTarget` to Tailwind v4's browser floor, below which the site's CSS (cascade layers, `@property`, `color-mix()`) doesn't render as designed whatever the build does. esbuild's CSS minify then lowers nesting in every stylesheet Vite builds, Astro `<style>` blocks included: `#pagefind-search { input { … } }` in `search.astro` ships as `#pagefind-search input{…}`. It lowers little else at these targets. Newer syntax such as `light-dark()`, relative colours, `@starting-style` and `@scope` passes through unchanged, so check its support against the floor.
 
-`pnpm dev` serves CSS unlowered, because Vite minifies CSS only in a build, so check older-browser output in the production build's `dist/_astro/*.css`.
+Nested CSS is fine to write in a `<style>` block, within these limits:
 
-**Anti-pattern:** flattening nested CSS by hand for browser support, which fixes that block and leaves the next nested rule unlowered. And setting `vite.build.target` to reach the CSS, which changes every JS bundle too.
+- In a scoped `<style>` (the default), Astro's compiler scopes only the outer selector, so a nested selector also matches inside child components and slotted content. Write a selector flat where it must stay scoped. An `is:global` block, like `search.astro`'s, has no scoping to lose
+- Put a rule's declarations before its nested rules. esbuild moves declarations that follow a nested at-rule ahead of it, so a trailing declaration that wins in `pnpm dev` can lose in production
+- Write an at-rule for a pseudo-element flat, as `@media (hover: hover) { .x::before { … } }`. esbuild lowers `.x::before { @media (hover: hover) { … } }` to a rule with no selector, which every browser drops
+- A `<style is:inline>` block skips Vite and ships as written
 
-**When to use:** writing nested CSS, adding a `<style is:inline>` block, or changing the browsers the build supports.
+`pnpm dev` serves CSS unlowered, because Vite minifies CSS only in a build, so check older-browser output in the production build: `dist/_astro/*.css`, and the `<style>` tags of the built pages, where Astro inlines small stylesheets.
+
+**Anti-pattern:** flattening nested CSS by hand for browser support, which fixes that block and leaves the next nested rule unlowered. Setting `vite.build.target` to reach the CSS, which changes every JS bundle too. And turning off `vite.build.minify` or `vite.build.cssMinify`, which turns the lowering off with it.
+
+**When to use:** writing nested CSS, adding a `<style is:inline>` block or changing the browsers the build supports.
