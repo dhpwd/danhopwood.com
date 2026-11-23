@@ -5,8 +5,33 @@ const DARK = "dark";
 // "light", "dark", or empty to follow the system's prefers-color-scheme.
 const initialColorScheme = "";
 
+// Reading localStorage throws where the browser blocks storage, and writing
+// it also throws on a full quota. A failed read counts as no stored theme and
+// a failed write is dropped, so the theme follows the system and the toggle
+// still works for this page-life.
+function readStoredTheme(): string | null {
+  try {
+    return localStorage.getItem(THEME);
+  } catch {
+    return null;
+  }
+}
+
+function storeTheme(value: string): void {
+  try {
+    localStorage.setItem(THEME, value);
+  } catch {
+    // Dropped – see readStoredTheme().
+  }
+}
+
+// Set by a toggle click, so the pick holds against a system change even when
+// storage dropped it. The module runs once per full load, so the flag
+// survives client-side navigation.
+let pickedThisLoad = false;
+
 function getPreferTheme(): string {
-  const currentTheme = localStorage.getItem(THEME);
+  const currentTheme = readStoredTheme();
   if (currentTheme) return currentTheme;
 
   if (initialColorScheme) return initialColorScheme;
@@ -20,7 +45,7 @@ function getPreferTheme(): string {
 let themeValue = window.theme?.themeValue ?? getPreferTheme();
 
 function setPreference(): void {
-  localStorage.setItem(THEME, themeValue);
+  storeTheme(themeValue);
   reflectPreference();
 }
 
@@ -78,6 +103,7 @@ function setThemeFeature(): void {
   reflectPreference();
 
   document.querySelector("#theme-btn")?.addEventListener("click", () => {
+    pickedThisLoad = true;
     themeValue = themeValue === LIGHT ? DARK : LIGHT;
     window.theme?.setTheme(themeValue);
     setPreference();
@@ -103,10 +129,15 @@ document.addEventListener("astro:before-swap", event => {
   }
 });
 
+// A visitor's pick outlasts system changes, and only a click stores one, so a
+// visitor who never picks follows the system on every visit. The stored theme
+// is read here rather than at load, to catch a pick made in another tab.
 window
   .matchMedia("(prefers-color-scheme: dark)")
   .addEventListener("change", ({ matches: isDark }) => {
+    if (pickedThisLoad || readStoredTheme()) return;
+
     themeValue = isDark ? DARK : LIGHT;
     window.theme?.setTheme(themeValue);
-    setPreference();
+    reflectPreference();
   });

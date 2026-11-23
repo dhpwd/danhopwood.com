@@ -211,7 +211,12 @@ const structuredDataJSON = JSON.stringify(structuredData).replace(
     <script is:inline>
       (function () {
         const initialColorScheme = ""; // "light" | "dark"
-        const currentTheme = localStorage.getItem("theme");
+        let currentTheme = null;
+        try {
+          currentTheme = localStorage.getItem("theme");
+        } catch {
+          // Storage is blocked: follow the system scheme.
+        }
 
         function getPreferTheme() {
           if (currentTheme) return currentTheme;
