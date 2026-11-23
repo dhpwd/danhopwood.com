@@ -20,6 +20,18 @@ To check a change here, add a temporary post with `draft: false` and a `pubDatet
 
 **When to use:** writing or changing any route that reads the blog collection.
 
+## Calendar dates of a post
+
+**Problem:** a `Date` from the blog collection is an instant. `getFullYear()`, `getMonth()` and `getDate()` read it in the build machine's timezone – UTC on Vercel, whatever `TZ` a local build runs under – while `Datetime.astro` shows each post's date in its `timezone` frontmatter, or `SITE.timezone` (Europe/London) when it has none. Code that groups or labels posts with those calls files a post published in the last hour of a BST month under that month in production while its card reads the 1st of the next, and a London build files it under the next. Nothing in the build reports it.
+
+**Solution:** read calendar fields from the conversion `Datetime.astro` uses, `dayjs(data.pubDatetime).tz(data.timezone || SITE.timezone)`, then `.year()`, `.month() + 1` or `.date()`. Import and `dayjs.extend` the `utc` and `timezone` plugins in the file that converts, rather than relying on `Datetime.astro` having extended them. `src/pages/archives/index.astro` groups by year and month this way. Sorting and comparing instants (`getTime()`, `postFilter`'s cut-off, `toISOString()`) needs no conversion.
+
+To check a change here, add a temporary post with `pubDatetime: 2026-06-30T23:30:00Z` and no `timezone`, build once under `TZ=UTC` and once under `TZ=Europe/London`, and confirm both builds put it under July, the month its card shows.
+
+**Anti-pattern:** `post.data.pubDatetime.getFullYear()` or `getMonth()` in a route or component.
+
+**When to use:** grouping, filtering or labelling posts by year, month or day.
+
 ## Server code goes in root `api/`, not the Vercel adapter
 
 **Problem:** the usual Astro answer for an endpoint is the `@astrojs/vercel` adapter with on-demand routes. With the adapter, Vercel deploys `.vercel/output`, which `astro build` writes before the build script's `pagefind --site dist` step runs. The deployed site loses its search index, and the build passes.

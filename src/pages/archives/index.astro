@@ -1,5 +1,8 @@
 ---
-import { getCollection } from "astro:content";
+import { type CollectionEntry, getCollection } from "astro:content";
+import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
+import timezone from "dayjs/plugin/timezone";
 import Main from "@/layouts/Main.astro";
 import Layout from "@/layouts/Layout.astro";
 import Header from "@/components/Header.astro";
@@ -9,11 +12,19 @@ import getPostsByGroupCondition from "@/utils/getPostsByGroupCondition";
 import postFilter from "@/utils/postFilter";
 import { SITE } from "@/config";
 
+dayjs.extend(utc);
+dayjs.extend(timezone);
+
 if (!SITE.showArchives) {
   return Astro.redirect("/404");
 }
 
 const posts = await getCollection("blog", postFilter);
+
+// pubDatetime in the timezone Datetime.astro shows dates in, not the build
+// machine's
+const published = ({ data }: CollectionEntry<"blog">) =>
+  dayjs(data.pubDatetime).tz(data.timezone || SITE.timezone);
 
 const months = [
   "January",
@@ -39,9 +50,7 @@ const months = [
   >
     {
       Object.entries(
-        getPostsByGroupCondition(posts, post =>
-          post.data.pubDatetime.getFullYear()
-        )
+        getPostsByGroupCondition(posts, post => published(post).year())
       )
         .sort(([yearA], [yearB]) => Number(yearB) - Number(yearA))
         .map(([year, yearGroup]) => (
@@ -53,7 +62,7 @@ const months = [
             {Object.entries(
               getPostsByGroupCondition(
                 yearGroup,
-                post => post.data.pubDatetime.getMonth() + 1
+                post => published(post).month() + 1
               )
             )
               .sort(([monthA], [monthB]) => Number(monthB) - Number(monthA))
