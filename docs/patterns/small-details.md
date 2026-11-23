@@ -62,9 +62,13 @@ An icon link is 44 by 44 below 640px and 32 by 32 from it, with its word as its 
 
 `ShareLinks.astro` reads its icons from `SHARE_LINKS` in `src/constants.ts`, and `Socials.astro` reads `SOCIALS` there and adds the RSS link and its icon itself. Their lists are `-mx-3 flex flex-wrap sm:-mx-1.5 sm:gap-x-3`, so the icons sit 24px apart and the first icon's box starts on the column's edge.
 
+An icon button that toggles something keeps one name in both states, its word in the `sr-only` span, and carries the state in an attribute its script sets: `aria-expanded` on the burger, and `aria-pressed` on the theme toggle, which `reflectPreference()` in `src/scripts/theme.ts` sets ("true" in the dark theme). Its `title`, where it has one, matches the name.
+
 Anti-patterns:
 
 - A control that moves – a rotate or translate on the link or button itself
 - A step keyed on `group-hover:`, which moves the arrow of a disabled `LinkButton`
+- An icon component with no `aria-hidden="true"`. Astro renders an imported SVG with no role or name, so it reads as an unnamed image beside the control's word
+- A toggle whose name changes with its state ("Switch to dark theme" and "Switch to light theme", or "Menu" and "Close"). The name then lives in the script, and whether a screen reader announces a name change on a focused button varies by screen reader
 
-**When to use:** adding an icon inside a control, or a profile or share link.
+**When to use:** adding an icon inside a control, a profile or share link or a toggle button.

@@ -38,7 +38,9 @@ function reflectPreference(): void {
     );
   }
 
-  document.querySelector("#theme-btn")?.setAttribute("aria-label", themeValue);
+  document
+    .querySelector("#theme-btn")
+    ?.setAttribute("aria-pressed", String(themeValue === DARK));
 
   const body = document.body;
 
@@ -72,7 +74,7 @@ if (window.theme) {
 reflectPreference();
 
 function setThemeFeature(): void {
-  // A swap replaces the theme button, so its aria-label needs setting again.
+  // A swap replaces the theme button, so its aria-pressed needs setting again.
   reflectPreference();
 
   document.querySelector("#theme-btn")?.addEventListener("click", () => {

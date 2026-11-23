@@ -103,7 +103,7 @@ Rejected: a breadcrumb, which is a second kind of mono line above a title on a s
 
 ## The header is three words and the theme toggle
 
-Posts, About and Search, then the toggle. Tags and Archives are reached from the Posts page, and Posts is the active item on both. On a phone the links sit behind a burger as a plain list. The burger is named "Menu" for screen readers when open and closed, with `aria-expanded` for the state, and turns to a cross while the menu is open. It is a taste call made on renders. A new destination joins the `NAV` list in `Header.astro`, whose `sections` say which paths make it the active item.
+Posts, About and Search, then the toggle. Tags and Archives are reached from the Posts page, and Posts is the active item on both. On a phone the links sit behind a burger as a plain list. The burger is named "Menu" for screen readers when open and closed, with `aria-expanded` for the state, and turns to a cross while the menu is open. It is a taste call made on renders. The theme toggle is named "Dark theme" for screen readers in both themes, with `aria-pressed` for the state and its icons hidden. A new destination joins the `NAV` list in `Header.astro`, whose `sections` say which paths make it the active item.
 
 Rejected:
 
@@ -113,6 +113,7 @@ Rejected:
 - A burger beside a mono "Menu", which keeps the label visible, the close second
 - The mono "Menu" word alone
 - A burger whose name changes to "Close" when open, which states the state twice
+- A theme toggle whose name changes with the theme ("Switch to dark theme" / "Switch to light theme"), which keeps the name in the script and needs a live region to be heard
 
 ## Profile and share links are icons
 
