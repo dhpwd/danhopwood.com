@@ -211,15 +211,14 @@ const structuredDataJSON = JSON.stringify(structuredData).replace(
     <script is:inline>
       (function () {
         const initialColorScheme = ""; // "light" | "dark"
-        let currentTheme = null;
-        try {
-          currentTheme = localStorage.getItem("theme");
-        } catch {
-          // Storage is blocked: follow the system scheme.
-        }
 
         function getPreferTheme() {
-          if (currentTheme) return currentTheme;
+          try {
+            const currentTheme = localStorage.getItem("theme");
+            if (currentTheme) return currentTheme;
+          } catch {
+            // Storage is blocked: fall back to the system scheme.
+          }
           if (initialColorScheme) return initialColorScheme;
           return window.matchMedia("(prefers-color-scheme: dark)").matches
             ? "dark"

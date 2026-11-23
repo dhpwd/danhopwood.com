@@ -6,9 +6,8 @@ const DARK = "dark";
 const initialColorScheme = "";
 
 // Reading localStorage throws where the browser blocks storage, and writing
-// it also throws on a full quota. A failed read counts as no stored theme and
-// a failed write is dropped, so the theme follows the system and the toggle
-// still works for this page-life.
+// it also throws on a full quota. A failed read leaves the theme following the
+// system, and a dropped write still holds the pick for this page-life.
 function readStoredTheme(): string | null {
   try {
     return localStorage.getItem(THEME);
@@ -17,17 +16,9 @@ function readStoredTheme(): string | null {
   }
 }
 
-function storeTheme(value: string): void {
-  try {
-    localStorage.setItem(THEME, value);
-  } catch {
-    // Dropped – see readStoredTheme().
-  }
-}
-
-// Set by a toggle click, so the pick holds against a system change even when
-// storage dropped it. The module runs once per full load, so the flag
-// survives client-side navigation.
+// Set by a pick, so it holds against a system change even when storage
+// dropped it. The module runs once per full load, so the flag survives
+// client-side navigation.
 let pickedThisLoad = false;
 
 function getPreferTheme(): string {
@@ -45,7 +36,12 @@ function getPreferTheme(): string {
 let themeValue = window.theme?.themeValue ?? getPreferTheme();
 
 function setPreference(): void {
-  storeTheme(themeValue);
+  pickedThisLoad = true;
+  try {
+    localStorage.setItem(THEME, themeValue);
+  } catch {
+    // Dropped – see readStoredTheme().
+  }
   reflectPreference();
 }
 
@@ -103,7 +99,6 @@ function setThemeFeature(): void {
   reflectPreference();
 
   document.querySelector("#theme-btn")?.addEventListener("click", () => {
-    pickedThisLoad = true;
     themeValue = themeValue === LIGHT ? DARK : LIGHT;
     window.theme?.setTheme(themeValue);
     setPreference();
