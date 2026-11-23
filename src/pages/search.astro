@@ -39,21 +39,19 @@ const backUrl = SITE.showBackButton ? `${Astro.url.pathname}` : "/";
     const check = () => {
       if (!pending) return cancel();
       const results = root.querySelectorAll(".pagefind-ui__result");
-      if (!results.length || root.querySelector(".pagefind-ui__loading"))
-        return;
+      if (!results.length) return;
+      // Pagefind shows "Load more results" before the excerpts have loaded,
+      // so each page is revealed at once and their excerpts load together.
       const more = root.querySelector<HTMLButtonElement>(
         ".pagefind-ui__button"
       );
       if (results.length < pending.shown && more) return more.click();
+      if (root.querySelector(".pagefind-ui__loading")) return;
       window.scrollTo({ top: pending.y, behavior: "instant" });
       cancel();
     };
     const observer = new MutationObserver(check);
-    observer.observe(root, {
-      childList: true,
-      subtree: true,
-      attributes: true,
-    });
+    observer.observe(root, { childList: true, subtree: true });
   }
 
   // A visitor who scrolls or acts before the results load keeps their place.
@@ -61,7 +59,19 @@ const backUrl = SITE.showBackButton ? `${Astro.url.pathname}` : "/";
     window.addEventListener(type, () => (pending = null), { passive: true });
 
   // Pagefind doesn't keep how many results "Load more results" revealed, so
-  // keep the count on this history entry each time it grows.
+  // keep the count on this history entry each time it grows, and drop it
+  // when the visitor types a new search, which starts again at one page.
+  // triggerSearch fills the field without an input event.
+  document.addEventListener("input", event => {
+    if (
+      history.state?.searchShown &&
+      (event.target as Element).matches(
+        "#pagefind-search .pagefind-ui__search-input"
+      )
+    )
+      history.replaceState({ ...history.state, searchShown: 0 }, "");
+  });
+
   document.addEventListener("click", event => {
     if (
       !(event.target as Element).closest?.(
