@@ -55,7 +55,7 @@ The image itself is the button, rather than a `<button>` wrapped round it, becau
 Anti-patterns:
 
 - Icons for a post's tags, which stay words
-- A margin that pulls the first share icon back under its label, like the theme's `md:-ml-2`. The ledger aligns the row, and the list's `-mx-3 sm:-mx-1.5` puts the first icon's ink on the column's edge
+- A margin that pulls the first share icon back past the content column towards its label, like the theme's `md:-ml-2`. The ledger aligns the row, and the list's `-mx-3 sm:-mx-1.5` only takes back the icon link's own padding, so the first icon's box starts on the content column's edge
 - A margin on a card or row to space a list, in place of `gap` on the list
 - An `aria-label` on the heading anchor with no `aria-labelledby` on the heading. The heading's name then carries the anchor's label after its own text, so a screen reader's headings list, which is how a screen-reader user skims a post, reads every heading twice
 

@@ -5,6 +5,19 @@
 
 let observer: IntersectionObserver | undefined;
 
+// Where the page comes to rest. The router restores a saved position, and the
+// browser scrolls to a #hash, smoothly and after this runs, so the position
+// now is not yet where the visitor lands.
+function landingY(): number {
+  const saved = history.state?.scrollY;
+  if (typeof saved === "number" && saved > 0) return saved;
+  const id = decodeURIComponent(location.hash.slice(1));
+  const target = id ? document.getElementById(id) : null;
+  if (!target) return window.scrollY;
+  const maxY = document.documentElement.scrollHeight - window.innerHeight;
+  return Math.min(target.getBoundingClientRect().top + window.scrollY, maxY);
+}
+
 function initRuleDraw(): void {
   if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
@@ -24,12 +37,14 @@ function initRuleDraw(): void {
   ].filter(row => !row.dataset.rule);
   // Every position is read before any row is marked, so marking one doesn't
   // make the next read recalculate styles.
-  const tops = rows.map(row => row.getBoundingClientRect().top);
-  const viewportBottom = window.innerHeight;
+  const tops = rows.map(
+    row => row.getBoundingClientRect().top + window.scrollY
+  );
+  const landingBottom = landingY() + window.innerHeight;
   rows.forEach((row, i) => {
-    // A row already in view at arrival never plays, since nothing the
-    // visitor did brought it there.
-    if (tops[i] < viewportBottom) {
+    // A row in view where the visitor lands, or above it, never plays, since
+    // nothing the visitor did brought it there.
+    if (tops[i] < landingBottom) {
       row.dataset.rule = "seen";
       return;
     }

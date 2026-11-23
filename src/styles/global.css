@@ -213,9 +213,7 @@ html[data-theme="dark"] {
 @media (hover: hover) and (prefers-reduced-motion: no-preference) {
   [class~="decoration-dashed"],
   .app-prose a:not(.heading-link) {
-    /* An inline box ends one descent (about 0.28em) under the baseline, so
-       with this padding, which an inline box takes without moving anything,
-       the line sits 4 to 5px under the baseline at every type size. */
+    /* Where the line sits: "The line of ink" in small-details.md */
     --ink-y: calc(100% - (0.28em - 3px));
     padding-bottom: 2px;
     background-image: linear-gradient(currentcolor, currentcolor);
@@ -242,38 +240,48 @@ html[data-theme="dark"] {
   }
   /* Keyboard focus keeps the outline on today's box, with no line */
   a[class~="decoration-dashed"]:focus-visible,
+  a:focus-visible [class~="decoration-dashed"],
   .app-prose a:not(.heading-link):focus-visible {
     padding-bottom: 0;
     background-image: none;
   }
+  /* A title has no underline at rest, so the line is all it gets */
+  a:hover [data-ink="title"] {
+    text-decoration-line: none;
+  }
 }
 
 /* The page rules itself: a row the visitor scrolls to draws its rule in the
-   accent, which dries to the border colour. src/scripts/rule-draw.ts arms a
-   row only when motion is allowed, so these need no media query. */
-[data-rule="pending"],
-[data-rule="run"] {
-  border-top-color: transparent;
+   accent, which dries to the border colour. src/scripts/rule-draw.ts arms
+   rows only when motion is allowed, and the query covers a change of
+   preference after that and a printed page. */
+@media screen and (prefers-reduced-motion: no-preference) {
+  [data-rule="pending"],
+  [data-rule="run"] {
+    border-top-color: transparent;
+  }
+  [data-rule="run"] {
+    position: relative;
+  }
+  [data-rule="run"]::before {
+    content: "";
+  }
+  [data-rule="run"] > .label-caps {
+    animation: rule-label 400ms ease-in both;
+  }
 }
-[data-rule="run"] {
-  position: relative;
-}
-/* The drawn rule, for a row and for the phone menu, which gives it content
-   only under its own media query below */
+/* The drawn rule, for a row and for the phone menu, each of which gives it
+   content under its own media query */
 [data-rule="run"]::before,
 #menu-items:not(.hidden)::before {
   position: absolute;
   inset-inline: 0;
   top: -1px;
   height: 1px;
+  /* Its resting colour, should the animation not run */
+  background: var(--border);
   transform-origin: left center;
   animation: rule-draw 400ms var(--default-transition-timing-function) both;
-}
-[data-rule="run"]::before {
-  content: "";
-}
-[data-rule="run"] > .label-caps {
-  animation: rule-label 400ms ease-in both;
 }
 @keyframes rule-draw {
   from {
@@ -315,6 +323,9 @@ html[data-theme="dark"] {
   }
   #menu-items:not(.hidden) > li:nth-child(3) {
     animation-delay: 80ms;
+  }
+  #menu-items:not(.hidden) > li:nth-child(4) {
+    animation-delay: 120ms;
   }
 }
 @keyframes menu-rule-settle {

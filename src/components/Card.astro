@@ -37,7 +37,8 @@ const readingTime = body ? calculateReadingTime(body) : undefined;
         style={{ viewTransitionName: slugifyStr(title.replaceAll(".", "-")) }}
       >
         <span
-          class="decoration-dashed underline-offset-4 group-focus-visible:no-underline motion-reduce:group-hover:underline"
+          data-ink="title"
+          class="decoration-dashed underline-offset-4 group-hover:underline group-focus-visible:no-underline"
           >{title}</span
         >
       </Heading>
