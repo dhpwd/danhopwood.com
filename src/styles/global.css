@@ -205,6 +205,17 @@ html[data-theme="dark"] {
   scroll-margin-block: 1rem;
 }
 
+/* Astro adds its own copy of this rule only to pages that use a transition:
+   directive, and the router swaps in the incoming page's head, so without it
+   a navigation into any other page runs the browser's default animations. */
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
+  }
+}
+
 /* The small details – see docs/patterns/small-details.md. Outside any layer,
    as .active-nav is, so they outrank the utilities on the same element. */
 
