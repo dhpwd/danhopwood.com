@@ -31,7 +31,8 @@ import { SITE } from "@/config";
   // astro:before-preparation, while the old root stays in the page until
   // the swap, so live is cleared there. A link moves the URL only at the
   // swap, where initSearch replaces live. Every write to the history entry
-  // names the root it came from and is dropped unless that root is live.
+  // but the skip listener's put-back names the root it came from and is
+  // dropped unless that root is live.
   let live: HTMLElement | null = null;
 
   function replaceEntry(root: Element | null, state: unknown, url?: string) {
