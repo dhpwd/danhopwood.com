@@ -68,6 +68,10 @@ export default defineConfig({
     optimizeDeps: {
       exclude: ["@resvg/resvg-js"],
     },
+    build: {
+      // See "Nested CSS and the CSS build target" in docs/patterns/astro-build.md
+      cssTarget: ["chrome111", "firefox128", "safari16.4", "ios16.4"],
+    },
   },
   image: {
     responsiveStyles: true,

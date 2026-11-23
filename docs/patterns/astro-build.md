@@ -85,6 +85,7 @@ Where the form's spec puts focus on the submit button after every submit, call `
 - Node's `AbortSignal.timeout` timer doesn't keep the event loop alive. A stubbed `fetch` that hangs until aborted needs its own pending timer, or the test script exits before the timeout fires
 - `astro dev` and `astro preview` move to the next free port when the one passed to `--port` is taken, and say so only in their output ("Port 4391 is in use, trying another one..."). Read the port from the server's "Local" line before sending requests. A request to the port you asked for reaches another session's server, and its 404s read as yours
 - A screen recording in real time stutters under load. To record motion, install `page.clock` and `pauseAt`, then for each 33ms frame `runFor` 33ms, advance every animation in `document.getAnimations()` by hand and take a CDP screenshot. A phone profile with CDP touch events does draw the tap flash
+- A build run with `pnpm astro build --outDir <dir>` also leaves Astro's own files in `<dir>` (`content-assets.mjs`, `content-modules.mjs`, `collections/`, `fonts/`), which `pnpm run build`'s `dist/` doesn't hold. They can differ between two builds of the same source (a fonts cache expiry, the order of image imports), so leave them out of a build diff
 - A `console.log` in build-time code can print on the same line as Astro's route listing (`└─ /index.htmlMARKER …`). To count how often a module or function runs in a build, count every match (`grep -o MARKER build.log | wc -l`), not lines that start with the marker
 
 Run Playwright against `pnpm build && pnpm preview`. To compare a base and a change, copy each build's `dist/` aside and serve both at once with `pnpm astro preview --port <port> --outDir <copy>`, on ports other sessions aren't using. Stub `api/` routes with `page.route` (preview doesn't serve them), and test a function by calling its default export's `fetch` from a Node script with a stubbed global `fetch`.
@@ -128,3 +129,22 @@ To check the patch, build a temporary post and a temporary Markdown page in `src
 **Solution:** exclude the module with `@source not "<path>"` in `src/styles/global.css`, beside the import of Tailwind. `src/utils/markdownTwins.ts` is excluded this way. To confirm a module adds nothing, diff the built CSS (or every page's HTML) against the base build.
 
 **When to use:** writing build-time code that names classes, such as selectors in an integration or a rehype plugin.
+
+## Nested CSS and the CSS build target
+
+**Problem:** Astro builds its client and server bundles with Vite's `build.target` set to `"esnext"`, which the project's own `vite.build` overrides key by key (`node_modules/astro/dist/core/build/static-build.js`), and Vite's `build.cssTarget` defaults to `build.target`. Left at that, esbuild's CSS minify lowers nothing, and nested CSS in an Astro `<style>` block reaches the browser as written: Chrome before 120 and Safari before 17.2 drop some or all of its nested rules. Tailwind lowers its own stylesheet, so what ships nested is CSS written in `<style>` blocks, and nothing in the build reports it.
+
+**Solution:** `astro.config.ts` sets `vite.build.cssTarget` to Tailwind v4's browser floor, below which the site's CSS (cascade layers, `@property`, `color-mix()`) doesn't render as designed whatever the build does. esbuild's CSS minify then lowers nesting in every stylesheet Vite builds, Astro `<style>` blocks included: `#pagefind-search { input { … } }` in `search.astro` ships as `#pagefind-search input{…}`. It lowers little else at these targets. Newer syntax such as `light-dark()`, relative colours, `@starting-style` and `@scope` passes through unchanged, so check its support against the floor.
+
+Nested CSS is fine to write in a `<style>` block, within these limits:
+
+- In a scoped `<style>` (the default), Astro's compiler scopes only the outer selector, so a nested selector also matches inside child components and slotted content. Write a selector flat where it must stay scoped. An `is:global` block, like `search.astro`'s, has no scoping to lose
+- Put a rule's declarations before its nested rules. esbuild moves declarations that follow a nested at-rule ahead of it, so a trailing declaration that wins in `pnpm dev` can lose in production
+- Write an at-rule for a pseudo-element flat, as `@media (hover: hover) { .x::before { … } }`. esbuild lowers `.x::before { @media (hover: hover) { … } }` to a rule with no selector, which every browser drops
+- A `<style is:inline>` block skips Vite and ships as written
+
+`pnpm dev` serves CSS unlowered, because Vite minifies CSS only in a build, so check older-browser output in the production build: `dist/_astro/*.css`, and the `<style>` tags of the built pages, where Astro inlines small stylesheets.
+
+**Anti-pattern:** flattening nested CSS by hand for browser support, which fixes that block and leaves the next nested rule unlowered. Setting `vite.build.target` to reach the CSS, which changes every JS bundle too. And turning off `vite.build.minify` or `vite.build.cssMinify`, which turns the lowering off with it.
+
+**When to use:** writing nested CSS, adding a `<style is:inline>` block or changing the browsers the build supports.
