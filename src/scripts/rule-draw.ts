@@ -5,14 +5,22 @@
 
 let observer: IntersectionObserver | undefined;
 
+// :target isn't set yet when this first runs on a page loaded with a #hash
+function fragmentTarget(): HTMLElement | null {
+  try {
+    return document.getElementById(decodeURIComponent(location.hash.slice(1)));
+  } catch {
+    return null; // a malformed fragment such as #% targets nothing
+  }
+}
+
 // Where the page comes to rest. The router restores a saved position, and the
 // browser scrolls to a #hash, smoothly and after this runs, so the position
 // now is not yet where the visitor lands.
 function landingY(): number {
   const saved = history.state?.scrollY;
   if (typeof saved === "number" && saved > 0) return saved;
-  const id = decodeURIComponent(location.hash.slice(1));
-  const target = id ? document.getElementById(id) : null;
+  const target = fragmentTarget();
   if (!target) return window.scrollY;
   const maxY = document.documentElement.scrollHeight - window.innerHeight;
   return Math.min(target.getBoundingClientRect().top + window.scrollY, maxY);
