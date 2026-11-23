@@ -167,6 +167,11 @@ import { SITE } from "@/config";
       const clearButton = document.querySelector(".pagefind-ui__search-clear");
       searchInput?.addEventListener("input", resetSearchParam);
       clearButton?.addEventListener("click", resetSearchParam);
+      // Pagefind empties the field on Escape without an input event.
+      searchInput?.addEventListener("keydown", event => {
+        if ((event as KeyboardEvent).key === "Escape")
+          history.replaceState(history.state, "", window.location.pathname);
+      });
 
       function resetSearchParam(e: Event) {
         if ((e.target as HTMLInputElement)?.value.trim() === "") {
