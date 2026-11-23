@@ -18,6 +18,74 @@ const backUrl = SITE.showBackButton ? `${Astro.url.pathname}` : "/";
 </Layout>
 
 <script>
+  // A Back, Forward or reload to /search restores the saved position before
+  // the results render, so the restore is clamped to the short page. Hold
+  // the position and how many results were showing, and apply them once the
+  // results have loaded – see "Nothing scrolls on astro:after-swap" in
+  // docs/patterns/astro-build.md.
+  let pending: { y: number; shown: number } | null = null;
+
+  function holdRestore() {
+    const { scrollY: y = 0, searchShown: shown = 0 } = history.state ?? {};
+    pending = y > 0 ? { y, shown } : null;
+  }
+
+  function restoreWhenLoaded(root: HTMLElement) {
+    if (!pending) return;
+    const cancel = () => {
+      pending = null;
+      observer.disconnect();
+    };
+    const check = () => {
+      if (!pending) return cancel();
+      const results = root.querySelectorAll(".pagefind-ui__result");
+      if (!results.length || root.querySelector(".pagefind-ui__loading"))
+        return;
+      const more = root.querySelector<HTMLButtonElement>(
+        ".pagefind-ui__button"
+      );
+      if (results.length < pending.shown && more) return more.click();
+      window.scrollTo({ top: pending.y, behavior: "instant" });
+      cancel();
+    };
+    const observer = new MutationObserver(check);
+    observer.observe(root, {
+      childList: true,
+      subtree: true,
+      attributes: true,
+    });
+  }
+
+  // A visitor who scrolls or acts before the results load keeps their place.
+  for (const type of ["wheel", "touchstart", "keydown", "pointerdown"])
+    window.addEventListener(type, () => (pending = null), { passive: true });
+
+  // Pagefind doesn't keep how many results "Load more results" revealed, so
+  // keep the count on this history entry each time it grows.
+  document.addEventListener("click", event => {
+    if (
+      !(event.target as Element).closest?.(
+        "#pagefind-search .pagefind-ui__button"
+      )
+    )
+      return;
+    requestAnimationFrame(() => {
+      const shown = document.querySelectorAll(
+        "#pagefind-search .pagefind-ui__result"
+      ).length;
+      history.replaceState({ ...history.state, searchShown: shown }, "");
+    });
+  });
+
+  document.addEventListener("astro:before-swap", ({ navigationType, to }) => {
+    if (navigationType === "traverse" && to.pathname === "/search")
+      holdRestore();
+  });
+
+  // On the first run, whether a full load or the first client-side visit,
+  // history.state holds a saved position only on a Back, Forward or reload.
+  holdRestore();
+
   function initSearch() {
     const pageFindSearch: HTMLElement | null =
       document.querySelector("#pagefind-search");
@@ -61,8 +129,9 @@ const backUrl = SITE.showBackButton ? `${Astro.url.pathname}` : "/";
 
       const query = params.get("q");
       if (query) {
+        restoreWhenLoaded(pageFindSearch);
         search.triggerSearch(query);
-      }
+      } else pending = null;
 
       const searchInput = document.querySelector(".pagefind-ui__search-input");
       const clearButton = document.querySelector(".pagefind-ui__search-clear");
