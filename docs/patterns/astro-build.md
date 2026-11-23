@@ -69,6 +69,14 @@ Each part covers a case the others miss. The module-run call binds the page's no
 
 **When to use:** any script that scrolls the page, and any page that renders its content after the swap.
 
+## In-page links after `replaceState`
+
+**Problem:** the router decides whether a link stays on the page by comparing it with the URL it last navigated to (`originalLocation` in `astro/dist/transitions/router.js`, compared on `pathname` and `search`), not with `location`. A script that rewrites the URL with `history.replaceState` moves `location` without the router seeing it, so a `#fragment` link on that page resolves to a URL the router takes for another page. It fetches the page again, adds a history entry and swaps, and the URL loses the fragment. A widget mounted on each swap loses whatever the visitor built up. `data-astro-reload` on the link avoids the fetch, but the browser's fragment navigation then adds an entry with no `history.state`, and the router ignores a `popstate` to such an entry: follow a link from there and Back shows the fragment entry's URL over the page just left. Astro 7.4.13's router still works this way.
+
+**Solution:** the page that calls `replaceState` handles its own in-page links. A capture-phase `click` listener on `document` takes a plain click on an `a[href^="#"]` link and calls `preventDefault()`, which the router's own listener respects. It then calls `location.replace(link.href)`, a fragment navigation in the same entry that scrolls to the target and moves the sequential focus starting point there, so the next Tab lands inside it. A fragment navigation clears `history.state`, so the listener puts back the state it read beforehand. The move replaces the entry rather than adding one, unlike the router's in-page move on other pages: an added entry would carry a URL the router misjudges in the same way, so Back to it would fetch the page again. `src/pages/search.astro` is the worked example, where Pagefind's `processTerm` mirrors each search into `?q=`.
+
+**When to use:** any page whose script calls `history.replaceState` with a new URL. Only `/search` does today.
+
 ## Browser storage can throw
 
 **Problem:** reading `localStorage` or `sessionStorage` throws a `SecurityError` where the browser blocks site data (all cookies blocked, measured in Firefox and full Chromium), and `setItem` also throws on a full quota. An unguarded call stops the script at that line. Inside a library callback it breaks the library's own work too: an unguarded write inside Pagefind's `processTerm` stops it returning the term, so search shows no results. Nothing shows in a normal browser or in Playwright's default headless shell.
