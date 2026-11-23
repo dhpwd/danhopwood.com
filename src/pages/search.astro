@@ -10,7 +10,7 @@ import { SITE } from "@/config";
 <Layout title={`Search | ${SITE.title}`}>
   <Header />
   <Main pageTitle="Search">
-    <div id="pagefind-search" transition:persist></div>
+    <div id="pagefind-search"></div>
   </Main>
   <Footer />
 </Layout>
@@ -125,6 +125,10 @@ import { SITE } from "@/config";
       // @ts-expect-error — Missing types for @pagefind/default-ui package.
       const { PagefindUI } = await import("@pagefind/default-ui");
 
+      // Another swap during the idle wait and import has replaced this
+      // root. The run for the new root mounts the UI.
+      if (!pageFindSearch.isConnected) return;
+
       // Pagefind indexes the built site, so dev has no index to search.
       if (import.meta.env.DEV) {
         pageFindSearch.innerHTML = `
@@ -140,6 +144,10 @@ import { SITE } from "@/config";
         showImages: false,
         showSubResults: true,
         processTerm: function (term: string) {
+          // A search typed just before leaving runs after the swap, on a
+          // root no longer in the page, so it leaves the new URL alone.
+          if (!pageFindSearch.isConnected) return term;
+
           // Mirror the term into the URL so a search is linkable, without
           // adding a history entry per keystroke.
           params.set("q", term);
@@ -168,15 +176,7 @@ import { SITE } from "@/config";
     });
   }
 
-  document.addEventListener("astro:after-swap", () => {
-    const pagefindSearch = document.querySelector("#pagefind-search");
-
-    // transition:persist carries the mounted UI across swaps – initialising
-    // again would stack a second one on top of it.
-    if (pagefindSearch && pagefindSearch.querySelector("form")) return;
-
-    initSearch();
-  });
+  document.addEventListener("astro:after-swap", initSearch);
   initSearch();
 </script>
 
