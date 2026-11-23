@@ -2,9 +2,6 @@ const THEME = "theme";
 const LIGHT = "light";
 const DARK = "dark";
 
-// "light", "dark", or empty to follow the system's prefers-color-scheme.
-const initialColorScheme = "";
-
 // Reading localStorage throws where the browser blocks storage, and writing
 // it also throws on a full quota. A failed read counts as no stored theme, and
 // a dropped write still holds the pick for this page-life.
@@ -21,19 +18,9 @@ function readStoredTheme(): string | null {
 // client-side navigation.
 let pickedThisLoad = false;
 
-function getPreferTheme(): string {
-  const currentTheme = readStoredTheme();
-  if (currentTheme) return currentTheme;
-
-  if (initialColorScheme) return initialColorScheme;
-
-  return window.matchMedia("(prefers-color-scheme: dark)").matches
-    ? DARK
-    : LIGHT;
-}
-
-// window.theme is seeded by the inline pre-paint script in Layout.astro.
-let themeValue = window.theme?.themeValue ?? getPreferTheme();
+// window.theme is seeded by the inline pre-paint script in Layout.astro, which
+// resolves the starting theme and runs before this module.
+let themeValue = window.theme.themeValue;
 
 function setPreference(): void {
   pickedThisLoad = true;
@@ -75,20 +62,8 @@ function reflectPreference(): void {
   }
 }
 
-if (window.theme) {
-  window.theme.setPreference = setPreference;
-  window.theme.reflectPreference = reflectPreference;
-} else {
-  window.theme = {
-    themeValue,
-    setPreference,
-    reflectPreference,
-    getTheme: () => themeValue,
-    setTheme: (val: string) => {
-      themeValue = val;
-    },
-  };
-}
+window.theme.setPreference = setPreference;
+window.theme.reflectPreference = reflectPreference;
 
 // The inline script in Layout.astro sets data-theme only: the theme-color meta
 // is taken from the body background, and <body> does not exist when it runs.
@@ -100,7 +75,7 @@ function setThemeFeature(): void {
 
   document.querySelector("#theme-btn")?.addEventListener("click", () => {
     themeValue = themeValue === LIGHT ? DARK : LIGHT;
-    window.theme?.setTheme(themeValue);
+    window.theme.setTheme(themeValue);
     setPreference();
   });
 }
@@ -126,13 +101,14 @@ document.addEventListener("astro:before-swap", event => {
 
 // A visitor's pick outlasts system changes, and only a click stores one, so a
 // visitor who never picks follows the system on every visit. The stored theme
-// is read here rather than at load, to catch a pick made in another tab.
+// is read when the change fires rather than at load, so a tab opened before a
+// pick in another tab takes that pick, not the system's scheme.
 window
   .matchMedia("(prefers-color-scheme: dark)")
   .addEventListener("change", ({ matches: isDark }) => {
-    if (pickedThisLoad || readStoredTheme()) return;
+    if (pickedThisLoad) return;
 
-    themeValue = isDark ? DARK : LIGHT;
-    window.theme?.setTheme(themeValue);
+    themeValue = readStoredTheme() || (isDark ? DARK : LIGHT);
+    window.theme.setTheme(themeValue);
     reflectPreference();
   });
