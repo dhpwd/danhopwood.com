@@ -18,6 +18,101 @@ const backUrl = SITE.showBackButton ? `${Astro.url.pathname}` : "/";
 </Layout>
 
 <script>
+  // A Back, Forward or reload to /search restores the saved position before
+  // the results render, so the restore is clamped to the short page. Hold
+  // the position and how many results were showing, and apply them once the
+  // results have loaded – see "Scroll position and View Transitions" in
+  // docs/patterns/astro-build.md.
+  type Restore = { y: number; shown: number };
+  let pending: Restore | null = null;
+  let held: Restore | null = null;
+  let observer: MutationObserver | undefined;
+
+  function savedRestore(): Restore | null {
+    const { scrollY: y = 0, searchShown: shown = 0 } = history.state ?? {};
+    return y > 0 || shown > 0 ? { y, shown } : null;
+  }
+
+  function cancelRestore() {
+    pending = null;
+    observer?.disconnect();
+  }
+
+  function restoreWhenLoaded(root: HTMLElement) {
+    if (!pending) return;
+    const check = () => {
+      if (!pending) return cancelRestore();
+      const results = root.querySelectorAll(".pagefind-ui__result");
+      if (!results.length) return;
+      // Pagefind shows "Load more results" before the excerpts have loaded,
+      // so each page is revealed at once and their excerpts load together.
+      const more = root.querySelector<HTMLButtonElement>(
+        ".pagefind-ui__button"
+      );
+      if (results.length < pending.shown && more) return more.click();
+      if (root.querySelector(".pagefind-ui__loading")) return;
+      window.scrollTo({ top: pending.y, behavior: "instant" });
+      cancelRestore();
+    };
+    observer = new MutationObserver(check);
+    observer.observe(root, { childList: true, subtree: true });
+  }
+
+  // A visitor who scrolls or acts before the results load keeps their place.
+  for (const type of ["wheel", "touchstart", "keydown", "pointerdown"])
+    window.addEventListener(type, cancelRestore, { passive: true });
+
+  // Pagefind doesn't keep how many results "Load more results" revealed, so
+  // keep the count on this history entry each time it grows, and drop it
+  // when the visitor types a new search, which starts again at one page.
+  // triggerSearch fills the field without an input event.
+  document.addEventListener("input", event => {
+    if (
+      history.state?.searchShown &&
+      (event.target as Element).matches(
+        "#pagefind-search .pagefind-ui__search-input"
+      )
+    )
+      history.replaceState({ ...history.state, searchShown: 0 }, "");
+  });
+
+  document.addEventListener("click", event => {
+    if (
+      !(event.target as Element).closest?.(
+        "#pagefind-search .pagefind-ui__button"
+      )
+    )
+      return;
+    requestAnimationFrame(() => {
+      const shown = document.querySelectorAll(
+        "#pagefind-search .pagefind-ui__result"
+      ).length;
+      history.replaceState({ ...history.state, searchShown: shown }, "");
+    });
+  });
+
+  // Read the saved position as a Back or Forward to /search starts, and
+  // apply it at the swap, which also ends a restore still waiting on the
+  // page being left.
+  document.addEventListener(
+    "astro:before-preparation",
+    ({ navigationType, to }) => {
+      held =
+        navigationType === "traverse" && to.pathname === "/search"
+          ? savedRestore()
+          : null;
+    }
+  );
+
+  document.addEventListener("astro:before-swap", () => {
+    cancelRestore();
+    pending = held;
+  });
+
+  // On the first run, whether a full load or the first client-side visit,
+  // history.state holds a saved position only on a Back, Forward or reload.
+  pending = savedRestore();
+
   function initSearch() {
     const pageFindSearch: HTMLElement | null =
       document.querySelector("#pagefind-search");
@@ -61,8 +156,9 @@ const backUrl = SITE.showBackButton ? `${Astro.url.pathname}` : "/";
 
       const query = params.get("q");
       if (query) {
+        restoreWhenLoaded(pageFindSearch);
         search.triggerSearch(query);
-      }
+      } else pending = null;
 
       const searchInput = document.querySelector(".pagefind-ui__search-input");
       const clearButton = document.querySelector(".pagefind-ui__search-clear");
