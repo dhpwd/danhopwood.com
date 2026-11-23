@@ -211,7 +211,8 @@ html[data-theme="dark"] {
 /* Links ink in: a solid line in the link's colour draws over the dashed
    underline from the left, and leaves to the right. */
 @media (hover: hover) and (prefers-reduced-motion: no-preference) {
-  :is([class~="decoration-dashed"], .app-prose a:not(.heading-link)) {
+  [class~="decoration-dashed"],
+  .app-prose a:not(.heading-link) {
     /* An inline box ends one descent (about 0.28em) under the baseline, so
        with this padding, which an inline box takes without moving anything,
        the line sits 4 to 5px under the baseline at every type size. */
@@ -221,38 +222,29 @@ html[data-theme="dark"] {
     background-repeat: no-repeat;
     background-position: 100% var(--ink-y);
     background-size: 0 1px;
-    transition-property: background-size, text-decoration-color;
-    transition-duration: 300ms, 150ms;
+    /* One list for a link and a span inside one: the span inherits its
+       colour, so it lists the first two properties and ignores the rest. */
+    transition-property: text-decoration-color, background-size;
+    transition-duration: 150ms, 300ms, 150ms;
     transition-timing-function: var(--default-transition-timing-function);
   }
-  :is(a[class~="decoration-dashed"], .app-prose a:not(.heading-link)) {
-    transition-property: color, background-size, text-decoration-color;
-    transition-duration: 150ms, 300ms, 150ms;
+  a[class~="decoration-dashed"],
+  .app-prose a:not(.heading-link) {
+    transition-property: text-decoration-color, background-size, color;
   }
-  :is(
-    a[class~="decoration-dashed"]:hover,
-    a:hover [class~="decoration-dashed"],
-    .app-prose a:not(.heading-link):hover
-  ) {
+  a[class~="decoration-dashed"]:hover,
+  a:hover [class~="decoration-dashed"],
+  .app-prose a:not(.heading-link):hover {
     background-position: 0 var(--ink-y);
     background-size: 100% 1px;
     text-decoration-color: transparent;
-    transition-delay: 0s, 0s, 120ms;
-  }
-  a:hover [class~="decoration-dashed"] {
-    transition-delay: 0s, 120ms;
+    transition-delay: 120ms, 0s, 0s;
   }
   /* Keyboard focus keeps the outline on today's box, with no line */
-  :is(
-    a[class~="decoration-dashed"],
-    .app-prose a:not(.heading-link)
-  ):focus-visible {
+  a[class~="decoration-dashed"]:focus-visible,
+  .app-prose a:not(.heading-link):focus-visible {
     padding-bottom: 0;
     background-image: none;
-  }
-  /* A title has no underline at rest, so the line is all it gets */
-  a:hover [data-ink="title"] {
-    text-decoration-line: none;
   }
 }
 
@@ -266,14 +258,19 @@ html[data-theme="dark"] {
 [data-rule="run"] {
   position: relative;
 }
-[data-rule="run"]::before {
-  content: "";
+/* The drawn rule, for a row and for the phone menu, which gives it content
+   only under its own media query below */
+[data-rule="run"]::before,
+#menu-items:not(.hidden)::before {
   position: absolute;
   inset-inline: 0;
   top: -1px;
   height: 1px;
   transform-origin: left center;
   animation: rule-draw 400ms var(--default-transition-timing-function) both;
+}
+[data-rule="run"]::before {
+  content: "";
 }
 [data-rule="run"] > .label-caps {
   animation: rule-label 400ms ease-in both;
@@ -308,12 +305,6 @@ html[data-theme="dark"] {
   }
   #menu-items:not(.hidden)::before {
     content: "";
-    position: absolute;
-    inset-inline: 0;
-    top: -1px;
-    height: 1px;
-    transform-origin: left center;
-    animation: rule-draw 400ms var(--default-transition-timing-function) both;
   }
   #menu-items:not(.hidden) > li {
     animation: menu-rise 280ms var(--default-transition-timing-function)
@@ -324,9 +315,6 @@ html[data-theme="dark"] {
   }
   #menu-items:not(.hidden) > li:nth-child(3) {
     animation-delay: 80ms;
-  }
-  #menu-items:not(.hidden) > li:nth-child(4) {
-    animation-delay: 120ms;
   }
 }
 @keyframes menu-rule-settle {

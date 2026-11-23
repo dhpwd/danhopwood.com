@@ -14,24 +14,23 @@ const pageUrl = Astro.url.href;
     <div data-rule class="ledger border-t border-border py-5">
       <h2 class="label-caps text-foreground/75">Share</h2>
       <ul class="-mx-3 flex flex-wrap sm:-mx-1.5 sm:gap-x-3">
-        {SHARE_LINKS.map(social => {
-          const Icon = social.icon;
-          return (
+        {SHARE_LINKS.map(
+          ({ name, label, icon: Icon, linkTitle, buildHref }) => (
             <li>
               <a
-                href={social.buildHref(pageUrl, title)}
+                href={buildHref(pageUrl, title)}
                 class="inline-flex size-11 items-center justify-center interactive sm:size-8"
-                title={social.linkTitle}
+                title={linkTitle}
                 target="_blank"
                 rel="noopener noreferrer"
-                data-share={social.name}
+                data-share={name}
               >
                 <Icon class="icon-tilt size-5" aria-hidden="true" />
-                <span class="sr-only">{social.label ?? social.name}</span>
+                <span class="sr-only">{label ?? name}</span>
               </a>
             </li>
-          );
-        })}
+          )
+        )}
       </ul>
     </div>
   )

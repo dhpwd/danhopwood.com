@@ -1,3 +1,4 @@
+import type { SvgComponent } from "astro/types";
 import { SITE } from "@/config";
 import IconBrandX from "@/assets/icons/IconBrandX.svg";
 import IconFacebook from "@/assets/icons/IconFacebook.svg";
@@ -7,11 +8,9 @@ import IconMail from "@/assets/icons/IconMail.svg";
 import IconTelegram from "@/assets/icons/IconTelegram.svg";
 import IconWhatsapp from "@/assets/icons/IconWhatsapp.svg";
 
-type Icon = typeof IconBrandX;
-
 interface Social {
   name: string;
-  icon: Icon;
+  icon: SvgComponent;
   href: string;
   linkTitle: string;
 }
@@ -21,7 +20,7 @@ interface ShareLink {
   name: string;
   // The link's name for screen readers, where it differs from `name`
   label?: string;
-  icon: Icon;
+  icon: SvgComponent;
   linkTitle: string;
   buildHref: (pageUrl: string, pageTitle?: string) => string;
 }

@@ -8,28 +8,34 @@ let observer: IntersectionObserver | undefined;
 function initRuleDraw(): void {
   if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
-  observer ??= new IntersectionObserver(
-    entries => {
+  const io = (observer ??= new IntersectionObserver(
+    (entries, self) => {
       for (const entry of entries) {
         if (!entry.isIntersecting) continue;
         (entry.target as HTMLElement).dataset.rule = "run";
-        observer?.unobserve(entry.target);
+        self.unobserve(entry.target);
       }
     },
     { rootMargin: "0px 0px -8% 0px" }
-  );
+  ));
 
-  for (const row of document.querySelectorAll<HTMLElement>("[data-rule]")) {
-    if (row.dataset.rule) continue;
+  const rows = [
+    ...document.querySelectorAll<HTMLElement>("[data-rule]"),
+  ].filter(row => !row.dataset.rule);
+  // Every position is read before any row is marked, so marking one doesn't
+  // make the next read recalculate styles.
+  const tops = rows.map(row => row.getBoundingClientRect().top);
+  const viewportBottom = window.innerHeight;
+  rows.forEach((row, i) => {
     // A row already in view at arrival never plays, since nothing the
     // visitor did brought it there.
-    if (row.getBoundingClientRect().top < window.innerHeight) {
+    if (tops[i] < viewportBottom) {
       row.dataset.rule = "seen";
-      continue;
+      return;
     }
     row.dataset.rule = "pending";
-    observer.observe(row);
-  }
+    io.observe(row);
+  });
 }
 
 // The phone menu's rule plays rule-draw too, on an element with no
