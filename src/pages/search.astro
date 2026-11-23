@@ -193,34 +193,56 @@ import { SITE } from "@/config";
         showSubResults: true,
         processTerm: function (term: string) {
           // Mirror the term into the URL so a search is linkable, without
-          // adding a history entry per keystroke.
-          params.set("q", term);
-          replaceEntry(pageFindSearch, history.state, "?" + params.toString());
+          // adding a history entry per keystroke. Pagefind searches a
+          // whitespace-only term too, which leaves no q.
+          if (!term.trim()) clearQuery();
+          else {
+            params.set("q", term);
+            replaceEntry(
+              pageFindSearch,
+              history.state,
+              "?" + params.toString()
+            );
+          }
 
           return term;
         },
       });
 
       const query = params.get("q");
-      if (query) {
+      if (query?.trim()) {
         restoreWhenLoaded(pageFindSearch);
         search.triggerSearch(query);
-      } else pending = null;
+      } else {
+        pending = null;
+        if (query !== null) clearQuery();
+      }
 
       const searchInput = document.querySelector(".pagefind-ui__search-input");
       const clearButton = document.querySelector(".pagefind-ui__search-clear");
-      searchInput?.addEventListener("input", resetSearchParam);
-      clearButton?.addEventListener("click", resetSearchParam);
-      // Pagefind empties the field on Escape without an input event.
+      searchInput?.addEventListener("input", event => {
+        if (!(event.target as HTMLInputElement).value.trim()) clearQuery();
+      });
+      // Pagefind empties the field on Clear and on Escape without an input
+      // event.
+      clearButton?.addEventListener("click", clearQuery);
       searchInput?.addEventListener("keydown", event => {
-        if ((event as KeyboardEvent).key === "Escape")
-          replaceEntry(pageFindSearch, history.state, window.location.pathname);
+        if ((event as KeyboardEvent).key === "Escape") clearQuery();
       });
 
-      function resetSearchParam(e: Event) {
-        if ((e.target as HTMLInputElement)?.value.trim() === "") {
-          replaceEntry(pageFindSearch, history.state, window.location.pathname);
-        }
+      // Remove q and keep the other parameters, so the URL stays in step
+      // with the params processTerm writes from. It writes even with no q
+      // to remove, so a clear also drops the skip link's hash, which a Back
+      // then Forward would otherwise reach without a live root – see
+      // "Client scripts and View Transitions" in docs/patterns/astro-build.md.
+      function clearQuery() {
+        params.delete("q");
+        const rest = params.toString();
+        replaceEntry(
+          pageFindSearch,
+          history.state,
+          rest ? "?" + rest : window.location.pathname
+        );
       }
     });
   }
