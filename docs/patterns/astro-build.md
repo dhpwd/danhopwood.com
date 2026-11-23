@@ -127,3 +127,15 @@ To check the patch, build a temporary post and a temporary Markdown page in `src
 **Solution:** exclude the module with `@source not "<path>"` in `src/styles/global.css`, beside the import of Tailwind. `src/utils/markdownTwins.ts` is excluded this way. To confirm a module adds nothing, diff the built CSS (or every page's HTML) against the base build.
 
 **When to use:** writing build-time code that names classes, such as selectors in an integration or a rehype plugin.
+
+## Nested CSS and the CSS build target
+
+**Problem:** Astro sets Vite's `build.target` to `"esnext"` for its client and server builds, ahead of the project's own `vite.build` (`node_modules/astro/dist/core/build/static-build.js`), and Vite's `build.cssTarget` defaults to `build.target`. Left at that, esbuild's CSS minify lowers nothing, and nested CSS in an Astro `<style>` block reaches the browser as written. Chrome before 112 and Safari before 16.5 drop every nested rule. Chrome before 120 and Safari before 17.2 also drop a nested rule that starts with a type selector, such as `input` inside `#pagefind-search`. Tailwind's stylesheet comes out flat because Tailwind lowers its own output, so only hand-written CSS ships nested, and nothing in the build reports it.
+
+**Solution:** `astro.config.ts` sets `vite.build.cssTarget` to `["chrome111", "firefox128", "safari16.4"]`. esbuild's CSS minify then lowers nesting, and any other syntax those browsers lack, in every stylesheet Vite builds, Astro `<style>` blocks included: `#pagefind-search { input { … } }` in `search.astro` ships as `#pagefind-search input{…}`. Nested CSS is fine to write in any `<style>` block. The targets are Tailwind v4's floor, since the site's CSS depends on cascade layers, `@property` and `color-mix()` and can't work in an older browser whatever the build does.
+
+`pnpm dev` serves CSS unlowered, because Vite minifies CSS only in a build, so check older-browser output in the production build's `dist/_astro/*.css`. A `<style is:inline>` block skips Vite and ships as written – the repo has none.
+
+**Anti-pattern:** flattening nested CSS by hand for browser support, which fixes that block and leaves the next nested rule unlowered. And setting `vite.build.target` to reach the CSS, which changes every JS bundle too.
+
+**When to use:** writing nested CSS, adding a `<style is:inline>` block, or changing the browsers the build supports.
