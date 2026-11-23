@@ -105,6 +105,8 @@ Rejected: a breadcrumb, which is a second kind of mono line above a title on a s
 
 Posts, About and Search, then the toggle. Tags and Archives are reached from the Posts page, and Posts is the active item on both. On a phone the links sit behind a burger as a plain list. The burger is named "Menu" for screen readers when open and closed, with `aria-expanded` for the state, and turns to a cross while the menu is open. It is a taste call made on renders. The theme toggle is named "Dark theme" for screen readers in both themes, with `aria-pressed` for the state and its icons hidden. A new destination joins the `NAV` list in `Header.astro`, whose `sections` say which paths make it the active item.
 
+Only a click on the toggle stores the theme, and a stored theme holds when the system's colour scheme changes. A visitor who never clicks follows the system, live and on every visit, and nothing is stored for them. A visitor who has clicked can't go back to following the system short of clearing site data.
+
 Rejected:
 
 - Five destinations in the header, and icons for them. As words they read as a blog theme's navigation and leave no room for another at 390
@@ -114,6 +116,8 @@ Rejected:
 - The mono "Menu" word alone
 - A burger whose name changes to "Close" when open, which states the state twice
 - A theme toggle whose name changes with the theme ("Switch to dark theme" / "Switch to light theme"), which keeps the name in the script and needs a live region to be heard
+- A third "follow the system" state on the toggle, which would give a visitor who clicked a way back but changes the toggle's look and name
+- Applying a system change to an open page after a pick without storing it. The next full load reads the stored pick and flips back
 
 ## Profile and share links are icons
 
