@@ -137,7 +137,7 @@ Text inside a control that sets its own colour doesn't inherit the control's ste
 
 Focus: links, buttons and `[role="button"]` elements take the base rule's 2px dashed accent outline, so a post's images, which `ImageZoom.astro` makes buttons, need no outline of their own. Fields focus differently – see "Form fields".
 
-Reduced motion keeps the colour steps and drops the motion: the press settle is `motion-safe:`, the theme toggle's icons morph with `transition-[scale,rotate] motion-reduce:transition-none`, and `html` takes `motion-safe:scroll-smooth` in `global.css` and `Layout.astro`. Astro's `ClientRouter` drops view-transition animation under reduced motion itself.
+Reduced motion keeps the colour steps and drops the motion: the press settle is `motion-safe:`, the theme toggle's icons morph with `transition-[scale,rotate] motion-reduce:transition-none`, and `html` takes `motion-safe:scroll-smooth` in `global.css` and `Layout.astro`. `global.css` drops every view-transition animation under reduced motion, outside any layer: Astro adds its own copy of that rule only to pages that use a `transition:` directive, and the router swaps in the incoming page's head, so a page without one would run the browser's default cross-fade.
 
 Anti-patterns:
 
