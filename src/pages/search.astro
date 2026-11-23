@@ -215,7 +215,7 @@ import { SITE } from "@/config";
         search.triggerSearch(query);
       } else {
         pending = null;
-        if (query !== null) clearQuery();
+        clearQuery();
       }
 
       const searchInput = document.querySelector(".pagefind-ui__search-input");
@@ -231,8 +231,10 @@ import { SITE } from "@/config";
       });
 
       // Remove q and keep the other parameters, so the URL stays in step
-      // with the params processTerm writes from.
+      // with the params processTerm writes from. With no q to remove, the
+      // entry is left as it is.
       function clearQuery() {
+        if (!params.has("q")) return;
         params.delete("q");
         const rest = params.toString();
         replaceEntry(
