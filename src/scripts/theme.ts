@@ -6,8 +6,8 @@ const DARK = "dark";
 const initialColorScheme = "";
 
 // Reading localStorage throws where the browser blocks storage, and writing
-// it also throws on a full quota. A failed read leaves the theme following the
-// system, and a dropped write still holds the pick for this page-life.
+// it also throws on a full quota. A failed read counts as no stored theme, and
+// a dropped write still holds the pick for this page-life.
 function readStoredTheme(): string | null {
   try {
     return localStorage.getItem(THEME);

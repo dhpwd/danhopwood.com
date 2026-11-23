@@ -217,7 +217,7 @@ const structuredDataJSON = JSON.stringify(structuredData).replace(
             const currentTheme = localStorage.getItem("theme");
             if (currentTheme) return currentTheme;
           } catch {
-            // Storage is blocked: fall back to the system scheme.
+            // Storage is blocked: treat it as no stored theme.
           }
           if (initialColorScheme) return initialColorScheme;
           return window.matchMedia("(prefers-color-scheme: dark)").matches
