@@ -55,7 +55,9 @@ Each part covers a case the others miss. The module-run call binds the page's no
 
 **Anti-pattern:** registering the init function on `astro:page-load` alone, which leaves nothing bound until window `load`.
 
-**Anti-pattern for new work:** `is:inline data-astro-rerun`. It does re-run the script, at the cost of TypeScript, import resolution and deduplication. `document` and `window` survive the swap, so a listener the script adds to either is added again on every navigation: each move from one post to another adds another `scroll` and `astro:after-swap` listener from `PostDetails.astro`. `PostDetails.astro` and `BackToTopButton.astro` both take that route, so expect to find it in the tree – prefer the pattern above for anything new, and keep inline scripts for pre-paint state such as the theme flash guard in `Layout.astro`.
+**Anti-pattern for new work:** `is:inline data-astro-rerun`. It does re-run the script, at the cost of TypeScript, import resolution and deduplication. `document` and `window` survive the swap, so a listener the script adds to either is added again on every navigation: `PostDetails.astro` adds its one `document` listener, the progress bar's `scroll` handler, behind a `window.postProgressBound` flag so the visit gets one. `PostDetails.astro` and `BackToTopButton.astro` both take that route, so expect to find it in the tree – prefer the pattern above for anything new, and keep inline scripts for pre-paint state such as the theme flash guard in `Layout.astro`.
+
+**Nothing scrolls on** `astro:after-swap`**.** The router scrolls a new page to the top, or restores the saved position on a Back or Forward, before it fires `astro:after-swap`. A `scrollTo` in that event undoes the restore, and a listener on `document` keeps doing so on every later page. `src/scripts/restore-scroll.ts` makes the restore jump rather than glide, because the router's `scrollTo(x, y)` otherwise takes `html`'s smooth `scroll-behavior`. A reload's restore, and a Back or Forward within one page after a `#hash` link, don't fire the swap events and still glide. Astro 7.4.3 and later pass `behavior: "instant"` to the router's restores themselves, on a Back or Forward and on a reload (withastro/astro#18506), so `restore-scroll.ts` and its `<script>` tag come out in the upgrade to Astro 7.
 
 **When to use:** any component that attaches client-side event listeners.
 
@@ -68,41 +70,6 @@ Each part covers a case the others miss. The module-run call binds the page's no
 Where the form's spec puts focus on the submit button after every submit, call `focus()` on the button itself instead. Noting `document.activeElement` can't deliver that: after Enter in a field it is the field, and Safari on macOS doesn't focus a button on click, so after a click there it is `<body>`. The enquiry form in `cloud-box-setup.astro` does this.
 
 **When to use:** any handler that disables a control while work is pending.
-
-## Testing client scripts and functions
-
-**Problem:** behaviours of this site, the browser and Node break the obvious test harness, either failing with an error that points elsewhere or passing when the code is wrong.
-
-**Solution:**
-
-- `global.css` applies `motion-safe:scroll-smooth` to `html`, so after Playwright's `fill()` scrolls down a long post the target keeps moving for about a second, and `click()` fails with "element is not stable". Wait for the scroll to settle before clicking
-- `html` is `overflow-y-scroll`, and headless Chromium's scrollbar takes 15px at 390, where a phone's overlays the page. Hide it (`html { scrollbar-width: none }` from an init script) before measuring layout or sideways scroll
-- A context's `colorScheme` picks the theme only while `localStorage` has no `theme` key. A test click on the theme button writes one, and every later page in that context keeps that theme – remove the key after the click
-- A screenshot drops `:hover`, so read a state's computed style while the state is held, between `hover()` or `mouse.down()` and the next mouse move
-- A colour from a `/75` utility or a `color-mix()` token computes with alpha or in another space (`oklab(… / 0.75)`, `color(srgb …)`), which is not the colour on screen. To measure contrast, paint the ground's computed colour and then each layer onto a 1×1 canvas and read the pixel
-- On `/search`, clicking Clear empties the results, so test "Load more results" before it
-- The fonts API registers each family under a hashed name, so `font-family` computes as `Geist-4350b8f6…` or `Geist Mono-1081b9fc…`. Match the face by prefix, with the hash stripped, not by equality
-- `<ClientRouter />` saves the scroll position with `history.replaceState`, which fires Playwright's `framenavigated` on the same URL. To assert that a submit didn't navigate, count navigation requests (`request.isNavigationRequest()`) or check a `window` marker survives, not `framenavigated`
-- To hold a page before window `load`, hold the `plausible.io` script request in a `route` handler and fulfil it with an empty body once the check is done. The async script holds back `load`, and an empty body leaves an init-script recorder in place of `window.plausible`. Assert `document.readyState` is `"interactive"` before each early action, so a check can't pass on a page that has already loaded
-- To show a handler isn't bound twice, count its node's listeners by type with CDP `DOMDebugger.getEventListeners`, taking the `objectId` from a `Runtime.evaluate` of the selector, rather than counting what the handler does. A second listener on an action that is safe to repeat, such as opening the zoom dialog, changes nothing visible. The same call reads `window` and `document`
-- Submit forms by clicking the button as well as pressing Enter in a field. Only the click leaves focus on the button, so a bug in how the handler treats focus shows on that route alone
-- `locator.boundingBox()` is relative to the viewport, and a click can scroll the page. To assert an element didn't move, compare `getBoundingClientRect().top + scrollY`
-- A control's state changes over the shared 150ms, so a computed style read straight after `focus()` or `hover()` is the start of the transition – a field's focus ring reads as transparent. Wait past the duration before reading
-- A full-page screenshot clipped to an element far below the viewport can show a post image as an empty box, even after it has loaded. Scroll the element into view and `await img.decode()` before the screenshot. Post images are `loading="lazy"`, so set them eager first
-- `textContent` runs a link's flex items together ("ai17 posts"). Read what a screen reader announces from `locator.ariaSnapshot()`, which separates them
-- `pnpm preview` answers a path with a trailing slash (`/about/`) with the 404 page – see `docs/patterns/urls.md`. A check that queries the page then finds nothing and passes, so write test URLs without the slash
-- A position read from a screenshot's pixels, such as where a marker's ink starts, can differ by a pixel between Chromium builds and scale factors. Compare before and after in the same browser at the same scale
-- To compare an element pixel for pixel across two builds, hide the site header on both. A change in the header's height moves everything below it by a fraction of a pixel, which changes its anti-aliasing and reads as a difference
-- Headless Chromium on `localhost` writes to the clipboard without a permission grant, so an unstubbed copy test passes whatever the page does when a write fails. Replace `navigator.clipboard.writeText` from an init script to test the failure path, and grant `clipboard-read` to read the clipboard back after a real write
-- Node's `AbortSignal.timeout` timer doesn't keep the event loop alive. A stubbed `fetch` that hangs until aborted needs its own pending timer, or the test script exits before the timeout fires
-- `astro dev` and `astro preview` move to the next free port when the one passed to `--port` is taken, and say so only in their output ("Port 4391 is in use, trying another one..."). Read the port from the server's "Local" line before sending requests. A request to the port you asked for reaches another session's server, and its 404s read as yours
-- A screen recording in real time stutters under load. To record motion, install `page.clock` and `pauseAt`, then for each 33ms frame `runFor` 33ms, advance every animation in `document.getAnimations()` by hand and take a CDP screenshot. A phone profile with CDP touch events does draw the tap flash
-- A build run with `pnpm astro build --outDir <dir>` also leaves Astro's own files in `<dir>` (`content-assets.mjs`, `content-modules.mjs`, `collections/`, `fonts/`), which `pnpm run build`'s `dist/` doesn't hold. They can differ between two builds of the same source (a fonts cache expiry, the order of image imports), so leave them out of a build diff
-- A `console.log` in build-time code can print on the same line as Astro's route listing (`└─ /index.htmlMARKER …`). To count how often a module or function runs in a build, count every match (`grep -o MARKER build.log | wc -l`), not lines that start with the marker
-
-Run Playwright against `pnpm build && pnpm preview`. To compare a base and a change, copy each build's `dist/` aside and serve both at once with `pnpm astro preview --port <port> --outDir <copy>`, on ports other sessions aren't using. Stub `api/` routes with `page.route` (preview doesn't serve them), and test a function by calling its default export's `fetch` from a Node script with a stubbed global `fetch`.
-
-**When to use:** browser-testing a client script or a change to what a page renders, testing an `api/` function, or checking build-time code with a temporary log.
 
 ## Markdown plugins and image optimisation
 
