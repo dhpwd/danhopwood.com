@@ -1,5 +1,5 @@
 interface Window {
-  theme?: {
+  theme: {
     themeValue: string;
     setPreference: () => void;
     reflectPreference: () => void;
