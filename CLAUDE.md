@@ -32,7 +32,7 @@ pnpm generate:favicons  # regenerate public/ favicons from the brand tokens
 
 1. Preflight
 2. `pnpm run build` – `astro check`, the production build, then Pagefind, which writes its index into `public/`
-3. Browser check, for any change to what a page renders – serve the build with `pnpm preview`, load each affected page in the Playwright MCP at 1440 and 390 in light and dark, and confirm the layout, no sideways scroll and no console errors. A colour change also measures contrast from computed colours composited onto their ground. A change to a control also reads each state's computed style while the state is held. Method: "Testing client scripts and functions" in `docs/patterns/astro-build.md`
+3. Browser check, for any change to what a page renders – serve the build with `pnpm preview`, load each affected page in the Playwright MCP at 1440 and 390 in light and dark, and confirm the layout, no sideways scroll and no console errors. A colour change also measures contrast from computed colours composited onto their ground. A change to a control also reads each state's computed style while the state is held. Method: "Testing client scripts and functions" in `docs/patterns/browser-testing.md`
 
 ## Pattern index
 
@@ -46,6 +46,7 @@ pnpm generate:favicons  # regenerate public/ favicons from the brand tokens
 - a post's title block, body, tables, figures or what follows the article → read `docs/patterns/post-page.md`
 - adding routes, changing route config or writing internal links → read `docs/patterns/urls.md`
 - client-side scripts, server endpoints (`api/`), content collections (including any route that reads posts), stale build output, build-time code that names CSS classes, nested CSS, the build's browser targets, upgrading Astro or editing `patches/` → read `docs/patterns/astro-build.md`
+- browser-testing a client script or a change to what a page renders, testing an `api/` function, or checking build-time code with a temporary log → read `docs/patterns/browser-testing.md`
 - adding, removing or upgrading a dependency → read `docs/patterns/dependencies.md`
 
 ## Key references
