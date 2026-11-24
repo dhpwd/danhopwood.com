@@ -1,0 +1,205 @@
+---
+// The figure a coded diagram sits in, and the parts every diagram is drawn
+// from. `summary` says what the drawing shows for a reader who can't see how
+// its parts are placed. The caption, when there is one, goes in the
+// `caption` slot. See docs/patterns/diagrams.md
+type Props = {
+  summary: string;
+};
+
+const { summary } = Astro.props;
+---
+
+<figure class="diagram not-prose">
+  <p class="sr-only">{summary}</p>
+  <slot />
+  {
+    Astro.slots.has("caption") && (
+      <figcaption>
+        <slot name="caption" />
+      </figcaption>
+    )
+  }
+</figure>
+
+<style is:global>
+  /* Every colour is a theme token or a mix of the text colour into the
+     ground, so a diagram follows the theme with no rule per theme. The mixes
+     are opaque: two lines that cross paint one colour, where a translucent
+     one would darken at the crossing. These rules sit outside the cascade
+     layers, so they outrank the prose rules in typography.css. */
+  .diagram {
+    container: diagram / inline-size;
+    width: 100%;
+    max-width: none;
+
+    --dg-text: color-mix(in srgb, var(--foreground) 82%, var(--background));
+    /* Labels, notes and the words on a connector */
+    --dg-note: color-mix(in srgb, var(--foreground) 75%, var(--background));
+    /* Connectors and the outlined box carry meaning, so they take the 60%
+       the site gives a control's boundary: 3:1 or more on the ground */
+    --dg-wire: color-mix(in srgb, var(--foreground) 60%, var(--background));
+    /* The dashed frame only groups, and its heading says so in words */
+    --dg-frame: color-mix(in srgb, var(--foreground) 32%, var(--background));
+    --dg-dot: color-mix(in srgb, var(--foreground) 25%, var(--background));
+    --dg-border: color-mix(in srgb, var(--foreground) 16%, var(--background));
+    --dg-chip: color-mix(in srgb, var(--foreground) 7%, var(--background));
+    --dg-tint: color-mix(in srgb, var(--foreground) 4%, var(--background));
+    /* The filled box: the text colour as the ground, the ground as the text */
+    --dg-fill: var(--foreground);
+    --dg-on-fill: var(--background);
+    --dg-on-fill-text: color-mix(
+      in srgb,
+      var(--background) 84%,
+      var(--foreground)
+    );
+    --dg-on-fill-line: color-mix(
+      in srgb,
+      var(--background) 32%,
+      var(--foreground)
+    );
+    --dg-gap: 0.625rem;
+
+    font-size: 0.875rem;
+    line-height: 1.45;
+    color: var(--dg-text);
+  }
+
+  /* typography.css gives prose p, strong and lists the text colour, and a
+     numbered list its own padding. Inside a diagram they inherit. */
+  .diagram :where(p, ul, ol, li, strong) {
+    padding: 0;
+    color: inherit;
+  }
+
+  .diagram :where(strong, b) {
+    font-weight: 600;
+  }
+
+  /* A diagram's two small mono labels, at the status chip's size. The level
+     label heads a level or a zone and is the one place a diagram takes the
+     accent – see "The accent at rest is a closed list". Its number, and
+     every other label, is grey. */
+  .dg-level,
+  .dg-label {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-weight: 500;
+    line-height: 1.35;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  .dg-level {
+    color: var(--accent);
+  }
+
+  /* The space after the number is a real one, so the label reads "01
+     Founder" to a screen reader and in the page's Markdown twin */
+  .dg-level > span {
+    color: var(--dg-note);
+  }
+
+  .dg-label {
+    color: var(--dg-note);
+  }
+
+  .dg-mono {
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+    letter-spacing: 0.02em;
+  }
+
+  .dg-card {
+    position: relative;
+    min-width: 0;
+    border: 1px solid var(--dg-border);
+    border-radius: 0.375rem;
+    background: var(--background);
+    padding: 0.75rem 0.875rem;
+  }
+
+  .dg-name {
+    font-size: 1.0625rem;
+    font-weight: 600;
+    line-height: 1.3;
+    letter-spacing: -0.018em;
+    color: var(--foreground);
+  }
+
+  .dg-name-lg {
+    font-size: 1.25rem;
+  }
+
+  .dg-card.dg-tint {
+    background: var(--dg-tint);
+  }
+
+  .dg-card.dg-strong {
+    border-color: var(--dg-wire);
+  }
+
+  .dg-card.dg-fill {
+    border-color: transparent;
+    background: var(--dg-fill);
+    color: var(--dg-on-fill-text);
+  }
+
+  .dg-fill :where(.dg-name, strong, b) {
+    color: var(--dg-on-fill);
+  }
+
+  .dg-chip {
+    display: inline-block;
+    border-radius: 0.25rem;
+    background: var(--dg-chip);
+    padding: 0.1875rem 0.5rem;
+    font-size: 0.8125rem;
+    color: var(--dg-text);
+  }
+
+  /* A dashed frame round the things that share a place */
+  .dg-frame {
+    border: 1px dashed var(--dg-frame);
+    border-radius: 0.75rem;
+    padding: 0.75rem;
+  }
+
+  /* The words on a connector. They sit beside its line, never on it */
+  .dg-tag {
+    width: fit-content;
+    max-width: 100%;
+    border: 1px solid var(--dg-border);
+    border-radius: 0.75rem;
+    background: var(--background);
+    padding: 0.1875rem 0.625rem;
+    font-size: 0.8125rem;
+    color: var(--dg-note);
+  }
+
+  /* Connectors are drawn in SVG wherever the layout is a fixed size, on
+     half-pixel coordinates so a 1px line fills one row of pixels. A line
+     ends on a card in a half disc, flat against the card's edge. */
+  .dg-wires {
+    display: block;
+    overflow: visible;
+    fill: none;
+    stroke: var(--dg-wire);
+    stroke-width: 1;
+  }
+
+  .dg-wires .end {
+    fill: var(--dg-wire);
+    stroke: none;
+  }
+
+  /* A half disc on its own, for the end of a line drawn in CSS */
+  .dg-end {
+    position: absolute;
+    display: block;
+    width: 0.4375rem;
+    height: 0.25rem;
+    fill: var(--dg-wire);
+  }
+</style>

@@ -33,16 +33,17 @@ const postUrlPath = (idSegments: string[]): string => {
 };
 
 // Recursively collect published post files, mirroring the loader glob
-// "**/[^_]*.md": any `.md` whose filename does not start with `_`. Directories
-// are traversed unconditionally (including `_`-prefixed ones) to match the glob;
-// getPath then strips `_` segments from the resulting URL.
+// "**/[^_]*.{md,mdx}": any `.md` or `.mdx` whose filename does not start with
+// `_`. Directories are traversed unconditionally (including `_`-prefixed
+// ones) to match the glob; getPath then strips `_` segments from the
+// resulting URL.
 const collectPostFiles = (dir: string): string[] => {
   const out: string[] = [];
   for (const entry of readdirSync(dir, { withFileTypes: true })) {
     const full = `${dir}/${entry.name}`;
     if (entry.isDirectory()) {
       out.push(...collectPostFiles(full));
-    } else if (entry.name.endsWith(".md") && !entry.name.startsWith("_")) {
+    } else if (/\.mdx?$/.test(entry.name) && !entry.name.startsWith("_")) {
       out.push(full);
     }
   }
@@ -77,7 +78,7 @@ export const getPostModDates = (): Map<string, Date> => {
 
     const idSegments = file
       .slice(BLOG_PATH.length + 1)
-      .replace(/\.md$/, "")
+      .replace(/\.mdx?$/, "")
       .split("/");
     dates.set(postUrlPath(idSegments), date);
   }

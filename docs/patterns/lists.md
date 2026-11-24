@@ -25,4 +25,6 @@ Anti-patterns:
 - A marker positioned by hand: the list padded to the marker's width with the rest on the item, or a rule for items ten and up
 - Markers hung outside the column (`padding-inline-start: 0`), which a phone's 16px gutter cuts off and which read as sitting too far left
 
+The lists inside a diagram (steps, chips, devices and sessions) are drawn parts outside this rule – see `docs/patterns/diagrams.md`.
+
 **When to use:** adding a list to a page or a part, or changing how lists are styled.
