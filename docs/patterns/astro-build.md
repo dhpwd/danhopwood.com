@@ -1,12 +1,14 @@
 # Astro build and client scripts
 
-## Stale content after deleting a post
+## Stale content from Astro's content store
 
 **Problem:** deleting a blog markdown file doesn't remove its route from the build output. Astro persists content collection data in `node_modules/.astro/data-store.json`, which survives both the file deletion and clearing `.astro/`.
 
-**Solution:** delete `node_modules/.astro/data-store.json` (and `node_modules/.astro/assets/` if images are stale too), then rebuild.
+The same store holds each post's rendered HTML, and Astro renders a post again only when its file, the content config or the Astro config changes. The Astro config's digest serialises a plugin as `null`, so an edit inside a markdown plugin changes none of them, and every unchanged post keeps the HTML the old plugin made. Adding or removing a plugin does change the digest. Vercel restores `node_modules` from its build cache, so a deploy keeps that HTML too.
 
-**When to use:** after deleting or renaming a content collection entry, when a route you removed still appears in `dist/`.
+**Solution:** delete `node_modules/.astro/data-store.json` (and `node_modules/.astro/assets/` if images are stale too), then rebuild. On Vercel, redeploy without the build cache.
+
+**When to use:** after deleting or renaming a content collection entry, when a route you removed still appears in `dist/`, and after editing a markdown plugin in `src/utils/`.
 
 ## Reading posts in a route
 
@@ -103,7 +105,9 @@ Where the form's spec puts focus on the submit button after every submit, call `
 
 `src/utils/rehypeTableLabels.ts`, in `markdown.rehypePlugins`, sets attributes on table elements and changes nothing else, so it needs no such care – see "Tables" in `docs/patterns/post-page.md`. It types the few hast fields it reads in the file, since `@types/hast` isn't a dependency.
 
-**When to use:** writing or changing a markdown plugin that restructures images.
+A property a rehype plugin sets on an `img` reaches `getImage`, since `rehypeImages` copies the element's properties into the image's props, and `getImage` keeps a `sizes` it is given: `src/utils/rehypeImageSizes.ts` relies on both to size post images to the column, so an Astro upgrade re-checks that the rendered `<img>` still carries its `sizes`.
+
+**When to use:** writing or changing a markdown plugin that restructures images or sets their properties.
 
 ## Astro is patched for Markdown image alt text
 

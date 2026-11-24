@@ -36,6 +36,8 @@ In the dark theme `.app-prose img` takes `filter: brightness(0.88)`, which bring
 
 The image itself is the button, rather than a `<button>` wrapped round it, because a wrapper changes the prose margins round every image.
 
+Every markdown image carries `sizes="(min-width: 48rem) 46rem, calc(100vw - 2rem)"`, set by `src/utils/rehypeImageSizes.ts` in `markdown.rehypePlugins`, so the browser picks the smallest `srcset` width that fills the column at the screen's pixel density, not one sized for the whole viewport. The values mirror `max-w-app` and `app-layout`'s gutters by hand, and a change to either updates the plugin. They are in rem, like the column, so a reader whose browser default font size is larger gets a file sized for their wider column. Astro caps an image's `srcset` at its natural width, so an image narrower than the column can't over-fetch either. The dialog loads the image's `src`, the natural-width file, not the `srcset` pick, so the first open of an image's dialog downloads that file, and the image shows once it arrives.
+
 ## After the article
 
 **The newsletter signup sits directly after `<Content />`, above the first rule.** It is the primary call to action, so it comes before the rows below it.
