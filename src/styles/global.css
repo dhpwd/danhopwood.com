@@ -159,6 +159,7 @@ html[data-theme="dark"] {
   @apply rounded border border-foreground/60 bg-background px-3 py-2 text-base text-foreground transition-[border-color,box-shadow] placeholder:text-foreground/75 focus:border-foreground focus:ring-1 focus:ring-foreground focus:outline-hidden sm:pointer-fine:text-sm;
 }
 
+/* A change to the column's width or app-layout's gutters updates the sizes in src/utils/rehypeImageSizes.ts */
 @utility max-w-app {
   @apply max-w-3xl;
 }

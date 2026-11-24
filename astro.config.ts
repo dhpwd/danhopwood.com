@@ -11,6 +11,7 @@ import {
 import { transformerFileName } from "./src/utils/transformers/fileName";
 import { remarkFigureCaptions } from "./src/utils/remarkFigureCaptions";
 import { rehypeTableLabels } from "./src/utils/rehypeTableLabels";
+import { rehypeImageSizes } from "./src/utils/rehypeImageSizes";
 import { SITE } from "./src/config";
 import { getPostModDates } from "./src/utils/getPostModDates";
 import { markdownTwins } from "./src/utils/markdownTwins";
@@ -39,7 +40,7 @@ export default defineConfig({
       [remarkCollapse, { test: "Table of contents" }],
       remarkFigureCaptions,
     ],
-    rehypePlugins: [rehypeTableLabels],
+    rehypePlugins: [rehypeTableLabels, rehypeImageSizes],
     shikiConfig: {
       // For more themes, visit https://shiki.style/themes
       themes: { light: "vitesse-light", dark: "vitesse-dark" },
