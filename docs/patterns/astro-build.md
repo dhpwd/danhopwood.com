@@ -105,7 +105,7 @@ Where the form's spec puts focus on the submit button after every submit, call `
 
 A property a rehype plugin sets on an `img` reaches `getImage`, since `rehypeImages` copies the element's properties into the image's props, and `getImage` keeps a `sizes` it is given: `src/utils/rehypeImageSizes.ts` relies on both to size post images to the column, so an Astro upgrade re-checks that the rendered `<img>` still carries its `sizes`.
 
-**When to use:** writing or changing a markdown plugin that restructures images.
+**When to use:** writing or changing a markdown plugin that restructures images or sets their properties.
 
 ## Astro is patched for Markdown image alt text
 
