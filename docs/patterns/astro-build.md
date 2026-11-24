@@ -1,12 +1,14 @@
 # Astro build and client scripts
 
-## Stale content after deleting a post
+## Stale content from Astro's content store
 
 **Problem:** deleting a blog markdown file doesn't remove its route from the build output. Astro persists content collection data in `node_modules/.astro/data-store.json`, which survives both the file deletion and clearing `.astro/`.
 
-**Solution:** delete `node_modules/.astro/data-store.json` (and `node_modules/.astro/assets/` if images are stale too), then rebuild.
+The same store holds each post's rendered HTML, and Astro renders a post again only when its file, the content config or the Astro config changes. The Astro config's digest serialises a plugin as `null`, so an edit inside a markdown plugin changes none of them, and every unchanged post keeps the HTML the old plugin made. Adding or removing a plugin does change the digest. Vercel restores `node_modules` from its build cache, so a deploy keeps that HTML too.
 
-**When to use:** after deleting or renaming a content collection entry, when a route you removed still appears in `dist/`.
+**Solution:** delete `node_modules/.astro/data-store.json` (and `node_modules/.astro/assets/` if images are stale too), then rebuild. On Vercel, redeploy without the build cache.
+
+**When to use:** after deleting or renaming a content collection entry, when a route you removed still appears in `dist/`, and after editing a markdown plugin in `src/utils/`.
 
 ## Reading posts in a route
 
