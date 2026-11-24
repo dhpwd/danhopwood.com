@@ -4,6 +4,7 @@
 // in SVG on that grid. Narrower, the levels stack and a rail down the left
 // joins each to the next. See docs/patterns/diagrams.md
 import Diagram from "./Diagram.astro";
+import { bracket, left, over, under } from "./paths";
 
 const summary =
   "Diagram: Dan at the top, answering one ranked queue from his phone or laptop. Below him, on one always-on cloud server, Clara the chief of staff. Below her, four PM agents called Ben (platform, website, outbound, delivery) and Sam the deals agent, with Sam handing customer requests to the delivery PM. The PMs start one worker per ticket: write the spec, build and review, run, deliver. At the bottom, calls that can be undone are made by the agents, and calls that can’t go up to Dan.";
@@ -63,40 +64,25 @@ const PM_DROPS = [62.5, 196.5, 330.5, 464.5];
 const SAM_DROP = 648.5;
 const WORKER_DROPS = [85.5, 265.5, 445.5, 625.5];
 
-// A line ends on a card in a half disc, flat against the card's edge
-const under = (x: number, y: number) =>
-  `M${x - 3.5} ${y}A3.5 3.5 0 0 0 ${x + 3.5} ${y}Z`;
-const over = (x: number, y: number) =>
-  `M${x - 3.5} ${y}A3.5 3.5 0 0 1 ${x + 3.5} ${y}Z`;
-
 const toPms = {
-  lines:
-    `M${SPINE} 0V44.5M${PM_DROPS[0]} 72V44.5H${SAM_DROP}V72` +
-    PM_DROPS.slice(1)
-      .map(x => `M${x} 44.5V72`)
-      .join(""),
+  lines: `M${SPINE} 0V44.5` + bracket([...PM_DROPS, SAM_DROP], 44.5, 72),
   ends:
     under(SPINE, 0) + [...PM_DROPS, SAM_DROP].map(x => over(x, 72)).join(""),
 };
 
 const join = {
-  lines:
-    `M${PM_DROPS[0]} 0V14.5H${PM_DROPS[3]}V0` +
-    PM_DROPS.slice(1, 3)
-      .map(x => `M${x} 0V14.5`)
-      .join("") +
-    `M${SPINE} 14.5V20`,
+  lines: bracket(PM_DROPS, 14.5, 0) + `M${SPINE} 14.5V20`,
   ends: PM_DROPS.map(x => under(x, 0)).join(""),
 };
 
 const toWorkers = {
-  lines:
-    `M${SPINE} 0V60.5M${WORKER_DROPS[0]} 88V60.5H${WORKER_DROPS[3]}V88` +
-    WORKER_DROPS.slice(1, 3)
-      .map(x => `M${x} 60.5V88`)
-      .join(""),
+  lines: `M${SPINE} 0V60.5` + bracket(WORKER_DROPS, 60.5, 88),
   ends: WORKER_DROPS.map(x => over(x, 88)).join(""),
 };
+
+// The ends of the rail's runs, each in a 7 by 4 `dg-end`
+const endTop = under(3.5, 0);
+const endBottom = over(3.5, 4);
 ---
 
 <Diagram summary={summary}>
@@ -118,7 +104,7 @@ const toWorkers = {
 
     <div class="band to-server">
       <svg class="dg-end top" viewBox="0 0 7 4" aria-hidden="true">
-        <path d="M0 0A3.5 3.5 0 0 0 7 0Z"></path>
+        <path d={endTop}></path>
       </svg>
       <p class="dg-tag">answers by item number</p>
       <p class="dg-tag">one ranked queue, two review windows a day</p>
@@ -128,14 +114,14 @@ const toWorkers = {
       <div class="server-top">
         <div class="server-head">
           <p>
-            <strong>One always-on cloud server</strong>
+            <strong class="dg-name">One always-on cloud server</strong>
             <span>Every agent below runs here</span>
           </p>
           <p class="dg-label">Claude Code · Codex · tmux</p>
         </div>
         <p class="dg-level"><span>02</span> Chief of staff</p>
         <svg class="dg-end bottom" viewBox="0 0 7 4" aria-hidden="true">
-          <path d="M0 4A3.5 3.5 0 0 1 7 4Z"></path>
+          <path d={endBottom}></path>
         </svg>
       </div>
       <div class="dg-card clara">
@@ -157,12 +143,12 @@ const toWorkers = {
           <path class="end" d={toPms.ends}></path>
         </svg>
         <svg class="dg-end top" viewBox="0 0 7 4" aria-hidden="true">
-          <path d="M0 0A3.5 3.5 0 0 0 7 0Z"></path>
+          <path d={endTop}></path>
         </svg>
         <p class="dg-tag">raise what needs Dan · relay his answers</p>
         <p class="dg-level"><span>03</span> PMs and deals</p>
         <svg class="dg-end bottom" viewBox="0 0 7 4" aria-hidden="true">
-          <path d="M0 4A3.5 3.5 0 0 1 7 4Z"></path>
+          <path d={endBottom}></path>
         </svg>
       </div>
 
@@ -178,17 +164,17 @@ const toWorkers = {
         }
         <div class="rail">
           <svg class="dg-end top" viewBox="0 0 7 4" aria-hidden="true">
-            <path d="M0 0A3.5 3.5 0 0 0 7 0Z"></path>
+            <path d={endTop}></path>
           </svg>
           <div class="hand">
             <span>customer requests</span>
             <svg class="dg-wires tree" viewBox="0 0 60 15" aria-hidden="true">
               <path d="M60 7.5H1.5M7 2L1.5 7.5L7 13"></path>
-              <path class="end" d="M60 4A3.5 3.5 0 0 0 60 11Z"></path>
+              <path class="end" d={left(60, 7.5)}></path>
             </svg>
             <svg class="dg-wires stack" viewBox="0 0 11 38" aria-hidden="true">
               <path d="M5.5 38V1.5M0.5 6.5L5.5 1.5L10.5 6.5"></path>
-              <path class="end" d="M2 38A3.5 3.5 0 0 1 9 38Z"></path>
+              <path class="end" d={over(5.5, 38)}></path>
             </svg>
           </div>
           <div class="dg-card dg-tint sam">
@@ -232,7 +218,7 @@ const toWorkers = {
           </p>
           <p class="dg-level"><span>04</span> Workers</p>
           <svg class="dg-end bottom" viewBox="0 0 7 4" aria-hidden="true">
-            <path d="M0 4A3.5 3.5 0 0 1 7 4Z"></path>
+            <path d={endBottom}></path>
           </svg>
         </div>
       </div>
@@ -381,10 +367,6 @@ const toWorkers = {
 
   .server-head strong {
     display: block;
-    font-size: 1.0625rem;
-    letter-spacing: -0.018em;
-    line-height: 1.3;
-    color: var(--foreground);
   }
 
   .server-head span {
@@ -584,8 +566,7 @@ const toWorkers = {
     }
 
     /* A level's label sits to the left of its card, level with its top */
-    .lead,
-    .server-top {
+    .lead {
       position: relative;
     }
 
@@ -593,7 +574,6 @@ const toWorkers = {
       position: absolute;
       top: 0.25rem;
       left: 0;
-      margin: 0;
     }
 
     .dan,
@@ -616,7 +596,7 @@ const toWorkers = {
     .to-server .dg-tag {
       position: absolute;
       top: 0.6875rem;
-      left: calc(var(--rail) + 0.9375rem);
+      left: var(--beside);
     }
 
     .to-server .dg-tag:first-of-type {
@@ -641,10 +621,6 @@ const toWorkers = {
     }
 
     /* Clara's line to the five cards under her */
-    .to-pms {
-      height: 4.5rem;
-    }
-
     .to-pms::before {
       content: none;
     }
@@ -655,8 +631,6 @@ const toWorkers = {
     }
 
     .to-pms > .tree {
-      position: absolute;
-      inset: 0;
       width: 44.375rem;
       height: 4.5rem;
     }
@@ -664,14 +638,13 @@ const toWorkers = {
     .to-pms .dg-tag {
       position: absolute;
       top: 0.5625rem;
-      left: calc(var(--rail) + 0.9375rem);
+      left: var(--beside);
     }
 
     .to-pms .dg-level {
       position: absolute;
       bottom: 2.25rem;
       left: 0;
-      margin: 0;
     }
 
     .pms {
@@ -776,7 +749,7 @@ const toWorkers = {
       grid-row: 4;
       align-self: start;
       justify-self: start;
-      margin: 0.5rem 0 0 calc(var(--rail) + 0.9375rem);
+      margin: 0.5rem 0 0 var(--beside);
     }
 
     .split span {

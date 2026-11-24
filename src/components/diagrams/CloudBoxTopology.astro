@@ -3,6 +3,7 @@
 // devices reach one Linux box over a private network, and everything runs on
 // the box. See docs/patterns/diagrams.md
 import Diagram from "./Diagram.astro";
+import { bracket, right, under } from "./paths";
 
 const summary =
   "Diagram: a laptop and a phone connect through a Tailscale private network to one Linux box holding three tmux sessions, each running a Claude Code process. Nothing runs on the laptop or phone.";
@@ -12,6 +13,18 @@ const sessions = [
   "tmux: fidero.com",
   "tmux: danhopwood.com",
 ];
+
+// Stacked, the two 136px device cards sit 10px apart, centred at x 68 and
+// 214. At the full column they stack, centred at y 22 and 76.
+const stack = {
+  lines: bracket([68.5, 214.5], 12.5, 0) + "M141.5 12.5V64",
+  ends: under(68.5, 0) + under(214.5, 0),
+};
+
+const across = {
+  lines: "M0 22.5H20.5V76.5H0M20.5 49.5H224",
+  ends: right(0, 22.5) + right(0, 76.5),
+};
 ---
 
 <Diagram summary={summary}>
@@ -27,16 +40,13 @@ const sessions = [
     <div class="net">
       <!-- Stacked: a line down from each device, joined, then on to the box -->
       <svg class="dg-wires stack" viewBox="0 0 282 64" aria-hidden="true">
-        <path d="M68.5 0V12.5H214.5V0M141.5 12.5V64"></path>
-        <path
-          class="end"
-          d="M65 0A3.5 3.5 0 0 0 72 0ZM211 0A3.5 3.5 0 0 0 218 0Z"></path>
+        <path d={stack.lines}></path>
+        <path class="end" d={stack.ends}></path>
       </svg>
       <!-- The full column: a line out of each device, joined, then across -->
       <svg class="dg-wires across" viewBox="0 0 224 98" aria-hidden="true">
-        <path d="M0 22.5H20.5V76.5H0M20.5 49.5H224"></path>
-        <path class="end" d="M0 19A3.5 3.5 0 0 1 0 26ZM0 73A3.5 3.5 0 0 1 0 80Z"
-        ></path>
+        <path d={across.lines}></path>
+        <path class="end" d={across.ends}></path>
       </svg>
       <p class="dg-tag">Tailscale private network</p>
     </div>
@@ -108,7 +118,6 @@ const sessions = [
   }
 
   .box .dg-level {
-    height: 1rem;
     margin-bottom: 0.625rem;
     line-height: 1rem;
   }
@@ -124,7 +133,6 @@ const sessions = [
     align-items: flex-start;
     gap: 0.5rem;
     padding: 0.625rem 0.75rem;
-    color: var(--dg-text);
   }
 
   /* The thing that runs: the one filled part of the drawing */

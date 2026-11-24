@@ -31,7 +31,6 @@ const { summary } = Astro.props;
   .diagram {
     container: diagram / inline-size;
     width: 100%;
-    max-width: none;
 
     --dg-text: color-mix(in srgb, var(--foreground) 82%, var(--background));
     /* Labels, notes and the words on a connector */
@@ -67,7 +66,7 @@ const { summary } = Astro.props;
 
   /* typography.css gives prose p, strong and lists the text colour, and a
      numbered list its own padding. Inside a diagram they inherit. */
-  .diagram :where(p, ul, ol, li, strong) {
+  .diagram :where(p, ul, ol, strong) {
     padding: 0;
     color: inherit;
   }
@@ -95,8 +94,6 @@ const { summary } = Astro.props;
     color: var(--accent);
   }
 
-  /* The space after the number is a real one, so the label reads "01
-     Founder" to a screen reader and in the page's Markdown twin */
   .dg-level > span {
     color: var(--dg-note);
   }
@@ -197,7 +194,6 @@ const { summary } = Astro.props;
   /* A half disc on its own, for the end of a line drawn in CSS */
   .dg-end {
     position: absolute;
-    display: block;
     width: 0.4375rem;
     height: 0.25rem;
     fill: var(--dg-wire);

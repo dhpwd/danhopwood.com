@@ -18,6 +18,7 @@ import { slugifyStr } from "./slugify";
 // Kept in sync with BLOG_PATH in src/content.config.ts (can't import it here:
 // content.config pulls in astro:content).
 const BLOG_PATH = "src/data/blog";
+const POST_FILE = /\.mdx?$/;
 
 // Mirror of getPath() URL construction (src/utils/getPath.ts) for the no-custom-
 // slug case: directory segments are slugified (with `_`-prefixed segments
@@ -43,7 +44,7 @@ const collectPostFiles = (dir: string): string[] => {
     const full = `${dir}/${entry.name}`;
     if (entry.isDirectory()) {
       out.push(...collectPostFiles(full));
-    } else if (/\.mdx?$/.test(entry.name) && !entry.name.startsWith("_")) {
+    } else if (POST_FILE.test(entry.name) && !entry.name.startsWith("_")) {
       out.push(full);
     }
   }
@@ -78,7 +79,7 @@ export const getPostModDates = (): Map<string, Date> => {
 
     const idSegments = file
       .slice(BLOG_PATH.length + 1)
-      .replace(/\.mdx?$/, "")
+      .replace(POST_FILE, "")
       .split("/");
     dates.set(postUrlPath(idSegments), date);
   }
