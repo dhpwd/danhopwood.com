@@ -184,6 +184,9 @@ const endBottom = over(3.5, 4);
               Tracks every follow-up owed and drafts each message. Dan sends.
             </p>
           </div>
+          <p class="note n3">
+            <strong>No workers.</strong> Drafts reach Dan through Clara.
+          </p>
           <svg
             class="dg-wires tree join"
             viewBox="0 0 710 20"
@@ -200,9 +203,6 @@ const endBottom = over(3.5, 4);
           <p class="note n2">
             It makes every call that can be undone, and never writes code
             itself.
-          </p>
-          <p class="note n3">
-            <strong>No workers.</strong> Drafts reach Dan through Clara.
           </p>
           <svg
             class="dg-wires tree fan"
@@ -296,12 +296,13 @@ const endBottom = over(3.5, 4);
     margin-top: 0.625rem;
   }
 
+  /* Stacked, a chip wraps rather than run past Dan's card when the reader's
+     text is larger. At the full column it keeps to one line. */
   .devices li {
     border: 1px solid var(--dg-on-fill-line);
     border-radius: 0.25rem;
     padding: 0.1875rem 0.625rem;
     font-size: 0.8125rem;
-    white-space: nowrap;
   }
 
   .devices b {
@@ -423,6 +424,11 @@ const endBottom = over(3.5, 4);
     color: var(--dg-note);
   }
 
+  /* One line, so a larger text size can't push it down onto Sam's card */
+  .hand span {
+    white-space: nowrap;
+  }
+
   .hand .stack {
     position: absolute;
     top: calc(var(--dg-gap) * -1);
@@ -444,27 +450,22 @@ const endBottom = over(3.5, 4);
   }
 
   .n3 {
-    order: 1;
     margin-top: 0.5rem;
   }
 
   .n1 {
-    order: 2;
     margin-top: 0.875rem;
   }
 
   .n2 {
-    order: 3;
     margin-top: 0.375rem;
   }
 
   .rail > .dg-tag {
-    order: 4;
     margin-top: 0.875rem;
   }
 
   .rail > .dg-level {
-    order: 5;
     margin-top: 0.75rem;
   }
 
@@ -582,6 +583,10 @@ const endBottom = over(3.5, 4);
       margin-inline: auto;
     }
 
+    .devices li {
+      white-space: nowrap;
+    }
+
     .band {
       display: block;
       padding: 0;
@@ -662,7 +667,6 @@ const endBottom = over(3.5, 4);
     }
 
     .rail > * {
-      order: 0;
       margin: 0;
     }
 
@@ -683,6 +687,7 @@ const endBottom = over(3.5, 4);
       font-size: 0.75rem;
       line-height: 1.25;
       text-align: center;
+      white-space: normal;
     }
 
     .hand .tree {
@@ -782,7 +787,7 @@ const endBottom = over(3.5, 4);
     .band::before,
     .server-top::before,
     .rail::before,
-    .trunk,
+    .rail > .trunk,
     .steps li::before,
     .steps li:last-child::before,
     .steps li:not(:last-child)::after {

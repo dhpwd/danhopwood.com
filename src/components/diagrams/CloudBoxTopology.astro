@@ -76,8 +76,9 @@ const across = {
 
 <style>
   /* Stacked, the default: the devices, the network and the box in a column.
-     The two device cards are a fixed size, so the lines out of them are SVG
-     on the same numbers. */
+     The two device cards and the lines out of them are a fixed size in px,
+     so the SVG stays on the cards' numbers and a reader's larger text can't
+     widen the pair past a phone's column. */
   .nothing {
     margin-bottom: 0.5rem;
     color: var(--dg-note);
@@ -85,8 +86,8 @@ const across = {
 
   .pair {
     display: grid;
-    grid-template-columns: repeat(2, 8.5rem);
-    gap: var(--dg-gap);
+    grid-template-columns: repeat(2, 136px);
+    gap: var(--dg-gap) 10px;
   }
 
   .pair .dg-card {
@@ -96,25 +97,35 @@ const across = {
     padding-block: 0;
   }
 
+  /* The label sits beside the line, 14px clear of it. The band grows with
+     the label when the reader's text is larger, and a line drawn in CSS at
+     the SVG's x carries the line on down to the box. */
   .net {
     position: relative;
+    min-height: 64px;
+    padding: 18px 0 0 156px;
+  }
+
+  .net::before {
+    content: "";
+    position: absolute;
+    top: 64px;
+    bottom: 0;
+    left: 141px;
+    width: 1px;
+    background: var(--dg-wire);
   }
 
   .net .stack {
-    width: 17.625rem;
-    height: 4rem;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 282px;
+    height: 64px;
   }
 
   .across {
     display: none;
-  }
-
-  /* Beside the line, 14px clear of it */
-  .net .dg-tag {
-    position: absolute;
-    top: 1.125rem;
-    left: 9.75rem;
-    max-width: calc(100% - 9.75rem);
   }
 
   .box .dg-level {
@@ -179,6 +190,15 @@ const across = {
       display: none;
     }
 
+    .net {
+      min-height: 0;
+      padding: 0;
+    }
+
+    .net::before {
+      content: none;
+    }
+
     .across {
       display: block;
       width: 14rem;
@@ -187,7 +207,7 @@ const across = {
 
     /* Above the line, centred on its run from the bracket to the box */
     .net .dg-tag {
-      top: auto;
+      position: absolute;
       right: 0;
       bottom: 3.5625rem;
       left: 1.25rem;
@@ -201,6 +221,15 @@ const across = {
       justify-content: space-between;
       height: 3rem;
       padding-block: 0;
+    }
+  }
+
+  /* Forced colours repaint every background as the page's ground, which
+     would erase the line drawn as one */
+  @media (forced-colors: active) {
+    .net::before {
+      forced-color-adjust: none;
+      background: CanvasText;
     }
   }
 </style>

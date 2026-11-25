@@ -62,6 +62,8 @@ Anti-patterns:
 
 **Solution:** the layout follows the figure's own width by container query, never the viewport. The default is stacked, for a phone: each level is its label over its cards, a rail down the left joins one level to the next, and the words about that step sit to the rail's right. From 46rem the figure is the column's full, fixed width (736px), and the second layout sits on a grid in px. A diagram may add a step between the two where the stacked layout has room, as the agent team diagram does at 30rem.
 
+The stacked layout holds a phone's column at a reader's larger text size too. A fixed-size part of it is sized in px, not rem, so larger text grows its words but not its geometry: the cloud box diagram's device pair and the SVG under it are 136px cards and a 282px drawing at any text size. A `dg-label` wraps when stacked rather than run past its card, and keeps to one line at the full column.
+
 Wherever the layout is a fixed size, connectors are SVG drawn on the grid's own numbers: one `svg.dg-wires` per row, its `viewBox` the row's size in px. Lines sit on half-pixel coordinates, so a line down the centre of a card at x 355 is drawn at x 355.5 and its 1px stroke fills one column of pixels. Every line is 1px, and every line that meets a card ends there in a half disc of radius 3.5, flat against the card's edge, drawn in the row's `.end` path. An arrow's head and shaft are one path, so the head sits on its shaft. A line whose length follows the text, such as the spine past a note that wraps, is a 1px CSS line at the same integer x as the SVG's line, with a `dg-end` where it meets a card. `src/components/diagrams/paths.ts` builds the path data: `under`, `over`, `left` and `right` for a half disc on each side of an edge, and `bracket` for a bar with a drop at each x. `AgentTeam.astro` is the worked example: its constants name every x and each row's height, and its paths are built from them with those helpers.
 
 The words on a connector sit beside or above its line and clear of it, never on it: 14px beside a vertical line in the agent team diagram, 8px above the horizontal one in the cloud box diagram. Connectors take `--dg-wire`, which clears the 3:1 WCAG asks of graphics in both themes.
@@ -72,6 +74,7 @@ Anti-patterns:
 - A translucent line colour, which darkens where two lines cross
 - A fractional line width, which blurs across two columns of pixels
 - A connector drawn by script, which shows nothing until the script runs
+- A fixed-size part of the stacked layout sized in rem, which a reader's larger text widens past a phone's column
 
 **When to use:** drawing a connector, or adding a layout step to a diagram.
 
@@ -79,7 +82,7 @@ Anti-patterns:
 
 **Problem:** a screen reader, site search and the page's Markdown twin read a diagram's words in source order, and can't see who sits under whom.
 
-**Solution:** the words are real elements in reading order, with no `h2` to `h6`. A heading would take an anchor from `addHeadingLinks()` and join the post's outline, so a diagram uses `p`, `strong` and lists. A number is followed by a real space, so a level label reads "01 Founder" rather than running on. Decorative parts (lines, half discs, the trunk) are `aria-hidden`. The `summary` says what the drawing shows that its words alone can't. Where a diagram replaces an image, it is the image's alt text. A diagram has no script, so it is drawn before any script runs and needs nothing rebound after a client-side navigation.
+**Solution:** the words are real elements in reading order, with no `h2` to `h6`. A note that belongs to one card follows that card in the source, wherever the layout draws it, so it can't read as a remark on the card before it: Sam's note in the agent team diagram follows his card, ahead of the PMs' notes. The order the eye takes comes from the layout's grid, never from `order`, which would part the visible order from the read one. A heading would take an anchor from `addHeadingLinks()` and join the post's outline, so a diagram uses `p`, `strong` and lists. A number is followed by a real space, so a level label reads "01 Founder" rather than running on. Decorative parts (lines, half discs, the trunk) are `aria-hidden`. The `summary` says what the drawing shows that its words alone can't. Where a diagram replaces an image, it is the image's alt text. A diagram has no script, so it is drawn before any script runs and needs nothing rebound after a client-side navigation.
 
 The Markdown twin keeps `.sr-only` text and drops `svg` and `aria-hidden` parts (`DROP` in `src/utils/markdownTwins.ts`), so a post's twin carries the summary and then the diagram's words in reading order.
 
@@ -108,9 +111,9 @@ MDX was chosen over raw HTML in the `.md`, which puts the drawing's markup in th
 
 Run each step on `pnpm build && pnpm preview`, in Playwright, at both themes. The methods are in `docs/patterns/browser-testing.md`.
 
-1. Where the diagram replaces an image, compare its words with the image's source, word for word and in reading order
+1. Where the diagram replaces an image, compare its words with the image's source, word for word
 2. Measure every text at 4.5:1 or more and the connector colour at 3:1 or more, from computed colours composited onto their ground
-3. Load the post at every width from 320 to 1440. Nothing scrolls sideways, no text runs wider than its part, and the figure switches to its fixed grid where it reaches 46rem
+3. Load the post at every width from 320 to 1440, and at 320 and 390 with the root font at 20px. Nothing scrolls sideways, no text runs wider than its part, and the figure switches to its fixed grid where it reaches 46rem
 4. Crop every band of connectors at 1x, 2x and 3x and enlarge each crop without smoothing. Each line is one sharp pixel wide at 1x, no line is offset from the line it continues, no junction is darker than its lines, every line that meets a card ends in a half disc and each arrowhead sits on its shaft
 5. Reach the post by a client-side navigation from the homepage, and check the diagram is styled on arrival
 6. Read the post's Markdown twin: the summary, then the diagram's words in reading order, and no image line

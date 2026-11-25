@@ -88,19 +88,27 @@ const caption = Astro.slots.has("caption")
     line-height: 1.35;
     letter-spacing: 0.04em;
     text-transform: uppercase;
-    white-space: nowrap;
   }
 
   .dg-level {
     color: var(--accent);
+    white-space: nowrap;
   }
 
   .dg-level > span {
     color: var(--dg-note);
   }
 
+  /* Stacked, a label wraps rather than run past its card when the reader's
+     text is larger. At the full column it keeps to one line on the grid. */
   .dg-label {
     color: var(--dg-note);
+  }
+
+  @container diagram (width >= 46rem) {
+    .dg-label {
+      white-space: nowrap;
+    }
   }
 
   .dg-mono {
