@@ -84,7 +84,8 @@ html[data-theme="dark"] {
   }
   a,
   button,
-  [role="button"] {
+  [role="button"],
+  summary {
     @apply outline-offset-1 outline-accent focus-visible:no-underline focus-visible:outline-2 focus-visible:outline-dashed;
   }
   /* Keyed on the class, not on `a`, so an underline drawn on a span inside a

@@ -57,7 +57,7 @@
     a {
       /* font-normal overrides the prose plugin's 500 default – see
          docs/patterns/type.md. */
-      @apply font-normal wrap-break-word interactive text-foreground decoration-dashed underline-offset-4 focus-visible:no-underline;
+      @apply font-normal wrap-break-word interactive text-foreground decoration-dashed underline-offset-4;
       /* Prose links get dashed via @apply, so the [class~="decoration-dashed"]
          base rule in global.css can't reach them – same token, stated here. */
       text-decoration-color: var(--dashed-decoration);
@@ -185,7 +185,7 @@
     }
 
     summary {
-      @apply interactive focus-visible:no-underline focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-accent focus-visible:outline-dashed;
+      @apply interactive;
     }
 
     pre {

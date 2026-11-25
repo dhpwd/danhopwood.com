@@ -30,9 +30,9 @@ A muted control rests on a colour, not an opacity (`text-foreground/75`), so its
 
 Text inside a control that sets its own colour doesn't inherit the control's steps. The count on a `/tags` row is `meta`, and the "Previous post" and "Next post" labels are `label-caps text-foreground/75`, so each takes `transition-colors group-hover:text-accent group-active:text-accent-strong` from its link, which carries `group`.
 
-Focus: links, buttons and `[role="button"]` elements take the base rule's 2px dashed accent outline, so a post's images, which `ImageZoom.astro` makes buttons, need no outline of their own. Fields focus differently – see "Form fields" in `docs/patterns/form-fields.md`.
+Focus: links, buttons, `[role="button"]` elements and disclosure summaries take the base rule's 2px dashed accent outline, so a post's images, which `ImageZoom.astro` makes buttons, need no outline of their own. Fields focus differently – see "Form fields" in `docs/patterns/form-fields.md`.
 
-Reduced motion keeps the colour steps and drops the motion: the press settle is `motion-safe:`, the theme toggle's icons morph with `transition-[scale,rotate] motion-reduce:transition-none`, and `html` takes `motion-safe:scroll-smooth` in `global.css` and `Layout.astro`. `global.css` drops every view-transition animation under reduced motion, outside any layer: Astro adds its own copy of that rule only to pages that use a `transition:` directive, and the router swaps in the incoming page's head, so a page without one would run the browser's default cross-fade.
+Reduced motion keeps the colour steps and drops the motion: the press settle is `motion-safe:`, the theme toggle's icons morph with `transition-[scale,rotate] motion-reduce:transition-none`, and `html` takes `motion-safe:scroll-smooth` in `global.css`. `global.css` drops every view-transition animation under reduced motion, outside any layer: Astro adds its own copy of that rule only to pages that use a `transition:` directive, and the router swaps in the incoming page's head, so a page without one would run the browser's default cross-fade.
 
 Anti-patterns:
 
@@ -42,12 +42,13 @@ Anti-patterns:
 - An opacity fade, on hover or at rest (`hover:opacity-75`, `opacity-90` on an icon or a filled button). A fade blends the control with the page behind, so it lowers contrast where a step raises it: `opacity-90` takes a filled button's label from 6.93:1 to 5.70:1 in light theme. And a fade is not a step of the one behaviour
 - `transition-all`, which also animates layout and any property added later
 - A duration or easing class on a component (`duration-200`, `ease-out`), which drifts from the shared timing
+- The base rule's focus styles restated on an element in `focus-visible:` classes of its own. A change to the base rule then misses that element and nothing warns you. Add the element to the base selector in `global.css`. The outline `.app-prose pre` in `typography.css` sets for a code block is not a restatement: it differs from the base rule (no offset, and its border hidden)
 
 **When to use:** any new interactive element, and any AstroPaper component being restyled.
 
 ## Pagefind's controls
 
-**Problem:** `/search` is Pagefind's markup, so Tailwind utilities can't reach its controls. Its stylesheet is unlayered and resets every element inside it with `all: unset` and `outline: revert`, which beats the base `a, button` rule in `@layer base`, so its controls don't get the site's focus outline either.
+**Problem:** `/search` is Pagefind's markup, so Tailwind utilities can't reach its controls. Its stylesheet is unlayered and resets every element inside it with `all: unset` and `outline: revert`, which beats the base focus rule in `@layer base`, so its controls don't get the site's focus outline either.
 
 **Solution:** `/search` takes the same behaviour as plain CSS in the `#pagefind-search` block of `search.astro`, with the transition timed from `var(--default-transition-duration)` and `var(--default-transition-timing-function)`. Result links and Clear step to `var(--accent)` on hover, inside `@media (hover: hover)` as Tailwind's `hover:` variant is, and to `var(--accent-strong)` on press. "Load more results" rests on `var(--foreground)` with a 60% text-colour border and steps its text and border the same way. Clear and "Load more results" take the 2px dashed accent focus outline. Rules there may nest: the build lowers nesting for older browsers ("Nested CSS and the CSS build target" in `docs/patterns/astro-build.md`).
 
