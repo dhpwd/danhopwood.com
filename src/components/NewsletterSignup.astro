@@ -1,5 +1,7 @@
 ---
+import type { ComponentProps } from "astro/types";
 import Button from "./Button.astro";
+import LedgerRow from "./LedgerRow.astro";
 
 // "row" drops the box and sets the name as the row's label, for the
 // homepage's first screen. The form and its script are the same in both.
@@ -7,21 +9,31 @@ type Props = { variant?: "box" | "row" };
 
 const { variant = "box" } = Astro.props;
 const row = variant === "row";
+
+// The row opens the homepage's list, so its rule stays still. The script
+// finds the form by the newsletter-signup class. TypeScript checks a dynamic
+// tag's props against both tags at once, so they're typed as the row's.
+const Wrapper = row ? LedgerRow : "div";
+const wrapperProps = (
+  row
+    ? {
+        label: "Build Notes",
+        draw: false,
+        class: "newsletter-signup not-prose pt-6",
+      }
+    : {
+        class:
+          "newsletter-signup not-prose mt-8 mb-8 rounded-lg border border-border p-6",
+      }
+) as ComponentProps<typeof LedgerRow>;
 ---
 
-<div
-  class:list={[
-    "newsletter-signup not-prose",
-    row ? "ledger" : "mt-8 mb-8 rounded-lg border border-border p-6",
-  ]}
->
-  <h2 class={row ? "label-caps text-foreground/75" : "title-item"}>
-    Build Notes
-  </h2>
+<Wrapper {...wrapperProps}>
+  {!row && <h2 class="title-item">Build Notes</h2>}
   <div class={row ? "min-w-0" : "contents"}>
     <p
       class={row
-        ? "text-[0.9375rem] leading-normal"
+        ? "text-small leading-normal"
         : "mt-1 text-sm text-foreground/80"}
     >
       Every Thursday morning. Discoveries from building Fidero entirely with AI
@@ -58,12 +70,11 @@ const row = variant === "row";
         href="https://buttondown.com/dhpwd/archive"
         target="_blank"
         rel="noopener"
-        class="interactive underline decoration-dashed underline-offset-4"
-        >Read the latest issue</a
+        class="interactive link-underline">Read the latest issue</a
       >
     </p>
   </div>
-</div>
+</Wrapper>
 
 <script>
   function initNewsletterForms() {

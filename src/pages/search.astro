@@ -279,6 +279,8 @@ import { SITE } from "@/config";
 </script>
 
 <style is:global>
+  @reference "../styles/global.css";
+
   #pagefind-search {
     --pagefind-ui-font: var(--font-app);
     --pagefind-ui-text: var(--foreground);
@@ -395,18 +397,12 @@ import { SITE } from "@/config";
      Pagefind sizes its text at 80% of its own scale, which puts an excerpt
      at 12.8px. */
   #pagefind-search .pagefind-ui__message {
-    font-family: var(--font-mono);
-    font-size: 0.8125rem;
+    @apply meta;
     font-weight: 400;
-    letter-spacing: 0.02em;
-    color: color-mix(in srgb, var(--foreground) 75%, transparent);
   }
 
   #pagefind-search .pagefind-ui__result-title {
-    font-size: 1.25rem;
-    font-weight: 600;
-    line-height: 1.3;
-    letter-spacing: -0.018em;
+    @apply title-item font-semibold;
   }
 
   /* The link too, since Pagefind sets a nested result's link at 0.9em */
@@ -418,7 +414,7 @@ import { SITE } from "@/config";
   }
 
   #pagefind-search .pagefind-ui__result-excerpt {
-    font-size: 0.9375rem;
+    font-size: var(--text-small);
     line-height: 1.55;
   }
 </style>

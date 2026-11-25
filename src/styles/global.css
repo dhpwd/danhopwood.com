@@ -58,6 +58,8 @@ html[data-theme="dark"] {
 @theme {
   --default-transition-duration: 150ms;
   --default-transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+  /* Text a step under the body – see docs/patterns/type.md */
+  --text-small: 0.9375rem;
 }
 
 @layer base {
@@ -87,11 +89,6 @@ html[data-theme="dark"] {
   [role="button"],
   summary {
     @apply outline-offset-1 outline-accent focus-visible:no-underline focus-visible:outline-2 focus-visible:outline-dashed;
-  }
-  /* Keyed on the class, not on `a`, so an underline drawn on a span inside a
-     link is muted too */
-  [class~="decoration-dashed"] {
-    text-decoration-color: var(--dashed-decoration);
   }
   button:not(:disabled),
   [role="button"]:not(:disabled) {
@@ -145,6 +142,31 @@ html[data-theme="dark"] {
   text-transform: uppercase;
 }
 
+/* The dashed underline, on a link or on a span inside one – see
+   docs/patterns/type.md */
+@utility link-underline {
+  @apply underline decoration-dashed underline-offset-4;
+  text-decoration-color: var(--dashed-decoration);
+  a:focus-visible & {
+    text-decoration-line: none;
+  }
+}
+
+/* A title's underline, shown only while its link is hovered – see
+   docs/patterns/type.md */
+@utility title-underline {
+  @apply link-underline;
+  text-decoration-line: none;
+  @media (hover: hover) {
+    a:hover & {
+      text-decoration-line: underline;
+    }
+  }
+  a:focus-visible & {
+    text-decoration-line: none;
+  }
+}
+
 /* Interaction states – see "One interaction behaviour" in
    docs/patterns/interaction.md */
 @utility interactive {
@@ -153,6 +175,12 @@ html[data-theme="dark"] {
 
 @utility interactive-fill {
   @apply transition-[background-color,translate] enabled:hover:bg-accent-strong enabled:active:bg-accent-stronger motion-safe:enabled:active:translate-y-px;
+}
+
+/* Text that sets its own colour inside a `group` control – see
+   docs/patterns/interaction.md */
+@utility interactive-inner {
+  @apply transition-colors group-hover:text-accent group-active:text-accent-strong;
 }
 
 /* Text fields – see "Form fields" in docs/patterns/form-fields.md */
@@ -181,6 +209,16 @@ html[data-theme="dark"] {
   @media (width >= 40rem) {
     grid-template-columns: 8.5rem minmax(0, 1fr);
   }
+}
+
+/* An icon link and its list – see "The icon's turn" in
+   docs/patterns/small-details.md */
+@utility icon-link {
+  @apply inline-flex size-11 items-center justify-center interactive sm:size-8;
+}
+
+@utility icon-links {
+  @apply -mx-3 flex flex-wrap sm:-mx-1.5 sm:gap-x-3;
 }
 
 /* The reading measure: about 70 characters of body text a line. */
@@ -225,7 +263,7 @@ html[data-theme="dark"] {
    underline from the left, and leaves to the right. The `a` in Pagefind's
    key matters: "Pagefind's controls" in docs/patterns/interaction.md. */
 @media (hover: hover) and (prefers-reduced-motion: no-preference) {
-  [class~="decoration-dashed"],
+  :is(.link-underline, .title-underline),
   .app-prose a:not(.heading-link),
   #pagefind-search a.pagefind-ui__result-link {
     /* Where the line sits: "The line of ink" in small-details.md */
@@ -241,13 +279,13 @@ html[data-theme="dark"] {
     transition-duration: 150ms, 300ms, 150ms;
     transition-timing-function: var(--default-transition-timing-function);
   }
-  a[class~="decoration-dashed"],
+  a:is(.link-underline, .title-underline),
   .app-prose a:not(.heading-link),
   #pagefind-search a.pagefind-ui__result-link {
     transition-property: text-decoration-color, background-size, color;
   }
-  a[class~="decoration-dashed"]:hover,
-  a:hover [class~="decoration-dashed"],
+  a:is(.link-underline, .title-underline):hover,
+  a:hover :is(.link-underline, .title-underline),
   .app-prose a:not(.heading-link):hover,
   #pagefind-search a.pagefind-ui__result-link:hover {
     background-position: 0 var(--ink-y);
@@ -256,8 +294,8 @@ html[data-theme="dark"] {
     transition-delay: 120ms, 0s, 0s;
   }
   /* Keyboard focus keeps the outline on today's box, with no line */
-  a[class~="decoration-dashed"]:focus-visible,
-  a:focus-visible [class~="decoration-dashed"],
+  a:is(.link-underline, .title-underline):focus-visible,
+  a:focus-visible :is(.link-underline, .title-underline),
   .app-prose a:not(.heading-link):focus-visible,
   #pagefind-search a.pagefind-ui__result-link:focus-visible {
     padding-bottom: 0;

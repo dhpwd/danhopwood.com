@@ -21,7 +21,7 @@ Three derived tokens mix the theme tokens, so they need no value per theme and n
 
 They sit on `:root` as plain custom properties and are then mapped in `@theme inline` (`--color-accent-strong` and so on), so plain CSS such as the Pagefind block in `search.astro` can use them. A colour defined only in `@theme inline` is inlined into the utilities and never reaches plain CSS. The build gives each a fallback of bare `--accent`, with the mix behind `@supports`, so a browser without `color-mix()` (below Tailwind 4's Safari 16.4 and Chrome 111 baseline) loses the press steps and the filled-button hover, and selects text on a solid accent.
 
-`--dashed-decoration` needs no satori mirror either, since the cards carry no links. It is restated in `typography.css` for prose links and in `search.astro` for Pagefind's result links, because the `global.css` base rule can't reach them.
+`--dashed-decoration` needs no satori mirror either, since the cards carry no links. `link-underline` and `title-underline` in `global.css` set it, prose links take it through `@apply link-underline`, and Pagefind's result links restate it in `search.astro`, because their markup can't take a class.
 
 Code blocks are the one area with its own palette: the shiki themes `vitesse-light` and `vitesse-dark`, set in `astro.config.ts`. Swapping them means checking both modes.
 

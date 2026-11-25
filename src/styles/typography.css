@@ -57,10 +57,7 @@
     a {
       /* font-normal overrides the prose plugin's 500 default – see
          docs/patterns/type.md. */
-      @apply font-normal wrap-break-word interactive text-foreground decoration-dashed underline-offset-4;
-      /* Prose links get dashed via @apply, so the [class~="decoration-dashed"]
-         base rule in global.css can't reach them – same token, stated here. */
-      text-decoration-color: var(--dashed-decoration);
+      @apply font-normal wrap-break-word interactive text-foreground link-underline;
     }
 
     ul {
@@ -115,7 +112,7 @@
        each row is a block and each cell after the first carries its heading,
        which rehypeTableLabels.ts sets as data-label. */
     table {
-      @apply my-9 w-full border-collapse text-[0.9375rem] leading-[1.55];
+      @apply my-9 w-full border-collapse text-small leading-[1.55];
 
       th {
         @apply border-b border-foreground/60 pt-0 pr-5 pb-2.5 pl-0 text-left align-bottom label-caps text-foreground/75 last:pr-0;

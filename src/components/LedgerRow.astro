@@ -1,0 +1,36 @@
+---
+import type { HTMLAttributes } from "astro/types";
+
+// A ledger row ruled above, with its label – see "The ledger" in
+// docs/patterns/page-layout.md. Padding comes from the caller's class.
+// An interface, since Astro's compiler doesn't read a `type Props` with an
+// `as` key and the props then go untyped.
+interface Props extends HTMLAttributes<"div"> {
+  label: string;
+  level?: 2 | 3;
+  as?: "div" | "section";
+  // The rule draws as the visitor scrolls to the row. A row that opens a
+  // page stays still.
+  draw?: boolean;
+}
+
+const {
+  label,
+  level = 2,
+  as: Tag = "div",
+  draw = true,
+  class: className,
+  ...attrs
+} = Astro.props;
+const Label = level === 3 ? "h3" : "h2";
+---
+
+<Tag
+  {...attrs}
+  data-rule={draw ? "" : undefined}
+  class:list={["ledger border-t border-border", className]}
+>
+  {/* A direct child, which the drawn rule's label animation keys on */}
+  <Label class="label-caps text-foreground/75">{label}</Label>
+  <slot />
+</Tag>

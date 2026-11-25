@@ -20,7 +20,7 @@ A list's text starts 1.625em in, with each marker inside the column, from the `l
 
 **Problem:** a three-column table at 390 leaves each column about 120px, and a sideways-scrolling table hides its first column, which is usually the one that names the row.
 
-**Solution:** tables are ruled rows with no outer box and no vertical rules: column headings in `label-caps` at 75% over a rule in the text colour at 60%, rows ruled in `--border`, text at 0.9375rem. Below 640px each row becomes a block, the heading row is visually hidden (`sr-only`), and each cell after the first prints its column heading above it from `data-label`, through `content: attr(data-label)`.
+**Solution:** tables are ruled rows with no outer box and no vertical rules: column headings in `label-caps` at 75% over a rule in the text colour at 60%, rows ruled in `--border`, text at `text-small` (15px). Below 640px each row becomes a block, the heading row is visually hidden (`sr-only`), and each cell after the first prints its column heading above it from `data-label`, through `content: attr(data-label)`.
 
 `src/utils/rehypeTableLabels.ts`, registered in `markdown.rehypePlugins`, sets that `data-label` on every body cell from the heading above it. It also sets the ARIA table roles (`table`, `rowgroup`, `row`, `columnheader`, `cell`) on every table element, because a browser drops a table's semantics once its rows and cells are `display: block`, and a screen reader then reads the cells without their rows and columns. Setting both at build means the labels are there before any script runs, and without JavaScript at all.
 
@@ -59,7 +59,7 @@ Every markdown image carries `sizes="(min-width: 48rem) 46rem, calc(100vw - 2rem
 Anti-patterns:
 
 - Icons for a post's tags, which stay words
-- A margin that pulls the first share icon back past the content column towards its label, like the theme's `md:-ml-2`. The ledger aligns the row, and the list's `-mx-3 sm:-mx-1.5` only takes back the icon link's own padding, so the first icon's box starts on the content column's edge
+- A margin that pulls the first share icon back past the content column towards its label, like the theme's `md:-ml-2`. The ledger aligns the row, and `icon-links`' negative margin only takes back the icon link's own padding, so the first icon's box starts on the content column's edge
 - A margin on a card or row to space a list, in place of `gap` on the list
 - An `aria-label` on the heading anchor with no `aria-labelledby` on the heading. The heading's name then carries the anchor's label after its own text, so a screen reader's headings list, which is how a screen-reader user skims a post, reads every heading twice
 

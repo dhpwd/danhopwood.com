@@ -8,7 +8,7 @@ The calls behind these rules, and the options they rejected, are in `docs/design
 
 **Solution:** each control moves one colour step on hover and one more on press, from two `@utility` blocks in `global.css`.
 
-- `interactive`, for text and icon controls: the text steps to `accent` on hover and `accent-strong` on press. Icon SVGs stroke `currentColor`, so an icon follows its anchor's colour with no rule of its own. An icon link is `size-11 sm:size-8`, with its word in an `sr-only` span as its name and a `title` as its tooltip, and an icon that turns or steps under the pointer follows "The icon's turn" in `docs/patterns/small-details.md`. `LinkButton.astro` applies it, so every enabled `LinkButton` has it, and a disabled one rests on `text-foreground/45`
+- `interactive`, for text and icon controls: the text steps to `accent` on hover and `accent-strong` on press. Icon SVGs stroke `currentColor`, so an icon follows its anchor's colour with no rule of its own. An icon link is `icon-link`, which applies `interactive` in a 44 by 44 box below 640px and 32 by 32 from it, with its word in an `sr-only` span as its name and a `title` as its tooltip, and an icon that turns or steps under the pointer follows "The icon's turn" in `docs/patterns/small-details.md`. `LinkButton.astro` applies it, so every enabled `LinkButton` has it, and a disabled one rests on `text-foreground/45`
 - `interactive-fill`, for filled accent buttons: the fill steps to `accent-strong` on hover and `accent-stronger` on press, only while the button is enabled, and the button settles 1px on press. `Button.astro` carries it, and every filled action is a `Button`: Subscribe in `NewsletterSignup.astro` and Request setup in `cloud-box-setup.astro`. The label is `text-background`, never `text-white`: white on the dark accent is 2.61:1. `disabled:opacity-60` dims the button while a submit is pending, and disabled controls are exempt from the contrast minimum
 - `.active-nav` rests on the accent, so it steps to `accent-strong` on hover and `accent-stronger` on press. The header's word links are the only ones that take it. It sits outside any layer in `global.css`, so it outranks the `interactive` on the same link
 
@@ -28,7 +28,7 @@ Timing: `--default-transition-duration` and `--default-transition-timing-functio
 
 A muted control rests on a colour, not an opacity (`text-foreground/75`), so its hover reaches the full accent. The heading anchor that `PostDetails.astro` adds rests on `text-foreground/60`. Where the pointer is fine it is hidden at `opacity-0` until its heading is hovered or the link is focused, which is a reveal rather than a resting state, and on a touch screen it always shows. Gate a reveal like this on `pointer-fine:`, not on a width, since a wide touch screen has no hover to reveal it.
 
-Text inside a control that sets its own colour doesn't inherit the control's steps. The count on a `/tags` row is `meta`, and the "Previous post" and "Next post" labels are `label-caps text-foreground/75`, so each takes `transition-colors group-hover:text-accent group-active:text-accent-strong` from its link, which carries `group`.
+Text inside a control that sets its own colour doesn't inherit the control's steps. The count on a `/tags` row is `meta`, and the "Previous post" and "Next post" labels are `label-caps text-foreground/75`, so each takes `interactive-inner`, which steps its colour on its link's hover and press. The link carries `group`.
 
 Focus: links, buttons, `[role="button"]` elements and disclosure summaries take the base rule's 2px dashed accent outline, so a post's images, which `ImageZoom.astro` makes buttons, need no outline of their own. Fields focus differently – see "Form fields" in `docs/patterns/form-fields.md`.
 
@@ -37,6 +37,7 @@ Reduced motion keeps the colour steps and drops the motion: the press settle is 
 Anti-patterns:
 
 - A bare `hover:text-accent`, with no press and no timing. Use `interactive`
+- The steps written out on text inside a control (`transition-colors group-hover:text-accent group-active:text-accent-strong`) in place of `interactive-inner`. A change to the steps misses that copy
 - `hover:bg-accent-hover` on a filled button. The `accent-hover` colour no longer exists, and Tailwind generates nothing for an unknown colour, so copied code loses its hover and nothing warns you. Use `interactive-fill`
 - A hover that moves the control, like `hover:rotate-6` or `hover:-mt-0.5`
 - An opacity fade, on hover or at rest (`hover:opacity-75`, `opacity-90` on an icon or a filled button). A fade blends the control with the page behind, so it lowers contrast where a step raises it: `opacity-90` takes a filled button's label from 6.93:1 to 5.70:1 in light theme. And a fade is not a step of the one behaviour
