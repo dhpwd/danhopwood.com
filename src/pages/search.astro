@@ -161,6 +161,20 @@ import { SITE } from "@/config";
   // history.state holds a saved position only on a Back, Forward or reload.
   pending = savedRestore();
 
+  // Pagefind indexes each post as posts/<slug>/index.html, so it links
+  // /posts/<slug>/. Production redirects that, and a client-side visit
+  // through a redirect loses its #fragment – see "Writer convention" in
+  // docs/patterns/urls.md. Keeps "/" as it is.
+  function withoutTrailingSlash(url: string) {
+    return url.replace(/^([^#]+?)\/(?=#|$)/, "$1");
+  }
+
+  type PagefindResult = {
+    url: string;
+    meta?: { url?: string };
+    sub_results?: { url: string }[];
+  };
+
   function initSearch() {
     const pageFindSearch: HTMLElement | null =
       document.querySelector("#pagefind-search");
@@ -209,6 +223,17 @@ import { SITE } from "@/config";
           }
 
           return term;
+        },
+        // All three alike: Pagefind takes the first sub-result for the page
+        // itself only when its URL equals meta.url || url.
+        processResult: function (result: PagefindResult) {
+          result.url = withoutTrailingSlash(result.url);
+          if (result.meta?.url)
+            result.meta.url = withoutTrailingSlash(result.meta.url);
+          for (const sub of result.sub_results ?? [])
+            sub.url = withoutTrailingSlash(sub.url);
+
+          return result;
         },
       });
 
@@ -296,6 +321,7 @@ import { SITE } from "@/config";
       outline-offset: 1px;
       outline-color: var(--accent);
       text-decoration-style: dashed;
+      text-decoration-color: var(--dashed-decoration);
       text-underline-offset: 4px;
     }
 
