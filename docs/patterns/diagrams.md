@@ -38,11 +38,11 @@ Type sizes, the whole list: 12px (the two mono labels, and the hand-off label at
 | `--dg-fill`, `--dg-on-fill`              | `--foreground`, `--background`                    | A filled box or chip, and the names or words on it    |
 | `--dg-on-fill-text`, `--dg-on-fill-line` | `--background` at 84% and 32% into `--foreground` | A filled box's text and inner borders                 |
 
-The accent appears only in `dg-level`, as the `eyebrow`'s counterpart inside a diagram. A filled box is the text colour in both themes. A diagram adds no colour or type size of its own: a new need is a new part in `Diagram.astro` and a line here. The one exception is forced colours (a Windows contrast theme), which repaint every background as the page's ground: connectors take `CanvasText` there, and a diagram that draws a line or dot as a background gives it `forced-color-adjust: none` and `CanvasText` in its own `@media (forced-colors: active)` block, as `AgentTeam.astro` does for its rails and steps.
+The accent appears only in `dg-level`, as the `eyebrow`'s counterpart inside a diagram. A filled box is the text colour in both themes. A diagram adds no colour or type size of its own: a new need is a new part in `Diagram.astro` and a line here. The one exception is forced colours (a Windows contrast theme), which repaint every background as the page's ground: connectors take `CanvasText` there, and a diagram that draws a line or dot as a background gives it `forced-color-adjust: none` and `CanvasText` in its own `@media (forced-colors: active)` block, as `AgentTeam.astro` does for its rails and steps. The override's selector must be at least as specific as the rule that paints the line, or that rule keeps its grey: the full column's trunk is `.rail > .trunk`, so a bare `.trunk` loses.
 
 The caption renders only when the post gives one. A diagram passes its caption slot on from inside an expression, which registers the slot either way, so `Diagram.astro` renders the slot and tests what it holds.
 
-The parts sit outside the cascade layers, which is what lets `.diagram :where(p, ul, ol, strong)` outrank the `.app-prose` rules in `typography.css` that give prose text the text colour and lists the `list-indent` padding. They set their type directly rather than through the shared utilities, since a component's `<style>` can `@apply` only after an `@reference` to `global.css`.
+The parts sit outside the cascade layers, which is what lets `.diagram :where(p, ul, ol, strong)` outrank the `.app-prose` rules in `typography.css` that give prose text the text colour and lists the `list-indent` padding. They set their type directly rather than through the shared utilities, since a component's `<style>` can `@apply` only after an `@reference` to `global.css`. The reset leaves one prose rule in force: `.app-prose ul` clips its overflow (`overflow-x: clip`), so a chip that runs past its list is cut off rather than shown.
 
 A diagram has no full-size dialog. Its text is the page's size already, and `ImageZoom.astro` binds `#article img` only.
 
@@ -117,5 +117,6 @@ Run each step on `pnpm build && pnpm preview`, in Playwright, at both themes. Th
 4. Crop every band of connectors at 1x, 2x and 3x and enlarge each crop without smoothing. Each line is one sharp pixel wide at 1x, no line is offset from the line it continues, no junction is darker than its lines, every line that meets a card ends in a half disc and each arrowhead sits on its shaft
 5. Reach the post by a client-side navigation from the homepage, and check the diagram is styled on arrival
 6. Read the post's Markdown twin: the summary, then the diagram's words in reading order, and no image line
+7. Emulate forced colours (`page.emulateMedia({ forcedColors: "active" })`, which repaints computed colours in Chromium) and read every connector's computed colour, the CSS-drawn ones from their `::before` or element background: each is `CanvasText`
 
 **When to use:** finishing any change to a diagram.
