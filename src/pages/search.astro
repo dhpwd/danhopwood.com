@@ -170,7 +170,8 @@ import { SITE } from "@/config";
   type PagefindResult = {
     url: string;
     meta?: { url?: string };
-    sub_results: { url: string }[];
+    // Optional, as Pagefind UI's own result component treats it
+    sub_results?: { url: string }[];
   };
 
   function initSearch() {
@@ -228,7 +229,7 @@ import { SITE } from "@/config";
           result.url = withoutTrailingSlash(result.url);
           if (result.meta?.url)
             result.meta.url = withoutTrailingSlash(result.meta.url);
-          for (const sub of result.sub_results)
+          for (const sub of result.sub_results ?? [])
             sub.url = withoutTrailingSlash(sub.url);
 
           return result;
@@ -367,6 +368,14 @@ import { SITE } from "@/config";
     #pagefind-search .pagefind-ui__button:hover {
       color: var(--accent);
       border-color: var(--accent);
+    }
+  }
+
+  /* A touch screen keeps :hover after a tap, and Pagefind's hover underline
+     doesn't wait for a pointer that can hover, as a card title's does. */
+  @media (hover: none) {
+    #pagefind-search .pagefind-ui__result-link:hover {
+      text-decoration-line: none;
     }
   }
 
