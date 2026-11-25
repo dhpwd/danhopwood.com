@@ -222,10 +222,12 @@ html[data-theme="dark"] {
    as .active-nav is, so they outrank the utilities on the same element. */
 
 /* Links ink in: a solid line in the link's colour draws over the dashed
-   underline from the left, and leaves to the right. */
+   underline from the left, and leaves to the right. The `a` in Pagefind's
+   key matters: "Pagefind's controls" in docs/patterns/interaction.md. */
 @media (hover: hover) and (prefers-reduced-motion: no-preference) {
   [class~="decoration-dashed"],
-  .app-prose a:not(.heading-link) {
+  .app-prose a:not(.heading-link),
+  #pagefind-search a.pagefind-ui__result-link {
     /* Where the line sits: "The line of ink" in small-details.md */
     --ink-y: calc(100% - (0.28em - 3px));
     padding-bottom: 2px;
@@ -240,12 +242,14 @@ html[data-theme="dark"] {
     transition-timing-function: var(--default-transition-timing-function);
   }
   a[class~="decoration-dashed"],
-  .app-prose a:not(.heading-link) {
+  .app-prose a:not(.heading-link),
+  #pagefind-search a.pagefind-ui__result-link {
     transition-property: text-decoration-color, background-size, color;
   }
   a[class~="decoration-dashed"]:hover,
   a:hover [class~="decoration-dashed"],
-  .app-prose a:not(.heading-link):hover {
+  .app-prose a:not(.heading-link):hover,
+  #pagefind-search a.pagefind-ui__result-link:hover {
     background-position: 0 var(--ink-y);
     background-size: 100% 1px;
     text-decoration-color: transparent;
@@ -254,12 +258,14 @@ html[data-theme="dark"] {
   /* Keyboard focus keeps the outline on today's box, with no line */
   a[class~="decoration-dashed"]:focus-visible,
   a:focus-visible [class~="decoration-dashed"],
-  .app-prose a:not(.heading-link):focus-visible {
+  .app-prose a:not(.heading-link):focus-visible,
+  #pagefind-search a.pagefind-ui__result-link:focus-visible {
     padding-bottom: 0;
     background-image: none;
   }
   /* A title has no underline at rest, so the line is all it gets */
-  a:hover [data-ink="title"] {
+  a:hover [data-ink="title"],
+  #pagefind-search a.pagefind-ui__result-link:hover {
     text-decoration-line: none;
   }
 }

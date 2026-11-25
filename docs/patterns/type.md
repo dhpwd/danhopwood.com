@@ -29,7 +29,7 @@ Anti-patterns:
 
 ## Don't compensate for the muted underline
 
-The dashed underline is the link signal on its own. `--dashed-decoration` in `global.css` mutes it to 45% of the current colour on purpose, because full-strength 1px dashes read as noise. Its base rule keys on the `decoration-dashed` class rather than on `a`, so an underline drawn on a span inside a link, like a `/tags` row's name, is muted too. Adding weight or colour to make links stand out defeats the treatment: at `strong`'s weight an emphasised phrase and a link become indistinguishable.
+The dashed underline is the link signal on its own. `--dashed-decoration` in `global.css` mutes it to 45% of the current colour on purpose, because full-strength 1px dashes read as noise. Its base rule keys on the `decoration-dashed` class rather than on `a`, so an underline drawn on a span inside a link, like a `/tags` row's name, is muted too. Links that can't carry the class take it from a rule of their own: prose links in `typography.css` and Pagefind's result links in `search.astro`. Adding weight or colour to make links stand out defeats the treatment: at `strong`'s weight an emphasised phrase and a link become indistinguishable.
 
 `typography.css` sets `font-normal` on `.app-prose a` for this reason. `@tailwindcss/typography` defaults links to 500, so removing that override restores a weight nobody chose and nothing in the build warns you. Post titles in `Card.astro` are titles and stay at 600 – the 400 rule is for prose links only.
 
