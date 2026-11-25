@@ -9,7 +9,7 @@ Personal site for Dan Hopwood, a public lab notebook built on the AstroPaper v5.
 <!-- Only what changes engineering decisions in this repo, stated as rules, not narrative. Never replace a constraint with a link: sessions must be self-sufficient in the repo. -->
 
 - **The repo is public** – the "Edit on GitHub" link on every post depends on it. Everything committed is world-readable, including `docs/` and commit messages. Commit only what building the site needs, and keep business strategy, positioning and competitive context out of the repo
-- **Every page must read as made with care before a word is read: precise, calm and understated, never showy.** The site should look like a notebook kept with care, not a blog theme. One upgraded page makes the others look unfinished, so a change to one page holds every page to the bar. A phone is composed on its own terms at 390, with the same weight as 1440. The design rules that carry this are in `docs/patterns/design-system.md`, and the calls already settled are in `docs/design-decisions.md`
+- **Every page must read as made with care before a word is read: precise, calm and understated, never showy.** The site should look like a notebook kept with care, not a blog theme. One upgraded page makes the others look unfinished, so a change to one page holds every page to the bar. A phone is composed on its own terms at 390, with the same weight as 1440. The design rules that carry this are in `docs/patterns/colour.md`, `type.md`, `page-layout.md`, `interaction.md` and `form-fields.md`, and the calls already settled are in `docs/design-decisions.md`
 
 ## Commands
 
@@ -36,7 +36,11 @@ pnpm generate:favicons  # regenerate public/ favicons from the brand tokens
 
 ## Pattern index
 
-- styling a component, changing a font, colour or theme token, or a hover, press or focus state → read `docs/patterns/design-system.md`
+- changing a colour or theme token, where the accent appears, how the theme is applied, or adding a transition to anything that changes with the theme → read `docs/patterns/colour.md`
+- styling text in a new component or restyle: a face, a size, a title or a link's underline → read `docs/patterns/type.md`
+- a page's title block, a labelled list or row, or building a page that isn't a list or a post → read `docs/patterns/page-layout.md`
+- a hover, press or focus state on a control, including the search page's controls → read `docs/patterns/interaction.md`
+- adding a text input or textarea, or a third-party widget that brings its own field styles → read `docs/patterns/form-fields.md`
 - adding a bulleted or numbered list, or changing how lists are indented → read `docs/patterns/lists.md`
 - any visual, layout, colour or motion change, or reviewing one → read `docs/design-decisions.md` before proposing
 - adding a dashed link, a ruled row or an icon inside a control, or changing one of the small details → read `docs/patterns/small-details.md`

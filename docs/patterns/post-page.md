@@ -4,7 +4,7 @@
 
 ## Title block
 
-The date line sits above the title, as the mono accent line does on every page: `<Datetime tone="eyebrow" />`, then the `h1` in `title-page`, with the same gap and top padding as `Main.astro`'s title block – see "The title block" in `docs/patterns/design-system.md`. The date reads `21 Nov 2026`, or `Updated 8 Aug 2026` once `modDatetime` is later than `pubDatetime`.
+The date line sits above the title, as the mono accent line does on every page: `<Datetime tone="eyebrow" />`, then the `h1` in `title-page`, with the same gap and top padding as `Main.astro`'s title block – see "The title block" in `docs/patterns/page-layout.md`. The date reads `21 Nov 2026`, or `Updated 8 Aug 2026` once `modDatetime` is later than `pubDatetime`.
 
 ## Reading measure
 

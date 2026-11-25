@@ -33,7 +33,7 @@ html[data-theme="dark"] {
 /* Mixes of the theme tokens, so they need no value per theme and no satori
    mirror. Plain custom properties, mapped in @theme inline below, so plain
    CSS (the Pagefind block in search.astro) can read them – see
-   docs/patterns/design-system.md */
+   docs/patterns/colour.md */
 :root {
   --accent-strong: color-mix(in srgb, var(--accent) 70%, var(--foreground));
   --accent-stronger: color-mix(in srgb, var(--accent) 55%, var(--foreground));
@@ -103,7 +103,7 @@ html[data-theme="dark"] {
   }
 }
 
-/* Type scale – see "Type" in docs/patterns/design-system.md */
+/* Type scale – see docs/patterns/type.md */
 @utility title-page {
   font-size: clamp(1.875rem, 1.45rem + 1.9vw, 2.5rem);
   line-height: 1.12;
@@ -145,7 +145,7 @@ html[data-theme="dark"] {
 }
 
 /* Interaction states – see "One interaction behaviour" in
-   docs/patterns/design-system.md */
+   docs/patterns/interaction.md */
 @utility interactive {
   @apply transition-colors hover:text-accent active:text-accent-strong;
 }
@@ -154,7 +154,7 @@ html[data-theme="dark"] {
   @apply transition-[background-color,translate] enabled:hover:bg-accent-strong enabled:active:bg-accent-stronger motion-safe:enabled:active:translate-y-px;
 }
 
-/* Text fields – see "Form fields" in docs/patterns/design-system.md */
+/* Text fields – see "Form fields" in docs/patterns/form-fields.md */
 @utility field {
   @apply rounded border border-foreground/60 bg-background px-3 py-2 text-base text-foreground transition-[border-color,box-shadow] placeholder:text-foreground/75 focus:border-foreground focus:ring-1 focus:ring-foreground focus:outline-hidden sm:pointer-fine:text-sm;
 }
@@ -170,7 +170,7 @@ html[data-theme="dark"] {
 
 /* A mono label in a fixed left column with its content beside it, and the
    label above the content on a phone – see "The ledger" in
-   docs/patterns/design-system.md */
+   docs/patterns/page-layout.md */
 @utility ledger {
   display: grid;
   grid-template-columns: minmax(0, 1fr);

@@ -1,6 +1,6 @@
 # Design decisions
 
-The design calls already settled, each with the options it rejected. Read this before proposing a visual, layout, colour or motion change. A proposal that reopens a call here needs a reason the entry doesn't already answer. How each call is built lives in `docs/patterns/design-system.md`.
+The design calls already settled, each with the options it rejected. Read this before proposing a visual, layout, colour or motion change. A proposal that reopens a call here needs a reason the entry doesn't already answer. How each call is built lives in the pattern files under `docs/patterns/` that the pattern index in `CLAUDE.md` routes to.
 
 ## The accent is brick
 
@@ -220,7 +220,7 @@ Rejected:
 - A line that thickens under the pointer. The line is 1px in every state
 - A caret after the site name, which reads as an engineer's blog
 - The portrait tilting under the pointer
-- A theme change wiping across the page, against "A theme change flips every colour in one frame" in `docs/patterns/design-system.md`
+- A theme change wiping across the page, against "A theme change flips every colour in one frame" in `docs/patterns/colour.md`
 - The line above a title typing itself, or its count running up
 
 ## Not adopted

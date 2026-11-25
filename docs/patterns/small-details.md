@@ -1,6 +1,6 @@
 # Small details
 
-The site's small details are a closed set of five – see "Small details are a closed set" in `docs/design-decisions.md`, with the options each rejected. The accent tint is built in "The accent at rest is a closed list" in `docs/patterns/design-system.md`, and the full-size image in "Figures" in `docs/patterns/post-page.md`. The other three each need a technique of their own, below. Their rules live in `src/styles/global.css` outside any layer, as `.active-nav` does, so they outrank the utilities on the same element. Every rule that moves something sits behind `prefers-reduced-motion: no-preference`, and the scroll script also does nothing under reduced motion.
+The site's small details are a closed set of five – see "Small details are a closed set" in `docs/design-decisions.md`, with the options each rejected. The accent tint is built in "The accent at rest is a closed list" in `docs/patterns/colour.md`, and the full-size image in "Figures" in `docs/patterns/post-page.md`. The other three each need a technique of their own, below. Their rules live in `src/styles/global.css` outside any layer, as `.active-nav` does, so they outrank the utilities on the same element. Every rule that moves something sits behind `prefers-reduced-motion: no-preference`, and the scroll script also does nothing under reduced motion.
 
 ## The line of ink
 

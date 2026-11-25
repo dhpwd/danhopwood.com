@@ -37,7 +37,7 @@ function reflectPreference(): void {
 
   // Held for one painted frame so controls flip with the text around them –
   // see "A theme change flips every colour in one frame" in
-  // docs/patterns/design-system.md.
+  // docs/patterns/colour.md.
   if (root.getAttribute("data-theme") !== themeValue) {
     root.setAttribute("data-theme-switching", "");
     root.setAttribute("data-theme", themeValue);
