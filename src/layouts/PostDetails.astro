@@ -106,6 +106,7 @@ const nextPost =
     >
       <Content />
     </article>
+    <p class="sr-only" role="status" data-copy-status></p>
 
     <NewsletterSignup />
 
@@ -226,6 +227,11 @@ const nextPost =
   function attachCopyButtons() {
     const copyButtonLabel = "Copy";
     const resetTimers = new WeakMap();
+    // The result is announced from the status region after the article, not
+    // by the button, and the region empties on its own timer – see "After the
+    // article" in docs/patterns/post-page.md.
+    const copyStatus = document.querySelector("[data-copy-status]");
+    let statusTimer;
     const codeBlocks = Array.from(document.querySelectorAll("pre"));
 
     for (const codeBlock of codeBlocks) {
@@ -248,7 +254,6 @@ const nextPost =
       const copyButton = document.createElement("button");
       copyButton.className = `copy-code absolute end-3 ${topClass} interactive rounded bg-muted border border-muted px-2 py-1 font-mono text-xs leading-4 text-foreground font-medium`;
       copyButton.innerHTML = copyButtonLabel;
-      copyButton.setAttribute("aria-live", "polite");
       codeBlock.setAttribute("tabindex", "0");
       codeBlock.appendChild(copyButton);
 
@@ -264,6 +269,8 @@ const nextPost =
       const code = block.querySelector("code");
       const text = code?.innerText;
 
+      copyStatus.textContent = "";
+
       let copied = true;
       try {
         await navigator.clipboard.writeText(text ?? "");
@@ -271,7 +278,14 @@ const nextPost =
         copied = false;
       }
 
-      button.innerText = copied ? "Copied" : "Copy failed";
+      const result = copied ? "Copied" : "Copy failed";
+      button.innerText = result;
+      copyStatus.textContent = result;
+
+      clearTimeout(statusTimer);
+      statusTimer = setTimeout(() => {
+        copyStatus.textContent = "";
+      }, 3000);
 
       // A failure label has to be read, so it holds for longer. A repeat
       // click cancels the last reset, so it can't cut the new label short.
