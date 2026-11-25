@@ -39,6 +39,16 @@ Rejected: an accent focus, which reads as a validation error round a field.
 
 Rejected: the accent, which reads as a warning, and a green, which adds a second semantic colour.
 
+## An offer page's questions are an open list
+
+Every answer is visible under its question, with the question at the body size in the heading weight. `Questions.astro` builds it.
+
+Rejected:
+
+- `<details>` disclosures, which hide the answers from a reader skimming the page and add a control with hover, press and focus states of its own. The prose `details` rule in `typography.css` also hides a disclosure's paragraphs, so the same disclosure would read differently inside `.app-prose`
+- The `Detail` part, whose label is uppercase mono and unreadable at a question's length
+- A `FAQPage` node in the JSON-LD graph, which nobody has asked for
+
 ## Titles are Geist at 600
 
 Page, post and card titles and in-post headings are Geist at 600 on the shared scale. Geist Mono stays on the site name, labels, the eyebrow, dates and metadata.
@@ -75,7 +85,7 @@ Rejected: warming the code ground, which needs `!important` over shiki's inline 
 
 ## The homepage's first screen
 
-A mono accent line, the headline, the rest of its sentence and a short paragraph, with the portrait beside them as a rounded tile. Below a rule, Build Notes and advisory sit as two ledger rows. At 390 the portrait is a small tile on a row with the mono line, and the headline, the signup and the advisory line fit one screen. The post lists follow.
+A mono accent line, the headline, the rest of its sentence and a short paragraph, with the portrait beside them as a rounded tile. Below a rule, Build Notes, advisory and the cloud box setup sit as three ledger rows. At 390 the portrait is a small tile on a row with the mono line, and the headline, the signup and the advisory line fit one screen. The post lists follow.
 
 Rejected: a type-led composition with the portrait as a byline and the boxed signup, which at 1440 ends the first screen on the "Featured" label with no post in view.
 

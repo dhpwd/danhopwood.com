@@ -24,7 +24,7 @@ The anti-pattern is `link-underline` on a box that isn't inline – an `inline-b
 
 **Problem:** a labelled row's rule draws the first time the visitor scrolls to it. A border can't draw, and a scroll listener reads layout on every frame. A row already in view where the page lands would play on arrival, which moves something the visitor didn't ask for.
 
-**Solution:** each ruled row carries a bare `data-rule` in its markup. `LedgerRow.astro` renders it on the homepage's Advisory, Featured and Recent posts rows, a post's Tags, Share and Source rows and the archive's months, and `Section.astro` unless `framed`. Rules that open or close a page stay still: the Build Notes row (`draw={false}`), the pagination's, the one above the previous and next posts and the footer's.
+**Solution:** each ruled row carries a bare `data-rule` in its markup. `LedgerRow.astro` renders it on the homepage's Advisory, Cloud box, Featured and Recent posts rows, a post's Tags, Share and Source rows and the archive's months, and `Section.astro` unless `framed`. Rules that open or close a page stay still: the Build Notes row (`draw={false}`), the pagination's, the one above the previous and next posts and the footer's.
 
 ```astro
 <LedgerRow as="section" id="featured" label="Featured" class="py-6">

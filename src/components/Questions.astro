@@ -1,0 +1,22 @@
+---
+// An offer page's questions, each answer visible under its question – see
+// "An offer page's questions are an open list" in docs/design-decisions.md.
+// Not a list: the page's Markdown twin would set each question as a list
+// item holding a heading.
+type Props = {
+  items: { question: string; answer: string }[];
+};
+
+const { items } = Astro.props;
+---
+
+<div class="flex flex-col gap-6">
+  {
+    items.map(({ question, answer }) => (
+      <div class="flex flex-col gap-1.5">
+        <h3>{question}</h3>
+        <p>{answer}</p>
+      </div>
+    ))
+  }
+</div>

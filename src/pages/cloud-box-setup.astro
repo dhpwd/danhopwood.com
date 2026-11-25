@@ -8,6 +8,7 @@ import Section from "@/components/Section.astro";
 import Panel from "@/components/Panel.astro";
 import Detail from "@/components/Detail.astro";
 import MarkedList from "@/components/MarkedList.astro";
+import Questions from "@/components/Questions.astro";
 import StatusChip from "@/components/StatusChip.astro";
 import Field from "@/components/Field.astro";
 import Button from "@/components/Button.astro";
@@ -18,7 +19,7 @@ const linkedIn = SOCIALS.find(({ name }) => name === "LinkedIn")!.href;
 
 const heading = "Claude Code that keeps working when your laptop is shut";
 const opening =
-  "I'll set up an always-on server for you that runs Claude Code with your repos, skills and connectors on it. You start sessions and pick them up from the Claude app on your laptop or your phone.";
+  "I'll set up an always-on server for you that runs Claude Code with your repos, skills and connectors on it. You keep working in the Claude app the way you do now, and your whole setup is there on your phone too.";
 
 // One row per place. Changing a place's status is a one-line edit here: the
 // table and its chip both follow from it. The empty status marks the
@@ -31,9 +32,57 @@ type Place = {
 
 const places: Place[] = [
   { place: "First", price: "£350", status: "Held" },
-  { place: "Second", price: "£500", status: "Open" },
+  { place: "Second", price: "£500", status: "Taken" },
   { place: "Third", price: "£650", status: "Open" },
   { place: "After that", price: "£950", status: "" },
+];
+
+const questions = [
+  {
+    question:
+      "Do I have to use a terminal at any point, even during the setup?",
+    answer:
+      "No. On the handover call you share your screen and (if you're happy to) hand me control of your keyboard for the steps that run on your laptop. You sign in to your own accounts yourself, and after the call everything happens in the Claude app.",
+  },
+  {
+    question: "Can you get into my server afterwards?",
+    answer:
+      "No. I remove my key at the end of the handover and have no way in after that. You keep the admin login through your host's console, and if something needs fixing in the 14 days we do it on a call while you share your screen.",
+  },
+  {
+    question: "Will it cost me more with Claude?",
+    answer:
+      "No, the server runs on the Claude subscription you already have, with the same limits. Work on the server counts towards them the same way work on your laptop does.",
+  },
+  {
+    question: "What happens after the 14 days?",
+    answer:
+      "The server keeps running. It's in your account, security updates install themselves and nothing on it depends on me. If something breaks later, fixing it is separate work, so ask me.",
+  },
+  {
+    question: "Can my team have it?",
+    answer:
+      "Yes. It's one setup per person, so each of you gets your own server on your own Claude seat. The company can own the hosting account and pay for every server, which lets it keep or close one when someone leaves.",
+  },
+  {
+    question: "Why not a Mac mini, or an app that keeps my laptop awake?",
+    answer:
+      "A keep-awake app works while the laptop sits on your desk. Once it goes in a bag there's no wifi and the agents stop. A Mac mini at home does the same job as the server, but you'd need to buy one and then set up the remote access yourself.",
+  },
+  {
+    question: "Don't Claude's cloud sessions already do this?",
+    answer:
+      "For some work they do: a cloud session can hold several GitHub repos and the connectors you've added in claude.ai. It doesn't have what's set up only on your own machine though (skills and agents kept outside your repos, connectors added with their own keys), and it gets shut down when it's been idle for a while, which ends any background work or scheduled jobs it was running. The server, on the other hand, is one machine that stays on and holds your whole setup.",
+  },
+  {
+    question: "Does it run Codex or other agents?",
+    answer: "It can do but this setup is Claude Code only, for now.",
+  },
+  {
+    question: "I don't use Claude Code yet. Is this for me?",
+    answer:
+      "Not yet. The setup moves the repos, skills and connectors you already work with onto a server, so it's for people who use Claude Code day to day.",
+  },
 ];
 ---
 
@@ -47,33 +96,114 @@ const places: Place[] = [
         {opening}
       </PageIntro>
 
-      <Section id="shift" title="What changes">
+      <Section id="why" title="Why I built this">
+        <p>
+          I built this for myself first, because I was beholden to my laptop.
+        </p>
+        <MarkedList>
+          <li>
+            <strong class="font-semibold"
+              >My agents only worked while the laptop was open and on wifi.</strong
+            > If I had to leave somewhere soon, I'd either hold off starting a job
+            or sit and wait for one to finish. Then nothing got done while I was on
+            the move
+          </li>
+          <li>
+            <strong class="font-semibold"
+              >Slow or dodgy wifi got in the way.</strong
+            > In a cafe, on a train or at an airport it made the work frustrating
+            (or impossible)
+          </li>
+          <li>
+            <strong class="font-semibold"
+              >I couldn't do much from my phone.</strong
+            > It didn't have my full setup, so I couldn't make any real progress standing
+            on the tube
+          </li>
+        </MarkedList>
+        <p>
+          So I moved everything onto a server that never turns off. My laptop
+          and phone are now just windows into it.
+        </p>
+      </Section>
+
+      <Section id="result" title="What you end up with">
+        <p>
+          Everything stays in the Claude app. The one difference is where the
+          work runs.
+        </p>
         <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <Panel label="Today">
             <p>
-              Your agents only run while your laptop is open and online. Close
-              the lid part-way through a long job and the job stops.
+              You start a session, choose "This computer" and pick a folder. The
+              work runs on your laptop, so it stops when the laptop does.
             </p>
           </Panel>
           <Panel label="After" strong>
             <p>
-              The work runs on a server that never sleeps. Close the lid, get on
-              a train, open the Claude app on your phone and carry on in the
-              same session.
+              You start a session and choose one of your repos on the server
+              instead. Nothing else in the app changes, and the work carries on
+              whether your laptop is open or not.
             </p>
           </Panel>
         </div>
+        <MarkedList>
+          <li>
+            <strong class="font-semibold"
+              >Send the message, shut the laptop.</strong
+            > The job carries on while the laptop's in your bag
+          </li>
+          <li>
+            <strong class="font-semibold">Pick it up anywhere.</strong> The same conversation
+            is in the Claude app on your phone, with your full setup behind it, and
+            even in the web app (claude.ai) if you need to use another computer. Reply
+            from wherever you are, then carry on at the laptop when you're home
+          </li>
+          <li>
+            <strong class="font-semibold"
+              >Bad wifi doesn't slow down the work.</strong
+            > A weak connection slows your messages down, but the job itself runs
+            on the server
+          </li>
+          <li>
+            <strong class="font-semibold">No terminal.</strong> You never type a command
+          </li>
+        </MarkedList>
       </Section>
 
-      <Section id="get" title="What you get">
+      <Section id="more" title="What else it's good for">
+        <MarkedList>
+          <li>
+            <strong class="font-semibold">One copy of your files.</strong> Every session
+            works on the one copy on the server, whichever device you start it from.
+            This means you don't need to push from one machine and pull on another
+            to carry on where an agent left off
+          </li>
+          <li>
+            <strong class="font-semibold">Agents as employees.</strong> A session
+            on the server stays open, so an agent can remain available and even wake
+            itself up on a loop to keep work moving without you. I run
+            <a
+              href="/posts/what-my-ai-agents-decide-without-me"
+              class="interactive link-underline">a whole team of them</a
+            > this way
+          </li>
+          <li>
+            <strong class="font-semibold">Scheduled jobs.</strong> They run on the
+            server with your full setup, whether your laptop is on or not
+          </li>
+        </MarkedList>
+        <p>
+          Agents and scheduled jobs aren't part of the setup. Having the server
+          is what lets you build them.
+        </p>
+      </Section>
+
+      <Section id="included" title="What's included">
         <MarkedList>
           <li>
             A server in your own account, running Claude Code all the time on
             your own Claude subscription
-          </li>
-          <li>
-            Sessions you start and continue from the Claude desktop and phone
-            apps. You never need a terminal
           </li>
           <li>
             Your GitHub repos on it with their dependencies installed, and your
@@ -112,25 +242,6 @@ const places: Place[] = [
           <li>
             <strong class="font-semibold">I remove my access.</strong> The server
             and every account it uses are yours, and nothing about it depends on me
-          </li>
-        </MarkedList>
-      </Section>
-
-      <Section id="why" title="Why a server">
-        <MarkedList>
-          <li>
-            <strong class="font-semibold">A keep-awake app</strong> works while the
-            laptop sits on your desk. Once it goes in a bag there's no wifi, and the
-            agents stop
-          </li>
-          <li>
-            <strong class="font-semibold">A Mac mini at home</strong> does the same
-            job, but you buy the machine and set up the remote access yourself
-          </li>
-          <li>
-            <strong class="font-semibold">Cloud coding sessions</strong> start from
-            a copy of one GitHub repo. They don't have your connectors, your other
-            repos or anything else from your own setup
           </li>
         </MarkedList>
       </Section>
@@ -209,13 +320,22 @@ const places: Place[] = [
           <li>A paid Claude plan</li>
           <li>Your work in GitHub</li>
           <li>The Claude app on your phone</li>
+          <li>A Mac or Linux laptop</li>
         </MarkedList>
+        <p>
+          If you're on a Team or Enterprise plan, you or your admin will need to
+          switch on Remote Control in Claude's admin settings.
+        </p>
         <p class="text-small text-foreground/75">
           The fixed price covers up to 10 repos and 5 connectors that use their
           own API keys. It doesn't cover maintenance after the 14 days, or
           designing and building agents, skills or loops. That's separate work,
           so ask me if you want it.
         </p>
+      </Section>
+
+      <Section id="questions" title="Questions">
+        <Questions items={questions} />
       </Section>
 
       <Section id="cta" title="Get it set up" framed>
