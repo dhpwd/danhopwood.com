@@ -1,0 +1,235 @@
+---
+// The cloud box, in the post "Running coding agents on a €30 Linux box": two
+// devices reach one Linux box over a private network, and everything runs on
+// the box. See docs/patterns/diagrams.md
+import Diagram from "./Diagram.astro";
+import { bracket, right, under } from "./paths";
+
+const summary =
+  "Diagram: a laptop and a phone connect through a Tailscale private network to one Linux box holding three tmux sessions, each running a Claude Code process. Nothing runs on the laptop or phone.";
+
+const sessions = [
+  "tmux: fidero-os",
+  "tmux: fidero.com",
+  "tmux: danhopwood.com",
+];
+
+// Stacked, the two 136px device cards sit 10px apart, centred at x 68 and
+// 214. At the full column they stack, centred at y 22 and 76.
+const stack = {
+  lines: bracket([68.5, 214.5], 12.5, 0) + "M141.5 12.5V64",
+  ends: under(68.5, 0) + under(214.5, 0),
+};
+
+const across = {
+  lines: "M0 22.5H20.5V76.5H0M20.5 49.5H224",
+  ends: right(0, 22.5) + right(0, 76.5),
+};
+---
+
+<Diagram summary={summary}>
+  <div class="topo">
+    <div class="devices">
+      <p class="nothing">Nothing runs on laptop/phone.</p>
+      <div class="pair">
+        <p class="dg-card dg-name">Laptop</p>
+        <p class="dg-card dg-name">Phone</p>
+      </div>
+    </div>
+
+    <div class="net">
+      <!-- Stacked: a line down from each device, joined, then on to the box -->
+      <svg class="dg-wires stack" viewBox="0 0 282 64" aria-hidden="true">
+        <path d={stack.lines}></path>
+        <path class="end" d={stack.ends}></path>
+      </svg>
+      <!-- The full column: a line out of each device, joined, then across -->
+      <svg class="dg-wires across" viewBox="0 0 224 98" aria-hidden="true">
+        <path d={across.lines}></path>
+        <path class="end" d={across.ends}></path>
+      </svg>
+      <p class="dg-tag">Tailscale private network</p>
+    </div>
+
+    <div class="dg-frame box">
+      <p class="dg-level">Linux box</p>
+      <ul class="sessions">
+        {
+          sessions.map(session => (
+            <li class="dg-card">
+              <span class="dg-mono">{session}</span>
+              <span class="process">Claude Code process</span>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </div>
+  {
+    Astro.slots.has("default") && (
+      <Fragment slot="caption">
+        <slot />
+      </Fragment>
+    )
+  }
+</Diagram>
+
+<style>
+  /* Stacked, the default: the devices, the network and the box in a column.
+     The two device cards and the lines out of them are a fixed size in px,
+     so the SVG stays on the cards' numbers and a reader's larger text can't
+     widen the pair past a phone's column. */
+  .nothing {
+    margin-bottom: 0.5rem;
+    color: var(--dg-note);
+  }
+
+  .pair {
+    display: grid;
+    grid-template-columns: repeat(2, 136px);
+    gap: var(--dg-gap) 10px;
+  }
+
+  .pair .dg-card {
+    display: flex;
+    align-items: center;
+    height: 2.75rem;
+    padding-block: 0;
+  }
+
+  /* The label sits beside the line, 14px clear of it. The band grows with
+     the label when the reader's text is larger, and a line drawn in CSS at
+     the SVG's x carries the line on down to the box. */
+  .net {
+    position: relative;
+    min-height: 64px;
+    padding: 18px 0 0 156px;
+  }
+
+  .net::before {
+    content: "";
+    position: absolute;
+    top: 64px;
+    bottom: 0;
+    left: 141px;
+    width: 1px;
+    background: var(--dg-wire);
+  }
+
+  .net .stack {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 282px;
+    height: 64px;
+  }
+
+  .across {
+    display: none;
+  }
+
+  .box .dg-level {
+    margin-bottom: 0.625rem;
+    line-height: 1rem;
+  }
+
+  .sessions {
+    display: grid;
+    gap: var(--dg-gap);
+  }
+
+  .sessions li {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+    padding: 0.625rem 0.75rem;
+  }
+
+  /* The thing that runs: the one filled part of the drawing */
+  .process {
+    border-radius: 0.25rem;
+    background: var(--dg-fill);
+    padding: 0.1875rem 0.625rem;
+    font-size: 0.8125rem;
+    color: var(--dg-on-fill);
+    white-space: nowrap;
+  }
+
+  /* The full column: devices on the left, the box on the right and the
+     network between them, on a fixed grid of 120, 224 and 392px. Each
+     session is 48px tall, which puts the middle one's centre 121px down the
+     box. The devices start 72px down, so the line across meets it there. */
+  @container diagram (width >= 46rem) {
+    .topo {
+      display: grid;
+      grid-template-columns: 7.5rem 14rem 24.5rem;
+      align-items: start;
+    }
+
+    .devices,
+    .net {
+      margin-top: 4.5rem;
+    }
+
+    .devices {
+      position: relative;
+    }
+
+    .nothing {
+      position: absolute;
+      bottom: calc(100% + 0.625rem);
+      margin: 0;
+    }
+
+    .pair {
+      grid-template-columns: none;
+    }
+
+    .stack {
+      display: none;
+    }
+
+    .net {
+      min-height: 0;
+      padding: 0;
+    }
+
+    .net::before {
+      content: none;
+    }
+
+    .across {
+      display: block;
+      width: 14rem;
+      height: 6.125rem;
+    }
+
+    /* Above the line, centred on its run from the bracket to the box */
+    .net .dg-tag {
+      position: absolute;
+      right: 0;
+      bottom: 3.5625rem;
+      left: 1.25rem;
+      max-width: none;
+      margin-inline: auto;
+    }
+
+    .sessions li {
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+      height: 3rem;
+      padding-block: 0;
+    }
+  }
+
+  /* Forced colours repaint every background as the page's ground, which
+     would erase the line drawn as one */
+  @media (forced-colors: active) {
+    .net::before {
+      forced-color-adjust: none;
+      background: CanvasText;
+    }
+  }
+</style>

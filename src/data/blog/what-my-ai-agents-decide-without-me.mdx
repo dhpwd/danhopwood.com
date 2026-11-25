@@ -8,14 +8,17 @@ draft: false
 tags: ["claude-code", "agentic-coding", "ai"]
 ---
 
+import AgentTeam from "@/components/diagrams/AgentTeam.astro";
+
 Most of the day-to-day calls in my company are now made by AI agents. They plan the work, build it, release it and draft every follow-up to prospects and customers. What still needs me arrives as one ranked list on my phone, twice a day.
 
 It took a few weeks of things going wrong to get here. A month ago four PM agents and several of their workers could each ping my phone whenever they liked, and nothing showed me in one place what was waiting on me. A week ago the last role filled in when a deals agent went live. So here's the whole setup: what each agent decides alone, what still reaches me and what broke on the way.
 
 ## The team
 
-![Diagram: Dan at the top, answering one ranked queue from his phone or laptop. Below him, on one always-on cloud server, Clara the chief of staff. Below her, four PM agents called Ben (platform, website, outbound, delivery) and Sam the deals agent, with Sam handing customer requests to the delivery PM. The PMs start one worker per ticket: write the spec, build and review, run, deliver. At the bottom, calls that can be undone are made by the agents, and calls that can't go up to Dan.](../../assets/images/cc-agent-team.png)
-_Who reports to whom. Everything below me runs on one server._
+<AgentTeam>
+  Who reports to whom. Everything below me runs on one server.
+</AgentTeam>
 
 I'm at the top and Clara, the chief of staff, sits below me. Below her are four PMs (one for each area of the business) plus Sam, who handles deals. Each PM starts a separate worker for each piece of work (ticket). The worker reports back to the PM and never to me.
 

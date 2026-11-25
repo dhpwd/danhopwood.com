@@ -41,6 +41,7 @@ pnpm generate:favicons  # regenerate public/ favicons from the brand tokens
 - any visual, layout, colour or motion change, or reviewing one → read `docs/design-decisions.md` before proposing
 - adding a dashed link, a ruled row or an icon inside a control, or changing one of the small details → read `docs/patterns/small-details.md`
 - adding or replacing images, the avatar or favicons → read `docs/patterns/images.md`
+- drawing or changing a diagram in a post, or converting a post to `.mdx` → read `docs/patterns/diagrams.md`
 - editing `src/utils/og-templates/` or `src/utils/loadGoogleFont.ts`, or changing the satori version → read `docs/patterns/og-images.md`
 - sitemap, `llms.txt`, JSON-LD, OG metadata, `vercel.json` routes, response headers or the Markdown twins → read `docs/patterns/machine-readability.md`
 - a post's title block, body, tables, figures or what follows the article → read `docs/patterns/post-page.md`

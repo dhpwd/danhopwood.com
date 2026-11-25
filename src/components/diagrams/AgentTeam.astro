@@ -1,0 +1,798 @@
+---
+// The agent team, in the post "What my AI agents decide without me". At the
+// full column it is an org chart on a fixed grid, with its connectors drawn
+// in SVG on that grid. Narrower, the levels stack and a rail down the left
+// joins each to the next. See docs/patterns/diagrams.md
+import Diagram from "./Diagram.astro";
+import { bracket, left, over, under } from "./paths";
+
+const summary =
+  "Diagram: Dan at the top, answering one ranked queue from his phone or laptop. Below him, on one always-on cloud server, Clara the chief of staff. Below her, four PM agents called Ben (platform, website, outbound, delivery) and Sam the deals agent, with Sam handing customer requests to the delivery PM. The PMs start one worker per ticket: write the spec, build and review, run, deliver. At the bottom, calls that can be undone are made by the agents, and calls that can’t go up to Dan.";
+
+const pms = [
+  { area: "Platform", does: "Engine, SDK and production releases" },
+  { area: "Website", does: "The marketing site" },
+  { area: "Outbound", does: "The outbound sending engine" },
+  { area: "Delivery", does: "Client deliverables" },
+];
+
+const workers = [
+  {
+    kind: "Spec",
+    name: "Write the spec",
+    steps: [
+      "Check the ticket against the code and docs",
+      "Settle open questions with the PM, or with Dan where he wants a say",
+      "Ready to build",
+    ],
+  },
+  {
+    kind: "Code",
+    name: "Build and review",
+    steps: [
+      "Build and test it in its own copy of the code",
+      "Reviewed by other agents, one from another vendor",
+      "The PM merges it. Dan’s go on anything a buyer sees",
+    ],
+  },
+  {
+    kind: "Ops",
+    name: "Run",
+    steps: [
+      "Carry out the ticket’s steps",
+      "Write a receipt",
+      "Next steps to the PM",
+    ],
+  },
+  {
+    kind: "Client work",
+    name: "Deliver",
+    steps: [
+      "Produce the client deliverable",
+      "Dan reviews it before the client sees it",
+      "Sent",
+    ],
+  },
+];
+
+// The org chart's grid, in px from the frame's inner edge: five 124px cards
+// with a 40px space before the last, and four 170px cards under them, all
+// 10px apart in a 710px row. A line runs half a pixel right of a card's
+// centre, so it fills one column of pixels.
+const SPINE = 355.5;
+const PM_DROPS = [62.5, 196.5, 330.5, 464.5];
+const SAM_DROP = 648.5;
+const WORKER_DROPS = [85.5, 265.5, 445.5, 625.5];
+
+const toPms = {
+  lines: `M${SPINE} 0V44.5` + bracket([...PM_DROPS, SAM_DROP], 44.5, 72),
+  ends:
+    under(SPINE, 0) + [...PM_DROPS, SAM_DROP].map(x => over(x, 72)).join(""),
+};
+
+const join = {
+  lines: bracket(PM_DROPS, 14.5, 0) + `M${SPINE} 14.5V20`,
+  ends: PM_DROPS.map(x => under(x, 0)).join(""),
+};
+
+const toWorkers = {
+  lines: `M${SPINE} 0V60.5` + bracket(WORKER_DROPS, 60.5, 88),
+  ends: WORKER_DROPS.map(x => over(x, 88)).join(""),
+};
+
+// The ends of the rail's runs, each in a 7 by 4 `dg-end`
+const endTop = under(3.5, 0);
+const endBottom = over(3.5, 4);
+---
+
+<Diagram summary={summary}>
+  <div class="team">
+    <div class="lead">
+      <p class="dg-level"><span>01</span> Founder</p>
+      <div class="dg-card dg-fill dan">
+        <p class="dg-name dg-name-lg">Dan</p>
+        <p>
+          Sets the week’s priorities and keeps the calls that can’t be undone.
+          Reads one queue, not every agent.
+        </p>
+        <ul class="devices">
+          <li><b>Phone</b> Claude app</li>
+          <li><b>Laptop</b> Claude app or terminal</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="band to-server">
+      <svg class="dg-end top" viewBox="0 0 7 4" aria-hidden="true">
+        <path d={endTop}></path>
+      </svg>
+      <p class="dg-tag">answers by item number</p>
+      <p class="dg-tag">one ranked queue, two review windows a day</p>
+    </div>
+
+    <div class="dg-frame server">
+      <div class="server-top">
+        <div class="server-head">
+          <p>
+            <strong class="dg-name">One always-on cloud server</strong>
+            <span>Every agent below runs here</span>
+          </p>
+          <p class="dg-label">Claude Code · Codex · tmux</p>
+        </div>
+        <p class="dg-level"><span>02</span> Chief of staff</p>
+        <svg class="dg-end bottom" viewBox="0 0 7 4" aria-hidden="true">
+          <path d={endBottom}></path>
+        </svg>
+      </div>
+      <div class="dg-card clara">
+        <p class="dg-name dg-name-lg">Clara</p>
+        <p>
+          Holds the ranked queue of everything that needs Dan. Settles what the
+          record already answers, so only real decisions reach him. The only
+          agent that notifies him.
+        </p>
+        <ul class="chips">
+          <li class="dg-chip">Hourly sweep for anything unreported</li>
+          <li class="dg-chip">Settles clashes between PMs</li>
+        </ul>
+      </div>
+
+      <div class="band to-pms">
+        <svg class="dg-wires tree" viewBox="0 0 710 72" aria-hidden="true">
+          <path d={toPms.lines}></path>
+          <path class="end" d={toPms.ends}></path>
+        </svg>
+        <svg class="dg-end top" viewBox="0 0 7 4" aria-hidden="true">
+          <path d={endTop}></path>
+        </svg>
+        <p class="dg-tag">raise what needs Dan · relay his answers</p>
+        <p class="dg-level"><span>03</span> PMs and deals</p>
+        <svg class="dg-end bottom" viewBox="0 0 7 4" aria-hidden="true">
+          <path d={endBottom}></path>
+        </svg>
+      </div>
+
+      <div class="pms">
+        {
+          pms.map(pm => (
+            <div class="dg-card ben">
+              <p class="dg-label">PM · {pm.area}</p>
+              <p class="dg-name dg-name-lg">Ben</p>
+              <p>{pm.does}</p>
+            </div>
+          ))
+        }
+        <div class="rail">
+          <svg class="dg-end top" viewBox="0 0 7 4" aria-hidden="true">
+            <path d={endTop}></path>
+          </svg>
+          <div class="hand">
+            <span>customer requests</span>
+            <svg class="dg-wires tree" viewBox="0 0 60 15" aria-hidden="true">
+              <path d="M60 7.5H1.5M7 2L1.5 7.5L7 13"></path>
+              <path class="end" d={left(60, 7.5)}></path>
+            </svg>
+            <svg class="dg-wires stack" viewBox="0 0 11 38" aria-hidden="true">
+              <path d="M5.5 38V1.5M0.5 6.5L5.5 1.5L10.5 6.5"></path>
+              <path class="end" d={over(5.5, 38)}></path>
+            </svg>
+          </div>
+          <div class="dg-card dg-tint sam">
+            <p class="dg-label">Deals</p>
+            <p class="dg-name dg-name-lg">Sam</p>
+            <p>
+              Tracks every follow-up owed and drafts each message. Dan sends.
+            </p>
+          </div>
+          <p class="note n3">
+            <strong>No workers.</strong> Drafts reach Dan through Clara.
+          </p>
+          <svg
+            class="dg-wires tree join"
+            viewBox="0 0 710 20"
+            aria-hidden="true"
+          >
+            <path d={join.lines}></path>
+            <path class="end" d={join.ends}></path>
+          </svg>
+          <p class="note n1">
+            <strong>Each PM</strong> picks its area’s work, starts a worker per ticket
+            and merges what passes its checks.
+          </p>
+          <i class="trunk" aria-hidden="true"></i>
+          <p class="note n2">
+            It makes every call that can be undone, and never writes code
+            itself.
+          </p>
+          <svg
+            class="dg-wires tree fan"
+            viewBox="0 0 710 88"
+            aria-hidden="true"
+          >
+            <path d={toWorkers.lines}></path>
+            <path class="end" d={toWorkers.ends}></path>
+          </svg>
+          <p class="dg-tag split">
+            <span>one worker per ticket ·</span>
+            <span>reports back at checkpoints and handover</span>
+          </p>
+          <p class="dg-level"><span>04</span> Workers</p>
+          <svg class="dg-end bottom" viewBox="0 0 7 4" aria-hidden="true">
+            <path d={endBottom}></path>
+          </svg>
+        </div>
+      </div>
+
+      <div class="workers">
+        {
+          workers.map(worker => (
+            <div class="dg-card">
+              <p class="dg-label">{worker.kind}</p>
+              <p class="dg-name">{worker.name}</p>
+              <ol class="steps">
+                {worker.steps.map(step => (
+                  <li>{step}</li>
+                ))}
+              </ol>
+            </div>
+          ))
+        }
+      </div>
+
+      <div class="doors">
+        <p class="dg-card dg-strong">
+          <strong>Calls that can be undone</strong>
+          Made at the lowest level that can make them and logged on the ticket as
+          a decision comment. When it could go either way, take the faster route.
+        </p>
+        <p class="dg-card dg-fill">
+          <strong>Calls that can’t be undone</strong>
+          Spend, pricing, contracts and anything that reaches a customer go up to
+          Dan, whoever raises them.
+        </p>
+      </div>
+    </div>
+
+    <p class="foot">
+      Clara, the PMs and Sam restart with a fresh context each morning. What
+      carries over lives in tickets, pull requests, notes and the queue.
+    </p>
+  </div>
+  {
+    Astro.slots.has("default") && (
+      <Fragment slot="caption">
+        <slot />
+      </Fragment>
+    )
+  }
+</Diagram>
+
+<style>
+  /* Stacked, the default. A rail runs down the left from each level to the
+     next, and the words about that step sit to its right. `--rail` is the
+     rail's left edge, measured from the frame's inner edge. */
+  .team {
+    --rail: 1rem;
+    --beside: calc(var(--rail) + 0.9375rem);
+  }
+
+  .lead > .dg-level {
+    margin-bottom: 0.5rem;
+  }
+
+  .dg-label + .dg-name {
+    margin-top: 0.1875rem;
+  }
+
+  .dg-name + p {
+    margin-top: 0.125rem;
+  }
+
+  .devices,
+  .chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.375rem;
+    margin-top: 0.625rem;
+  }
+
+  /* Stacked, a chip wraps rather than run past Dan's card when the reader's
+     text is larger. At the full column it keeps to one line. */
+  .devices li {
+    border: 1px solid var(--dg-on-fill-line);
+    border-radius: 0.25rem;
+    padding: 0.1875rem 0.625rem;
+    font-size: 0.8125rem;
+  }
+
+  .devices b {
+    margin-inline-end: 0.25rem;
+  }
+
+  /* One run of the rail between two cards */
+  .band {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.375rem;
+    padding: 0.875rem 0 0.875rem var(--beside);
+  }
+
+  .band::before,
+  .server-top::before,
+  .rail::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: var(--rail);
+    width: 1px;
+    background: var(--dg-wire);
+  }
+
+  .dg-end {
+    left: calc(var(--rail) - 0.1875rem);
+  }
+
+  .dg-end.top {
+    top: 0;
+  }
+
+  .dg-end.bottom {
+    bottom: 0;
+  }
+
+  /* Dan's card sits outside the frame, whose edge and padding come to 13px,
+     so the same rail is 13px further in from here */
+  .to-server {
+    --rail: 1.8125rem;
+    --beside: calc(var(--rail) + 0.9375rem);
+  }
+
+  /* The rail runs on through the frame's edge, past its heading, to Clara */
+  .server-top {
+    position: relative;
+    padding: 0.125rem 0 0.875rem var(--beside);
+  }
+
+  .server-top::before {
+    top: -0.8125rem;
+  }
+
+  .server-head {
+    display: grid;
+    gap: 0.375rem;
+    margin-bottom: 1rem;
+  }
+
+  .server-head strong {
+    display: block;
+  }
+
+  .server-head span {
+    color: var(--dg-note);
+  }
+
+  .to-pms .dg-level {
+    margin-top: 0.5rem;
+  }
+
+  .tree,
+  .trunk {
+    display: none;
+  }
+
+  .pms {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--dg-gap);
+  }
+
+  /* 10px at the sides, so a role label fits its card on a 320px phone */
+  .pms > .dg-card,
+  .sam {
+    padding: 0.625rem 0.625rem 0.75rem;
+  }
+
+  /* From the PMs to the workers. Sam and the notes sit beside the rail, so
+     the line passes Sam by: Sam starts no workers. */
+  .rail {
+    position: relative;
+    grid-column: 1 / -1;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 0 0 0.875rem var(--beside);
+  }
+
+  .rail::before,
+  .rail > .dg-end.top {
+    top: calc(var(--dg-gap) * -1);
+  }
+
+  /* Sam hands customer requests up to the delivery PM, the card above */
+  .hand {
+    position: relative;
+    align-self: stretch;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    height: 1.75rem;
+    padding-inline-end: 3.75rem;
+    font-size: 0.8125rem;
+    color: var(--dg-note);
+  }
+
+  /* One line, so a larger text size can't push it down onto Sam's card */
+  .hand span {
+    white-space: nowrap;
+  }
+
+  .hand .stack {
+    position: absolute;
+    top: calc(var(--dg-gap) * -1);
+    right: 2.5rem;
+    width: 0.6875rem;
+    height: 2.375rem;
+  }
+
+  .sam {
+    align-self: stretch;
+  }
+
+  .note {
+    color: var(--dg-note);
+  }
+
+  .note strong {
+    color: var(--dg-text);
+  }
+
+  .n3 {
+    margin-top: 0.5rem;
+  }
+
+  .n1 {
+    margin-top: 0.875rem;
+  }
+
+  .n2 {
+    margin-top: 0.375rem;
+  }
+
+  .rail > .dg-tag {
+    margin-top: 0.875rem;
+  }
+
+  .rail > .dg-level {
+    margin-top: 0.75rem;
+  }
+
+  /* Two lines, broken at the dot */
+  .split span {
+    display: block;
+  }
+
+  .workers {
+    display: grid;
+    gap: var(--dg-gap);
+  }
+
+  .steps {
+    display: grid;
+    gap: 0.375rem;
+    margin-top: 0.5rem;
+    font-size: 0.8125rem;
+  }
+
+  .steps li {
+    position: relative;
+    padding-inline-start: 1.125rem;
+  }
+
+  .steps li::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0.375rem;
+    width: 0.4375rem;
+    height: 0.4375rem;
+    border-radius: 50%;
+    background: var(--dg-dot);
+  }
+
+  /* A rule from each step's dot to the next one's */
+  .steps li:not(:last-child)::after {
+    content: "";
+    position: absolute;
+    left: 0.1875rem;
+    top: 0.8125rem;
+    bottom: -0.75rem;
+    width: 1px;
+    background: var(--dg-dot);
+  }
+
+  .steps li:last-child {
+    font-weight: 600;
+    color: var(--foreground);
+  }
+
+  .steps li:last-child::before {
+    background: var(--foreground);
+  }
+
+  .doors {
+    display: grid;
+    gap: var(--dg-gap);
+    margin-top: var(--dg-gap);
+  }
+
+  .doors strong {
+    display: block;
+    margin-bottom: 0.125rem;
+    font-size: 0.9375rem;
+  }
+
+  .doors .dg-strong strong {
+    color: var(--foreground);
+  }
+
+  .foot {
+    margin-top: 0.75rem;
+    color: var(--dg-note);
+  }
+
+  @container diagram (width >= 30rem) {
+    .workers,
+    .doors {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  /* The full column: the org chart. Everything sits on one 710px grid, so
+     the connectors are SVG drawn on the same numbers, and the rail becomes
+     the spine down the middle. */
+  @container diagram (width >= 46rem) {
+    .team {
+      --rail: 22.1875rem;
+    }
+
+    .tree {
+      display: block;
+    }
+
+    .stack {
+      display: none;
+    }
+
+    /* A level's label sits to the left of its card, level with its top */
+    .lead {
+      position: relative;
+    }
+
+    .lead > .dg-level {
+      position: absolute;
+      top: 0.25rem;
+      left: 0;
+    }
+
+    .dan,
+    .clara {
+      width: 26.25rem;
+      margin-inline: auto;
+    }
+
+    .devices li {
+      white-space: nowrap;
+    }
+
+    .band {
+      display: block;
+      padding: 0;
+    }
+
+    /* The spine is 13px further in from outside the frame */
+    .to-server {
+      --rail: 23rem;
+      height: 3rem;
+    }
+
+    .to-server .dg-tag {
+      position: absolute;
+      top: 0.6875rem;
+      left: var(--beside);
+    }
+
+    .to-server .dg-tag:first-of-type {
+      right: calc(100% - var(--rail) + 0.875rem);
+      left: auto;
+    }
+
+    .server-top {
+      padding: 0 0 1rem;
+    }
+
+    .server-head {
+      grid-template-columns: 1fr auto;
+      align-items: start;
+      margin-bottom: 0;
+    }
+
+    .server-top > .dg-level {
+      position: absolute;
+      top: calc(100% + 0.25rem);
+      left: 0;
+    }
+
+    /* Clara's line to the five cards under her */
+    .to-pms::before {
+      content: none;
+    }
+
+    .to-pms > .dg-end,
+    .rail > .dg-end {
+      display: none;
+    }
+
+    .to-pms > .tree {
+      width: 44.375rem;
+      height: 4.5rem;
+    }
+
+    .to-pms .dg-tag {
+      position: absolute;
+      top: 0.5625rem;
+      left: var(--beside);
+    }
+
+    .to-pms .dg-level {
+      position: absolute;
+      bottom: 2.25rem;
+      left: 0;
+    }
+
+    .pms {
+      grid-template-columns: repeat(4, 7.75rem) 2.5rem 7.75rem;
+      row-gap: 0;
+    }
+
+    /* Its children take their places on the PMs' grid */
+    .rail {
+      display: contents;
+    }
+
+    .rail::before {
+      content: none;
+    }
+
+    .rail > * {
+      margin: 0;
+    }
+
+    /* Sam's hand-off: a straight arrow across the space between the cards */
+    .hand {
+      grid-column: 5;
+      grid-row: 1;
+      display: block;
+      height: auto;
+      padding: 0;
+    }
+
+    .hand span {
+      position: absolute;
+      top: 2.625rem;
+      right: -0.625rem;
+      left: -0.625rem;
+      font-size: 0.75rem;
+      line-height: 1.25;
+      text-align: center;
+      white-space: normal;
+    }
+
+    .hand .tree {
+      position: absolute;
+      top: 4.75rem;
+      left: -0.625rem;
+      width: 3.75rem;
+      height: 0.9375rem;
+    }
+
+    .sam {
+      grid-column: 6;
+      grid-row: 1;
+    }
+
+    /* The four PMs' lines join, and one trunk runs on down the spine */
+    .join {
+      grid-column: 1 / -1;
+      grid-row: 2;
+      width: 44.375rem;
+      height: 1.25rem;
+    }
+
+    .note {
+      grid-row: 3;
+      padding-top: 0.75rem;
+    }
+
+    /* The first two notes stop 15px short of the trunk, one either side */
+    .rail > .n1 {
+      grid-column: 1 / 4;
+      margin-inline-end: 3.25rem;
+    }
+
+    .rail > .n2 {
+      grid-column: 3 / 6;
+      margin-inline-start: 6.4375rem;
+    }
+
+    .n3 {
+      grid-column: 6;
+    }
+
+    /* 87px into the third column is the spine */
+    .rail > .trunk {
+      display: block;
+      grid-column: 3;
+      grid-row: 3;
+      justify-self: start;
+      width: 1px;
+      margin-inline-start: 5.4375rem;
+      background: var(--dg-wire);
+    }
+
+    .fan {
+      grid-column: 1 / -1;
+      grid-row: 4;
+      width: 44.375rem;
+      height: 5.5rem;
+    }
+
+    .rail > .dg-tag {
+      grid-column: 1 / -1;
+      grid-row: 4;
+      align-self: start;
+      justify-self: start;
+      margin: 0.5rem 0 0 var(--beside);
+    }
+
+    .split span {
+      white-space: nowrap;
+    }
+
+    .rail > .dg-level {
+      grid-column: 1 / -1;
+      grid-row: 4;
+      align-self: end;
+      margin-bottom: 2.25rem;
+    }
+
+    .workers {
+      grid-template-columns: repeat(4, 10.625rem);
+    }
+
+    .workers > .dg-card {
+      padding-inline: 0.75rem;
+    }
+
+    .doors {
+      grid-template-columns: repeat(2, 21.875rem);
+    }
+  }
+
+  /* Forced colours repaint every background as the page's ground, which
+     would erase the lines and dots drawn as one */
+  @media (forced-colors: active) {
+    .band::before,
+    .server-top::before,
+    .rail::before,
+    .rail > .trunk,
+    .steps li::before,
+    .steps li:last-child::before,
+    .steps li:not(:last-child)::after {
+      forced-color-adjust: none;
+      background: CanvasText;
+    }
+  }
+</style>

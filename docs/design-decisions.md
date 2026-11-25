@@ -143,7 +143,7 @@ Rejected: a larger size at the full column, since 18px still runs to about 82 ch
 
 ## Every list's text starts 1.625em in, with the browser's markers inside the column
 
-Every bulleted and numbered list, in posts, on the About page and on the page parts, starts its text 1.625em (27.6px) in from the text above it, with wrapped lines under the text. The browser places each marker before the text at its own gap, and every marker sits inside the column, never left of the paragraphs' edge. 1.625em is the smallest indent at which a two-digit numeral and the page parts' mono steps stay inside it, which holds a prose list of up to 99 items and nine steps in a page part. How it is built is in `docs/patterns/lists.md`.
+Every bulleted and numbered list, in posts, on the About page and on the page parts, starts its text 1.625em (27.6px) in from the text above it, with wrapped lines under the text. The browser places each marker before the text at its own gap, and every marker sits inside the column, never left of the paragraphs' edge. 1.625em is the smallest indent at which a two-digit numeral and the page parts' mono steps stay inside it, which holds a prose list of up to 99 items and nine steps in a page part. How it is built is in `docs/patterns/lists.md`. The lists inside a diagram (steps, chips, devices and sessions) are drawn parts outside this rule – see `docs/patterns/diagrams.md`.
 
 Rejected:
 
@@ -172,17 +172,30 @@ Rejected: no filter, which leaves a white screenshot as the brightest thing on t
 
 ## A diagram is ink, with the accent on its level labels
 
-A diagram drawn for a post is ink on the page's ground. Titles and filled boxes are the text colour, flat, with no gradient or shadow. Lines and panels are greys mixed from the text colour, and card borders take the share cards' rule grey. Connectors clear the 3:1 that WCAG asks of graphics, in both themes. The accent appears only on the diagram's level labels, the small mono label that heads each level or section, as the mono line above a page's title heads the page. A level's number and the diagram's other mono text, such as a card's role line, take a grey. One light image serves both themes, dimmed in the dark theme like any image.
-
-Known drawbacks: in the dark theme the labels are the light theme's brick on a dimmed plate, beside the page's lighter accent. A change to the accent means re-rendering each diagram.
+A diagram drawn for a post is ink on the page's ground. Titles and filled boxes are the text colour in both themes, flat, with no gradient or shadow. Lines and panels are greys mixed from the text colour. Connectors clear the 3:1 that WCAG asks of graphics, in both themes. The accent appears only on the diagram's level labels, the small mono label that heads each level or section, as the mono line above a page's title heads the page. A level's number and the diagram's other mono text, such as a card's role line, take a grey.
 
 Rejected:
 
 - Ink only, which leaves nothing of the site's own in the diagram
 - Brick fills on the filled boxes, which are large red blocks and read as a warning
 - Brick on one connector, which is a hairline at the size the page shows it
-- A second image for the dark theme, which needs a way to swap images by theme
 - A palette other than the site's
+- A raised dark surface for filled boxes in the dark theme, which makes the filled box read like the outlined one beside it
+
+## A diagram is drawn in the page
+
+A diagram in a post is drawn as a component on the theme tokens, at the page's text size, with real colours in both themes and no full-size view. It is the image's drawing at a readable size: centred lead cards with their labels to the left, a half disc where a line meets a card, and labels beside their lines. On a phone it stacks, with a rail down the left from each level to the next. The cloud box diagram runs across at the full column. How it is built is in `docs/patterns/diagrams.md`.
+
+Known cost: height. With its caption the agent team diagram is 1352px tall at 1440 and 2386px at 390, where the image was 862px and 457px.
+
+Rejected:
+
+- An image, whose text shrinks with the column and which the dark theme can only dim
+- A second image for the dark theme
+- Connectors drawn by script, which show nothing until the script runs
+- A drawing wider than the text column
+- The cloud box diagram running top to bottom at the full column, which leaves the top of the drawing mostly empty
+- Labels placed on their lines
 
 ## Motion answers the visitor
 
