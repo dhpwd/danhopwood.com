@@ -18,11 +18,9 @@ const { tag, tagName, variant = "inline", count } = Astro.props;
         class="group flex items-baseline justify-between gap-4 py-3 interactive"
       >
         <span transition:name={tag}>
-          <span class="underline decoration-dashed underline-offset-4 group-focus-visible:no-underline">
-            {tagName}
-          </span>
+          <span class="link-underline">{tagName}</span>
         </span>
-        <span class="meta transition-colors group-hover:text-accent group-active:text-accent-strong">
+        <span class="meta interactive-inner">
           {count}
           <span class="sr-only">{count === 1 ? " post" : " posts"}</span>
         </span>
@@ -33,11 +31,9 @@ const { tag, tagName, variant = "inline", count } = Astro.props;
       <a
         href={`/tags/${tag}`}
         transition:name={tag}
-        class="group inline-block py-1 interactive"
+        class="inline-block py-1 interactive"
       >
-        <span class="underline decoration-dashed underline-offset-4 group-focus-visible:no-underline">
-          {tagName}
-        </span>
+        <span class="link-underline">{tagName}</span>
       </a>
     </li>
   )

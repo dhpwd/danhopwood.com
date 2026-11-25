@@ -9,6 +9,7 @@ import EditPost from "@/components/EditPost.astro";
 import ShareLinks from "@/components/ShareLinks.astro";
 import NewsletterSignup from "@/components/NewsletterSignup.astro";
 import ImageZoom from "@/components/ImageZoom.astro";
+import LedgerRow from "@/components/LedgerRow.astro";
 import { getPath } from "@/utils/getPath";
 import { slugifyStr } from "@/utils/slugify";
 import { calculateReadingTime } from "@/utils/readingTime";
@@ -108,12 +109,11 @@ const nextPost =
 
     <NewsletterSignup />
 
-    <div data-rule class="ledger border-t border-border py-5">
-      <h2 class="label-caps text-foreground/75">Tags</h2>
+    <LedgerRow label="Tags" class="py-5">
       <ul data-pagefind-body class="flex flex-wrap gap-x-5 gap-y-1">
         {tags.map(tag => <Tag tag={slugifyStr(tag)} tagName={tag} />)}
       </ul>
-    </div>
+    </LedgerRow>
 
     <ShareLinks title={title} />
 
@@ -129,16 +129,11 @@ const nextPost =
             href={getPath(prevPost.id, prevPost.filePath)}
             class="group flex flex-col gap-1 interactive"
           >
-            <span class="label-caps text-foreground/75 transition-colors group-hover:text-accent group-active:text-accent-strong">
+            <span class="label-caps interactive-inner text-foreground/75">
               Previous post
             </span>
             <span class="font-medium">
-              <span
-                data-ink="title"
-                class="decoration-dashed underline-offset-4 group-hover:underline group-focus-visible:no-underline"
-              >
-                {prevPost.title}
-              </span>
+              <span class="title-underline">{prevPost.title}</span>
             </span>
           </a>
         )
@@ -149,16 +144,11 @@ const nextPost =
             href={getPath(nextPost.id, nextPost.filePath)}
             class="group flex flex-col gap-1 interactive sm:col-start-2 sm:items-end sm:text-end"
           >
-            <span class="label-caps text-foreground/75 transition-colors group-hover:text-accent group-active:text-accent-strong">
+            <span class="label-caps interactive-inner text-foreground/75">
               Next post
             </span>
             <span class="font-medium">
-              <span
-                data-ink="title"
-                class="decoration-dashed underline-offset-4 group-hover:underline group-focus-visible:no-underline"
-              >
-                {nextPost.title}
-              </span>
+              <span class="title-underline">{nextPost.title}</span>
             </span>
           </a>
         )

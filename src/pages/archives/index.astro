@@ -8,6 +8,7 @@ import Layout from "@/layouts/Layout.astro";
 import Header from "@/components/Header.astro";
 import Footer from "@/components/Footer.astro";
 import Card from "@/components/Card.astro";
+import LedgerRow from "@/components/LedgerRow.astro";
 import getPostsByGroupCondition from "@/utils/getPostsByGroupCondition";
 import postFilter from "@/utils/postFilter";
 import { SITE } from "@/config";
@@ -67,10 +68,11 @@ const months = [
             )
               .sort(([monthA], [monthB]) => Number(monthB) - Number(monthA))
               .map(([month, monthGroup]) => (
-                <div data-rule class="ledger border-t border-border py-6">
-                  <h3 class="label-caps text-foreground/75">
-                    {months[Number(month) - 1]}
-                  </h3>
+                <LedgerRow
+                  label={months[Number(month) - 1]}
+                  level={3}
+                  class="py-6"
+                >
                   <ul class="flex flex-col gap-7">
                     {monthGroup
                       .sort(
@@ -86,7 +88,7 @@ const months = [
                         <Card variant="h4" {...data} />
                       ))}
                   </ul>
-                </div>
+                </LedgerRow>
               ))}
           </section>
         ))

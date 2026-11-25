@@ -21,16 +21,17 @@ Anti-patterns:
 
 **Problem:** the site has many labelled lists – the homepage's rows, the post lists, the archive's months, the rows after a post. Set as sections under full-width label headings, each list's text runs the full column, and each page ends up styling its list its own way.
 
-**Solution:** the `ledger` utility in `global.css`. One column on a phone, with the label above its content. From 640px, two columns, `8.5rem minmax(0, 1fr)`, with the label on the left and its content beside it, 2rem apart and aligned on their first baselines. An `inline-block` takes its baseline from its last line, so a link that can wrap at the top of a row's content (a card's title) is `block w-fit`, or the label lines up with its last line. Not `inline-flex`: it takes the first baseline too, but only a wrapped title loses the 1px the line box adds below it, so one-line and wrapped titles end up spaced differently. The label is an `h2` (an `h3` under a year on `/archives`) in `label-caps text-foreground/75`. Rows are ruled above with `border-t border-border` and carry `data-rule`, so the rule draws as the visitor scrolls to it – see "The rule that draws" in `docs/patterns/small-details.md`. Lists inside a row space their items with `gap`, never a margin on the item.
+**Solution:** the `ledger` utility in `global.css`. One column on a phone, with the label above its content. From 640px, two columns, `8.5rem minmax(0, 1fr)`, with the label on the left and its content beside it, 2rem apart and aligned on their first baselines. An `inline-block` takes its baseline from its last line, so a link that can wrap at the top of a row's content (a card's title) is `block w-fit`, or the label lines up with its last line. Not `inline-flex`: it takes the first baseline too, but only a wrapped title loses the 1px the line box adds below it, so one-line and wrapped titles end up spaced differently. A labelled row ruled above is `LedgerRow.astro`. It renders the `ledger` element with `border-t border-border`, its `label` as the first child in `label-caps text-foreground/75`, and the row's content from its slot. The label is an `h2`, or an `h3` with `level={3}` (the months under a year on `/archives`). `as="section"` renders a `section` in place of the `div`, and any other attribute, such as an `id`, passes through to it. The row carries a bare `data-rule`, so the rule draws as the visitor scrolls to it – see "The rule that draws" in `docs/patterns/small-details.md` – and `draw={false}` leaves it off a row that opens a page. The label stays a direct child of the row, which the drawn rule's label animation keys on. Padding comes from the caller's `class`, since it differs from row to row. Lists inside a row space their items with `gap`, never a margin on the item.
 
 ```astro
-<section data-rule class="ledger border-t border-border py-6">
-  <h2 class="label-caps text-foreground/75">Recent posts</h2>
+<LedgerRow as="section" id="recent-posts" label="Recent posts" class="py-6">
   <ul class="flex flex-col gap-7">…</ul>
-</section>
+</LedgerRow>
 ```
 
-`<Card aside />` makes a post card a ledger row of its own: the date line in the label column, with one item a line, and above the title on a phone. A card in a list that already has a label puts the date above the title instead. `NewsletterSignup variant="row"`, `ShareLinks.astro` and `EditPost.astro` each render their own row.
+`<Card aside />` makes a post card a ledger row of its own: the date line in the label column, with one item a line, and above the title on a phone. It has no rule, so it is a plain `ledger`. A card in a list that already has a label puts the date above the title instead. `NewsletterSignup variant="row"`, `ShareLinks.astro` and `EditPost.astro` each render their own row through `LedgerRow`.
+
+The anti-pattern is a ruled row written out (`ledger border-t border-border` with its own label and `data-rule`). A change to the row's rule, label or drawn line misses that copy.
 
 Prose and long lines take `max-w-measure` (38rem), the reading measure – see "Reading measure" in `docs/patterns/post-page.md`.
 

@@ -1,6 +1,7 @@
 ---
 import type { CollectionEntry } from "astro:content";
 import { SITE } from "@/config";
+import LedgerRow from "./LedgerRow.astro";
 
 type Props = {
   hideEditPost?: CollectionEntry<"blog">["data"]["hideEditPost"];
@@ -16,20 +17,17 @@ const showEditPost =
 
 {
   showEditPost && (
-    <div data-rule class="ledger border-t border-border py-5">
-      <h2 class="label-caps text-foreground/75">Source</h2>
+    <LedgerRow label="Source" class="py-5">
       <p>
         <a
           href={href}
           target="_blank"
           rel="noopener noreferrer"
-          class="group inline-block py-1 interactive"
+          class="inline-block py-1 interactive"
         >
-          <span class="underline decoration-dashed underline-offset-4 group-focus-visible:no-underline">
-            {SITE.editPost.text}
-          </span>
+          <span class="link-underline">{SITE.editPost.text}</span>
         </a>
       </p>
-    </div>
+    </LedgerRow>
   )
 }

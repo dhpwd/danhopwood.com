@@ -210,7 +210,7 @@ const places: Place[] = [
           <li>Your work in GitHub</li>
           <li>The Claude app on your phone</li>
         </MarkedList>
-        <p class="text-[0.9375rem] text-foreground/75">
+        <p class="text-small text-foreground/75">
           The fixed price covers up to 10 repos and 5 connectors that use their
           own API keys. It doesn't cover maintenance after the 14 days, or
           designing and building agents, skills or loops. That's separate work,
@@ -281,13 +281,11 @@ const places: Place[] = [
         </form>
       </Section>
 
-      <p
-        class="border-t border-border pt-6 text-[0.9375rem] text-foreground/75"
-      >
+      <p class="border-t border-border pt-6 text-small text-foreground/75">
         How the setup works and why I run mine this way:
         <a
           href="/posts/running-coding-agents-on-a-30-euro-linux-box"
-          class="interactive text-foreground underline decoration-dashed underline-offset-4"
+          class="interactive text-foreground link-underline"
           >Running coding agents on a €30 Linux box</a
         >.
       </p>
@@ -306,8 +304,7 @@ const places: Place[] = [
     link.href = linkedIn;
     link.target = "_blank";
     link.rel = "noopener noreferrer";
-    link.className =
-      "interactive underline decoration-dashed underline-offset-4";
+    link.className = "interactive link-underline";
     link.textContent = "LinkedIn";
     status.replaceChildren(
       "That didn't send. Try again, or message me on ",
@@ -366,12 +363,12 @@ const places: Place[] = [
       }
       // Focus goes to the button on every route, Enter in a field included –
       // see "Disabling a focused button drops focus" in
-      // docs/patterns/astro-build.md
+      // docs/patterns/client-scripts.md
       button.focus();
     });
   }
 
-  // See "Client scripts and View Transitions" in docs/patterns/astro-build.md
+  // See "Client scripts and View Transitions" in docs/patterns/client-scripts.md
   document.addEventListener("astro:page-load", initSetupForm);
   initSetupForm();
 </script>

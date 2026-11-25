@@ -9,15 +9,11 @@ const links = [
 ];
 ---
 
-<ul class="-mx-3 flex flex-wrap items-center sm:-mx-1.5 sm:gap-x-3">
+<ul class="icon-links items-center">
   {
     links.map(({ name, icon: Icon, href, linkTitle }) => (
       <li>
-        <a
-          {href}
-          title={linkTitle}
-          class="inline-flex size-11 items-center justify-center interactive sm:size-8"
-        >
+        <a {href} title={linkTitle} class="icon-link">
           <Icon class="icon-tilt size-5" aria-hidden="true" />
           <span class="sr-only">{name}</span>
         </a>

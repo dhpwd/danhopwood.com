@@ -7,6 +7,7 @@ import Footer from "@/components/Footer.astro";
 import LinkButton from "@/components/LinkButton.astro";
 import Card from "@/components/Card.astro";
 import NewsletterSignup from "@/components/NewsletterSignup.astro";
+import LedgerRow from "@/components/LedgerRow.astro";
 import getSortedPosts from "@/utils/getSortedPosts";
 import IconArrowRight from "@/assets/icons/IconArrowRight.svg";
 import { SITE } from "@/config";
@@ -47,9 +48,7 @@ const recentPosts = sortedPosts.filter(({ data }) => !data.featured);
         <p
           class="text-[1.0625rem] leading-[1.6] text-foreground/82 [grid-area:lede] sm:text-lg sm:leading-[1.6]"
         >
-          <a
-            href="https://fidero.com"
-            class="interactive underline decoration-dashed underline-offset-4"
+          <a href="https://fidero.com" class="interactive link-underline"
             >Fidero</a
           > is a data platform for companies whose deals close in a CRM, or whose
           subscriptions start in an app or a billing tool. The same discipline that
@@ -66,47 +65,41 @@ const recentPosts = sortedPosts.filter(({ data }) => !data.featured);
           class="size-16 flex-none rounded-2xl ring-1 ring-border [grid-area:portrait] sm:size-44 sm:rounded-[1.75rem]"
         />
       </div>
-      <div class="mt-8 border-t border-border pt-6 sm:mt-10">
+      <div class="mt-8 sm:mt-10">
         <NewsletterSignup variant="row" />
       </div>
-      <div data-rule class="mt-6 ledger border-t border-border pt-6">
-        <h2 class="label-caps text-foreground/75">Advisory</h2>
-        <p class="text-[0.9375rem] leading-normal">
+      <LedgerRow label="Advisory" class="mt-6 pt-6">
+        <p class="text-small leading-normal">
           I also advise founders and leadership teams on AI agents and data.
           <a
             href="https://cal.com/dhpwd/advisory"
-            class="whitespace-nowrap interactive underline decoration-dashed underline-offset-4"
+            class="whitespace-nowrap interactive link-underline"
             >Book an advisory intro call</a
           >
         </p>
-      </div>
+      </LedgerRow>
     </section>
 
     {
       featuredPosts.length > 0 && (
-        <section
-          id="featured"
-          data-rule
-          class="ledger border-t border-border py-6"
-        >
-          <h2 class="label-caps text-foreground/75">Featured</h2>
+        <LedgerRow as="section" id="featured" label="Featured" class="py-6">
           <ul class="flex flex-col gap-7">
             {featuredPosts.map(data => (
               <Card variant="h3" {...data} />
             ))}
           </ul>
-        </section>
+        </LedgerRow>
       )
     }
 
     {
       recentPosts.length > 0 && (
-        <section
+        <LedgerRow
+          as="section"
           id="recent-posts"
-          data-rule
-          class="ledger border-t border-border py-6"
+          label="Recent posts"
+          class="py-6"
         >
-          <h2 class="label-caps text-foreground/75">Recent posts</h2>
           <div>
             <ul class="flex flex-col gap-7">
               {recentPosts.slice(0, SITE.postPerIndex).map(data => (
@@ -121,7 +114,7 @@ const recentPosts = sortedPosts.filter(({ data }) => !data.featured);
               />
             </LinkButton>
           </div>
-        </section>
+        </LedgerRow>
       )
     }
   </main>
