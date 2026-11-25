@@ -268,7 +268,6 @@ const nextPost =
       const code = block.querySelector("code");
       const text = code?.innerText;
 
-      // Emptied first, so an identical result is announced again.
       copyStatus.textContent = "";
 
       let copied = true;
@@ -283,7 +282,7 @@ const nextPost =
       copyStatus.textContent = result;
 
       // Emptying a region can cut its speech off, so the result outlasts the
-      // label's reset. A new result cancels the pending empty.
+      // label's reset.
       clearTimeout(statusTimer);
       statusTimer = setTimeout(() => {
         copyStatus.textContent = "";
