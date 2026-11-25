@@ -47,6 +47,19 @@ Anti-patterns:
 
 **When to use:** any new interactive element, and any AstroPaper component being restyled.
 
+## Status messages
+
+**Problem:** a script that reports how an action went ("Copied", a form's success line) has to reach a screen reader without moving focus. Making the control the live region, with `aria-live` on the button, announces every change to its text, so the label's return to its resting text is spoken too, and screen readers announce a control used as a live region inconsistently. A screen reader also announces changes only to a live region it already knows about, so a region the script adds can miss its first message.
+
+**Solution:** put the message in a separate `role="status"` element rendered in the component's markup, empty at load (WCAG 2.2 SC 4.1.3, technique ARIA22). `role="status"` is a polite live region with `aria-atomic` implied, so the message is read whole each time it changes, and removing it is not announced. The script empties the element before each action and writes the result after it, so a result identical to the last one is announced again. The element is visible where nothing else on screen shows the result, as below the forms in `NewsletterSignup.astro` and `cloud-box-setup.astro`. It is `sr-only` where the control's own label already shows it, as for a post's code-block Copy button – see "After the article" in `docs/patterns/post-page.md`, which also covers when that region empties.
+
+Anti-patterns:
+
+- `aria-live` on a button, link or field
+- A status element the script creates, or one given its `role` only when the message is written
+
+**When to use:** any script that tells the visitor how an action went without moving focus.
+
 ## Pagefind's controls
 
 **Problem:** `/search` is Pagefind's markup, so Tailwind utilities can't reach its controls. Its stylesheet is unlayered and resets every element inside it with `all: unset` and `outline: revert`, which beats the base focus rule in `@layer base`, so its controls don't get the site's focus outline either.

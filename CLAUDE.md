@@ -39,7 +39,7 @@ pnpm generate:favicons  # regenerate public/ favicons from the brand tokens
 - changing a colour or theme token, where the accent appears, how the theme is applied, or adding a transition to anything that changes with the theme → read `docs/patterns/colour.md`
 - styling text in a new component or restyle: a face, a size, a title or a link's underline → read `docs/patterns/type.md`
 - a page's title block, a labelled list or row, or building a page that isn't a list or a post → read `docs/patterns/page-layout.md`
-- a hover, press or focus state on a control, including the search page's controls → read `docs/patterns/interaction.md`
+- a hover, press or focus state on a control, including the search page's controls, or a status message that reports an action's result → read `docs/patterns/interaction.md`
 - adding a text input or textarea, or a third-party widget that brings its own field styles → read `docs/patterns/form-fields.md`
 - adding a bulleted or numbered list, or changing how lists are indented → read `docs/patterns/lists.md`
 - any visual, layout, colour or motion change, or reviewing one → read `docs/design-decisions.md` before proposing
