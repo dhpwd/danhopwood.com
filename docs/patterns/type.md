@@ -16,10 +16,6 @@ Nav links are Geist at 500 (`font-medium`), not mono.
 
 Text inside a diagram takes the parts in `Diagram.astro` at the sizes they set, from 12px mono labels and 14px text to 20px names – see `docs/patterns/diagrams.md`.
 
-The share cards set their titles through `titleStyle` in `src/utils/og-templates/shared.js`, which restates `title-page`'s weight, line-height and tracking by hand at card scale. A change to the title treatment updates it too.
-
-Pagefind's results on `/search` can't take classes either, so four flat `#pagefind-search …` rules in `search.astro` set their type. Its `<style>` block opens with `@reference "../styles/global.css";`, so the count line applies `meta` (at weight 400), result titles apply `title-item font-semibold` and excerpts take `var(--text-small)`, and a change to any of them reaches the results. Only the nested-title rule is set by hand, at 16px and weight 500, and it sets the link as well, which Pagefind sizes at 0.9em of its title. Without these rules Pagefind sets a result title at weight 700 and an excerpt at 12.8px. The `.pagefind-ui__result-title a` rule is the one hand-written copy of the dashed underline: a result link is a title, and `@apply link-underline` there would underline every result at rest.
-
 Both faces load through Astro's experimental fonts API (Google provider, configured in `astro.config.ts`, preloaded by `<Font>` in `Layout.astro`) at weights 400/500/600/700, from one variable file per family. A new weight in that range loads nothing new.
 
 Anti-patterns:
@@ -28,6 +24,18 @@ Anti-patterns:
 - A title sized by hand (`text-2xl font-bold sm:text-3xl`) in place of `title-page` or `title-item`
 - The dashed underline written out (`underline decoration-dashed underline-offset-4`), which rests at full strength and misses a change to `link-underline`
 - `text-[0.9375rem]` in place of `text-small`, which a change to the step misses
+
+## Type the classes can't reach
+
+**Problem:** the share cards and Pagefind's results on `/search` can't carry the type utilities' classes, so their type is set in code or CSS of their own, and a change to a utility can pass them by.
+
+**Solution:** each takes its values from the shared styles where it can, and names any copy it keeps.
+
+The share cards set their titles through `titleStyle` in `src/utils/og-templates/shared.js`, which restates `title-page`'s weight, line-height and tracking by hand at card scale. A change to the title treatment updates it too.
+
+Pagefind's results take their type from four flat `#pagefind-search …` rules in `search.astro`. Its `<style>` block opens with `@reference "../styles/global.css";`, so the count line applies `meta` (at weight 400), result titles apply `title-item font-semibold` and excerpts take `var(--text-small)`, and a change to any of them reaches the results. Only the nested-title rule is set by hand, at 16px and weight 500, and it sets the link as well, which Pagefind sizes at 0.9em of its title. Without these rules Pagefind sets a result title at weight 700 and an excerpt at 12.8px. The `.pagefind-ui__result-title a` rule is the one hand-written copy of the dashed underline: a result link is a title, and `@apply link-underline` there would underline every result at rest.
+
+**When to use:** changing a type utility, the share cards' titles or the search page's type.
 
 ## Don't compensate for the muted underline
 
