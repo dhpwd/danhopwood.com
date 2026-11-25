@@ -228,7 +228,8 @@ const nextPost =
     const copyButtonLabel = "Copy";
     const resetTimers = new WeakMap();
     // The result is announced from the status region after the article, not
-    // by the button – see "After the article" in docs/patterns/post-page.md.
+    // by the button, and the region empties on its own timer – see "After the
+    // article" in docs/patterns/post-page.md.
     const copyStatus = document.querySelector("[data-copy-status]");
     let statusTimer;
     const codeBlocks = Array.from(document.querySelectorAll("pre"));
@@ -281,8 +282,6 @@ const nextPost =
       button.innerText = result;
       copyStatus.textContent = result;
 
-      // Emptying a region can cut its speech off, so the result outlasts the
-      // label's reset.
       clearTimeout(statusTimer);
       statusTimer = setTimeout(() => {
         copyStatus.textContent = "";
