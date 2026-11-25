@@ -161,10 +161,8 @@ import { SITE } from "@/config";
   // history.state holds a saved position only on a Back, Forward or reload.
   pending = savedRestore();
 
-  // Pagefind indexes each post as posts/<slug>/index.html, so it links
-  // /posts/<slug>/. Production redirects that, and a client-side visit
-  // through a redirect loses its #fragment – see "Writer convention" in
-  // docs/patterns/urls.md. Keeps "/" as it is.
+  // Pagefind links each post as /posts/<slug>/ – see "Writer convention"
+  // in docs/patterns/urls.md. Strips the slash before any #, and keeps "/".
   function withoutTrailingSlash(url: string) {
     return url.replace(/^([^#]+?)\/(?=#|$)/, "$1");
   }
@@ -172,7 +170,7 @@ import { SITE } from "@/config";
   type PagefindResult = {
     url: string;
     meta?: { url?: string };
-    sub_results?: { url: string }[];
+    sub_results: { url: string }[];
   };
 
   function initSearch() {
@@ -230,7 +228,7 @@ import { SITE } from "@/config";
           result.url = withoutTrailingSlash(result.url);
           if (result.meta?.url)
             result.meta.url = withoutTrailingSlash(result.meta.url);
-          for (const sub of result.sub_results ?? [])
+          for (const sub of result.sub_results)
             sub.url = withoutTrailingSlash(sub.url);
 
           return result;

@@ -222,7 +222,9 @@ html[data-theme="dark"] {
    as .active-nav is, so they outrank the utilities on the same element. */
 
 /* Links ink in: a solid line in the link's colour draws over the dashed
-   underline from the left, and leaves to the right. */
+   underline from the left, and leaves to the right. The `a` in Pagefind's
+   key outranks search.astro's own transition rule for result links, which
+   is unlayered too, whatever the file order. */
 @media (hover: hover) and (prefers-reduced-motion: no-preference) {
   [class~="decoration-dashed"],
   .app-prose a:not(.heading-link),
