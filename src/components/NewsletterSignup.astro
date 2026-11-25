@@ -9,27 +9,28 @@ type Props = { variant?: "box" | "row" };
 
 const { variant = "box" } = Astro.props;
 const row = variant === "row";
+const name = "Build Notes";
 
 // The row opens the homepage's list, so its rule stays still. The script
 // finds the form by the newsletter-signup class. TypeScript checks a dynamic
-// tag's props against both tags at once, so they're typed as the row's.
+// tag's props against both tags at once, so the cast types them as the row's,
+// and `satisfies` keeps the row's own props checked.
 const Wrapper = row ? LedgerRow : "div";
-const wrapperProps = (
+const rowProps = (
   row
-    ? {
-        label: "Build Notes",
-        draw: false,
-        class: "newsletter-signup not-prose pt-6",
-      }
-    : {
-        class:
-          "newsletter-signup not-prose mt-8 mb-8 rounded-lg border border-border p-6",
-      }
+    ? ({ label: name, draw: false } satisfies ComponentProps<typeof LedgerRow>)
+    : {}
 ) as ComponentProps<typeof LedgerRow>;
 ---
 
-<Wrapper {...wrapperProps}>
-  {!row && <h2 class="title-item">Build Notes</h2>}
+<Wrapper
+  {...rowProps}
+  class:list={[
+    "newsletter-signup not-prose",
+    row ? "pt-6" : "mt-8 mb-8 rounded-lg border border-border p-6",
+  ]}
+>
+  {!row && <h2 class="title-item">{name}</h2>}
   <div class={row ? "min-w-0" : "contents"}>
     <p
       class={row

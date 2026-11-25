@@ -162,6 +162,7 @@ html[data-theme="dark"] {
       text-decoration-line: underline;
     }
   }
+  /* Restated after the hover rule, so keyboard focus wins while hovered */
   a:focus-visible & {
     text-decoration-line: none;
   }
