@@ -45,7 +45,7 @@ Every answer is visible under its question, with the question at the body size i
 
 Rejected:
 
-- `<details>` disclosures, which hide the answers from a reader skimming the page and add a control with hover, press and focus states of its own. The prose `details` rule in `typography.css` also hides a disclosure's paragraphs, so the same disclosure would read differently inside `.app-prose`
+- `<details>` disclosures, which hide the answers from a reader skimming the page and add a control with hover, press and focus states of its own
 - The `Detail` part, whose label is uppercase mono and unreadable at a question's length
 - A `FAQPage` node in the JSON-LD graph, which nobody has asked for
 
