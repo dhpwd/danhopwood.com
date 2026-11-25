@@ -42,7 +42,7 @@ Anti-patterns:
 - An opacity fade, on hover or at rest (`hover:opacity-75`, `opacity-90` on an icon or a filled button). A fade blends the control with the page behind, so it lowers contrast where a step raises it: `opacity-90` takes a filled button's label from 6.93:1 to 5.70:1 in light theme. And a fade is not a step of the one behaviour
 - `transition-all`, which also animates layout and any property added later
 - A duration or easing class on a component (`duration-200`, `ease-out`), which drifts from the shared timing
-- The base rule's focus outline restated on an element in `focus-visible:` classes of its own. A change to the base rule then misses that element and nothing warns you. Add the element to the base selector in `global.css`. The outline `.app-prose pre` in `typography.css` sets for a code block is not a restatement: it differs from the base rule (no offset, and its border hidden)
+- The base rule's focus styles restated on an element in `focus-visible:` classes of its own. A change to the base rule then misses that element and nothing warns you. Add the element to the base selector in `global.css`. The outline `.app-prose pre` in `typography.css` sets for a code block is not a restatement: it differs from the base rule (no offset, and its border hidden)
 
 **When to use:** any new interactive element, and any AstroPaper component being restyled.
 
