@@ -8,18 +8,19 @@ type Props = {
 };
 
 const { summary } = Astro.props;
+
+// A diagram passes its caption slot from inside an expression, which
+// registers the slot even when the post gave no caption, so test what it
+// renders rather than whether it exists
+const caption = Astro.slots.has("caption")
+  ? (await Astro.slots.render("caption")).trim()
+  : "";
 ---
 
 <figure class="diagram not-prose">
   <p class="sr-only">{summary}</p>
   <slot />
-  {
-    Astro.slots.has("caption") && (
-      <figcaption>
-        <slot name="caption" />
-      </figcaption>
-    )
-  }
+  {caption && <figcaption set:html={caption} />}
 </figure>
 
 <style is:global>
@@ -197,5 +198,20 @@ const { summary } = Astro.props;
     width: 0.4375rem;
     height: 0.25rem;
     fill: var(--dg-wire);
+  }
+
+  /* Forced colours (a Windows contrast theme) repaint text and borders in
+     the reader's colours, so the connectors take the text colour with them.
+     A line drawn as a background needs the same rule in its diagram, since
+     forced colours repaint every background as the page's ground. */
+  @media (forced-colors: active) {
+    .dg-wires {
+      stroke: CanvasText;
+    }
+
+    .dg-wires .end,
+    .dg-end {
+      fill: CanvasText;
+    }
   }
 </style>

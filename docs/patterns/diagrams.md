@@ -23,7 +23,7 @@ The figure takes the full column and is a size container (`container: diagram / 
 - `dg-chip` is a chip, `dg-frame` a 1px dashed frame at a 0.75rem radius and `dg-tag` the words on a connector, 13px in a 1px border at a 0.75rem radius
 - `dg-wires` is an SVG of connectors, unfilled with a 1px stroke, whose `.end` paths fill as half discs. `dg-end` is a 7 by 4px half disc on its own, for the end of a line drawn in CSS
 
-Type sizes, the whole list: 12px (the two mono labels), 13px (connector labels, chips, steps, processes and literal strings), 14px (text), 15px at 600 (a closing box's title), and 17px and 20px (names and the frame's heading). Every colour is a theme token or a custom property on `.diagram` that mixes `--foreground` into `--background`. Each mix is opaque, so two lines that cross paint one colour:
+Type sizes, the whole list: 12px (the two mono labels, and the hand-off label at the full column), 13px (connector labels, chips, device chips, steps, processes and literal strings), 14px (text), 15px at 600 (a closing box's title), and 17px and 20px (names and the frame's heading). Every colour is a theme token or a custom property on `.diagram` that mixes `--foreground` into `--background`. Each mix is opaque, so two lines that cross paint one colour:
 
 | Property                                 | Mix                                               | Used for                                              |
 | ---------------------------------------- | ------------------------------------------------- | ----------------------------------------------------- |
@@ -35,10 +35,12 @@ Type sizes, the whole list: 12px (the two mono labels), 13px (connector labels, 
 | `--dg-border`                            | 16%                                               | Card borders                                          |
 | `--dg-chip`                              | 7%                                                | Chips                                                 |
 | `--dg-tint`                              | 4%                                                | A tinted card                                         |
-| `--dg-fill`, `--dg-on-fill`              | `--foreground`, `--background`                    | A filled box and its names, in both themes            |
+| `--dg-fill`, `--dg-on-fill`              | `--foreground`, `--background`                    | A filled box or chip, and the names or words on it    |
 | `--dg-on-fill-text`, `--dg-on-fill-line` | `--background` at 84% and 32% into `--foreground` | A filled box's text and inner borders                 |
 
-The accent appears only in `dg-level`, as the `eyebrow`'s counterpart inside a diagram. A filled box is the text colour in both themes. A diagram adds no colour or type size of its own: a new need is a new part in `Diagram.astro` and a line here.
+The accent appears only in `dg-level`, as the `eyebrow`'s counterpart inside a diagram. A filled box is the text colour in both themes. A diagram adds no colour or type size of its own: a new need is a new part in `Diagram.astro` and a line here. The one exception is forced colours (a Windows contrast theme), which repaint every background as the page's ground: connectors take `CanvasText` there, and a diagram that draws a line or dot as a background gives it `forced-color-adjust: none` and `CanvasText` in its own `@media (forced-colors: active)` block, as `AgentTeam.astro` does for its rails and steps.
+
+The caption renders only when the post gives one. A diagram passes its caption slot on from inside an expression, which registers the slot either way, so `Diagram.astro` renders the slot and tests what it holds.
 
 The parts sit outside the cascade layers, which is what lets `.diagram :where(p, ul, ol, strong)` outrank the `.app-prose` rules in `typography.css` that give prose text the text colour and lists the `list-indent` padding. They set their type directly rather than through the shared utilities, since a component's `<style>` can `@apply` only after an `@reference` to `global.css`.
 
@@ -62,7 +64,7 @@ Anti-patterns:
 
 Wherever the layout is a fixed size, connectors are SVG drawn on the grid's own numbers: one `svg.dg-wires` per row, its `viewBox` the row's size in px. Lines sit on half-pixel coordinates, so a line down the centre of a card at x 355 is drawn at x 355.5 and its 1px stroke fills one column of pixels. Every line is 1px, and every line that meets a card ends there in a half disc of radius 3.5, flat against the card's edge, drawn in the row's `.end` path. An arrow's head and shaft are one path, so the head sits on its shaft. A line whose length follows the text, such as the spine past a note that wraps, is a 1px CSS line at the same integer x as the SVG's line, with a `dg-end` where it meets a card. `src/components/diagrams/paths.ts` builds the path data: `under`, `over`, `left` and `right` for a half disc on each side of an edge, and `bracket` for a bar with a drop at each x. `AgentTeam.astro` is the worked example: its constants name every x and each row's height, and its paths are built from them with those helpers.
 
-The words on a connector sit beside its line, 14px clear of it, never on it. Connectors take `--dg-wire`, which clears the 3:1 WCAG asks of graphics in both themes.
+The words on a connector sit beside or above its line and clear of it, never on it: 14px beside a vertical line in the agent team diagram, 8px above the horizontal one in the cloud box diagram. Connectors take `--dg-wire`, which clears the 3:1 WCAG asks of graphics in both themes.
 
 Anti-patterns:
 
@@ -81,7 +83,7 @@ Anti-patterns:
 
 The Markdown twin keeps `.sr-only` text and drops `svg` and `aria-hidden` parts (`DROP` in `src/utils/markdownTwins.ts`), so a post's twin carries the summary and then the diagram's words in reading order.
 
-Reading time is left as computed. `src/utils/readingTime.ts` reads the post's source, where a diagram is one tag, so moving an image's alt text into a component lowers it: the cloud box post went from 8 to 7 minutes. Counting a diagram's words was rejected, since no image's words were ever counted.
+Reading time is left as computed. `src/utils/readingTime.ts` reads the post's source, where a diagram is one tag, so its words and summary don't count towards it, where an image's alt text in a `.md` post does. Counting a diagram's words was rejected, since no image's words were ever counted.
 
 **Anti-pattern:** a heading element in a diagram.
 

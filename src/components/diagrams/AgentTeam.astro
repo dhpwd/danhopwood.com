@@ -775,4 +775,19 @@ const endBottom = over(3.5, 4);
       grid-template-columns: repeat(2, 21.875rem);
     }
   }
+
+  /* Forced colours repaint every background as the page's ground, which
+     would erase the lines and dots drawn as one */
+  @media (forced-colors: active) {
+    .band::before,
+    .server-top::before,
+    .rail::before,
+    .trunk,
+    .steps li::before,
+    .steps li:last-child::before,
+    .steps li:not(:last-child)::after {
+      forced-color-adjust: none;
+      background: CanvasText;
+    }
+  }
 </style>
