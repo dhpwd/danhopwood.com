@@ -31,6 +31,8 @@
 - `locator.boundingBox()` is relative to the viewport, and a click can scroll the page. To assert an element didn't move, compare `getBoundingClientRect().top + scrollY`
 - A control's state changes over the shared 150ms, so a computed style read straight after `focus()` or `hover()` is the start of the transition – a field's focus ring reads as transparent. Wait past the duration before reading
 - A full-page screenshot clipped to an element far below the viewport can show a post image as an empty box, even after it has loaded. Scroll the element into view and `await img.decode()` before the screenshot. Post images are `loading="lazy"`, so set them eager first
+- An element inside a closed `<details>` still returns its laid-out box from `getBoundingClientRect()`, since Chromium hides the content with `content-visibility` rather than `display: none`. Read `checkVisibility()` to tell whether it shows
+- `locator.ariaSnapshot()` gives a `summary` no role, so a disclosure's control and its expanded state are missing from it. Read Chromium's own role, name and `expanded` with CDP `Accessibility.getPartialAXTree` on the `summary`'s `nodeId`
 - `textContent` runs a link's flex items together ("ai17 posts"). Read what a screen reader announces from `locator.ariaSnapshot()`, which separates them
 - `pnpm preview` answers a path with a trailing slash (`/about/`) with the 404 page – see `docs/patterns/urls.md`. A check that queries the page then finds nothing and passes, so write test URLs without the slash
 - A position read from a screenshot's pixels, such as where a marker's ink starts, can differ by a pixel between Chromium builds and scale factors. Compare before and after in the same browser at the same scale
