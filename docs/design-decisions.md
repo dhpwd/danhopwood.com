@@ -39,13 +39,15 @@ Rejected: an accent focus, which reads as a validation error round a field.
 
 Rejected: the accent, which reads as a warning, and a green, which adds a second semantic colour.
 
-## An offer page's questions are an open list
+## An offer page's questions open on a tap
 
-Every answer is visible under its question, with the question at the body size in the heading weight. `Questions.astro` builds it.
+A ruled list of questions, each at the body size in the heading weight, with its answer opening on a tap through the browser's own `<details>`. All are closed on arrival, and several can be open at once. A mono `+` marks a closed question and a `−` an open one, swapped with no animation. The answers stay in the page's HTML for screen readers, agents and the Markdown twin. `Questions.astro` builds it.
 
 Rejected:
 
-- `<details>` disclosures, which hide the answers from a reader skimming the page and add a control with hover, press and focus states of its own
+- Every answer open under its question, which takes too much of a phone's height with nine answers
+- A scripted accordion, where the native element needs no script
+- A chevron that turns, which adds a motion to the closed set of small details
 - The `Detail` part, whose label is uppercase mono and unreadable at a question's length
 - A `FAQPage` node in the JSON-LD graph, which nobody has asked for
 
