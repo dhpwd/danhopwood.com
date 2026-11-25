@@ -74,6 +74,14 @@ To check the patch, build a temporary post and a temporary Markdown page in `src
 
 **When to use:** reading a file from disk in build-time code.
 
+## A `Props` type with an `as` key goes untyped
+
+**Problem:** Astro types a component's `Astro.props`, and checks its callers, from the `Props` the component declares. `@astrojs/compiler` (2.13.0) doesn't find a `type Props = { … }` alias that has a key named `as`: the generated types fall back to `Record<string, any>`, so a caller's misspelt or missing prop passes `astro check`. The only sign is a hint, "'Props' is declared but never used" (ts 6196).
+
+**Solution:** declare those props as an interface, `interface Props extends HTMLAttributes<"div"> { … }`, which the compiler reads with the `as` key. `LedgerRow.astro` does this.
+
+**When to use:** writing a component with an `as` prop, or when `astro check` reports that hint for `Props`.
+
 ## Class names in build-time code reach the CSS
 
 **Problem:** Tailwind v4 finds its classes by scanning every source file it isn't told to skip, not only templates. A build-time module that names classes as strings, such as a selector in an integration, is read the same way, and any name no page uses yet adds a rule to the site's CSS. The stylesheet's hashed file name then changes, and with it every page's HTML, though no page uses the rule. Nothing in the build reports it.

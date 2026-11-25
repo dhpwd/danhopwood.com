@@ -3,8 +3,8 @@ import type { HTMLAttributes } from "astro/types";
 
 // A ledger row ruled above, with its label – see "The ledger" in
 // docs/patterns/page-layout.md. Padding comes from the caller's class.
-// An interface, since Astro's compiler doesn't read a `type Props` with an
-// `as` key and the props then go untyped.
+// An interface – see "A `Props` type with an `as` key goes untyped" in
+// docs/patterns/astro-build.md.
 interface Props extends HTMLAttributes<"div"> {
   label: string;
   level?: 2 | 3;
