@@ -1,8 +1,11 @@
 @import "tailwindcss";
 @import "./typography.css";
 
-/* Build-time code that names classes as selectors, so it adds no CSS */
+/* Build-time code and docs that name classes, so they add no CSS – see
+   "Class names in build-time code reach the CSS" in
+   docs/patterns/astro-build.md */
 @source not "../utils/markdownTwins.ts";
+@source not "../../docs";
 
 @custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
 

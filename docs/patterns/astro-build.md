@@ -133,7 +133,7 @@ To check the patch, build a temporary post and a temporary Markdown page in `src
 
 **Problem:** Tailwind v4 finds its classes by scanning every source file it isn't told to skip, not only templates. A build-time module that names classes as strings, such as a selector in an integration, is read the same way, and any name no page uses yet adds a rule to the site's CSS. The stylesheet's hashed file name then changes, and with it every page's HTML, though no page uses the rule. Nothing in the build reports it.
 
-**Solution:** exclude the module with `@source not "<path>"` in `src/styles/global.css`, beside the import of Tailwind. `src/utils/markdownTwins.ts` is excluded this way. To confirm a module adds nothing, diff the built CSS (or every page's HTML) against the base build.
+**Solution:** exclude the module with `@source not "<path>"` in `src/styles/global.css`, beside the import of Tailwind. `src/utils/markdownTwins.ts` is excluded this way, and so is `docs/`, whose pattern files name classes in their examples and anti-patterns. To confirm a module adds nothing, diff the built CSS (or every page's HTML) against the base build.
 
 **When to use:** writing build-time code that names classes, such as selectors in an integration or a rehype plugin.
 
