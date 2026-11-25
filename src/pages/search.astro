@@ -20,7 +20,7 @@ import { SITE } from "@/config";
   // the results render, so the restore is clamped to the short page. Hold
   // the position and how many results were showing, and apply them once the
   // results have loaded – see "Scroll position and View Transitions" in
-  // docs/patterns/astro-build.md.
+  // docs/patterns/client-scripts.md.
   type Restore = { y: number; shown: number };
   let pending: Restore | null = null;
   let held: Restore | null = null;
@@ -98,7 +98,7 @@ import { SITE } from "@/config";
     const root = button.closest("#pagefind-search");
     requestAnimationFrame(() => {
       // An entry with no state is one the router doesn't track – see
-      // "Scroll position and View Transitions" in docs/patterns/astro-build.md.
+      // "Scroll position and View Transitions" in docs/patterns/client-scripts.md.
       if (!history.state) return;
       const shown = document.querySelectorAll(
         "#pagefind-search .pagefind-ui__result"
@@ -111,7 +111,7 @@ import { SITE } from "@/config";
   // not the one processTerm writes, so after a search it would fetch /search
   // again for "Skip to content". Move to the fragment in place instead,
   // keeping this entry and its state – see "In-page links after
-  // replaceState" in docs/patterns/astro-build.md.
+  // replaceState" in docs/patterns/client-scripts.md.
   document.addEventListener(
     "click",
     event => {
@@ -261,7 +261,7 @@ import { SITE } from "@/config";
       // with the params processTerm writes from. It writes even with no q
       // to remove, so a clear also drops the skip link's hash, which a Back
       // then Forward would otherwise reach without a live root – see
-      // "Client scripts and View Transitions" in docs/patterns/astro-build.md.
+      // "Client scripts and View Transitions" in docs/patterns/client-scripts.md.
       function clearQuery() {
         params.delete("q");
         const rest = params.toString();

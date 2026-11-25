@@ -1,5 +1,5 @@
 // Makes a Back or Forward restore jump rather than glide – see "Nothing
-// scrolls on astro:after-swap" in docs/patterns/astro-build.md.
+// scrolls on astro:after-swap" in docs/patterns/client-scripts.md.
 document.addEventListener(
   "astro:before-swap",
   ({ navigationType, newDocument }) => {

@@ -363,12 +363,12 @@ const places: Place[] = [
       }
       // Focus goes to the button on every route, Enter in a field included –
       // see "Disabling a focused button drops focus" in
-      // docs/patterns/astro-build.md
+      // docs/patterns/client-scripts.md
       button.focus();
     });
   }
 
-  // See "Client scripts and View Transitions" in docs/patterns/astro-build.md
+  // See "Client scripts and View Transitions" in docs/patterns/client-scripts.md
   document.addEventListener("astro:page-load", initSetupForm);
   initSetupForm();
 </script>

@@ -50,7 +50,8 @@ pnpm generate:favicons  # regenerate public/ favicons from the brand tokens
 - sitemap, `llms.txt`, JSON-LD, OG metadata, `vercel.json` routes, response headers or the Markdown twins → read `docs/patterns/machine-readability.md`
 - a post's title block, body, tables, figures or what follows the article → read `docs/patterns/post-page.md`
 - adding routes, changing route config or writing internal links → read `docs/patterns/urls.md`
-- client-side scripts, server endpoints (`api/`), content collections (including any route that reads posts), stale build output, build-time code that names CSS classes, nested CSS, the build's browser targets, upgrading Astro or editing `patches/` → read `docs/patterns/astro-build.md`
+- a client-side script: listeners across View Transitions, a widget whose state comes from the URL, scrolling the page, `history.replaceState`, browser storage or disabling a control while work is pending → read `docs/patterns/client-scripts.md`
+- server endpoints (`api/`), content collections (including any route that reads posts), stale build output, build-time code that names CSS classes, nested CSS, the build's browser targets, upgrading Astro or editing `patches/` → read `docs/patterns/astro-build.md`
 - browser-testing a client script or a change to what a page renders, testing an `api/` function, or checking build-time code with a temporary log → read `docs/patterns/browser-testing.md`
 - adding, removing or upgrading a dependency → read `docs/patterns/dependencies.md`
 
