@@ -37,7 +37,7 @@ const readingTime = body ? calculateReadingTime(body) : undefined;
         transition:name={slugifyStr(title.replaceAll(".", "-"))}
         transition:animate="initial"
       >
-        <span data-ink="title" class="title-underline">{title}</span>
+        <span class="title-underline">{title}</span>
       </Heading>
     </a>
     <p class="mt-1.5">{description}</p>

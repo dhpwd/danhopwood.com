@@ -306,7 +306,7 @@ html[data-theme="dark"] {
     background-image: none;
   }
   /* A title has no underline at rest, so the line is all it gets */
-  a:hover [data-ink="title"],
+  a:hover .title-underline,
   #pagefind-search a.pagefind-ui__result-link:hover {
     text-decoration-line: none;
   }
