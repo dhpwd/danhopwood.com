@@ -45,6 +45,7 @@ Code blocks are the one area with its own palette: the shiki themes `vitesse-lig
 - The one filled action (`interactive-fill`)
 - Prose marks: list markers (`marker:text-accent`) and the blockquote rule (`border-s-accent/80`)
 - The active nav item (`.active-nav`)
+- The current chapter's time while the walkthrough on `/cloud-box-setup` plays (its link carries `aria-current="time"`), the active nav item's counterpart
 - The reading progress bar on a post
 
 Everything else rests on the text colour or a mix of it. Frames take `border-border`, or `border-foreground/60` where one card leads another (the setup page's "After" card). Status chips take `border-foreground/60 text-foreground` ("Open") or sit on `--muted` ("Held", "Taken"). Link titles and search result titles take the text colour. Selected text (`selection:bg-accent-tint selection:text-foreground` on `body`), search matches (`#pagefind-search mark`) and the tap flash (`-webkit-tap-highlight-color` on `html`) sit on `--accent-tint` with the text in the text colour: 10.51:1 in light theme and 9.52:1 in dark. The favicon and the share cards' accent bar and hostname are brand marks, outside the list. A drawn diagram's level labels are on the list, as the `eyebrow`'s counterpart inside a diagram – see "A diagram is ink, with the accent on its level labels" in `docs/design-decisions.md`. A row's rule and label take the accent for under 400ms as the visitor scrolls to the row, which is motion, not rest – see "The rule that draws" in `docs/patterns/small-details.md`.

@@ -54,3 +54,17 @@ Each part covers a case the others miss. The module-run call binds the page's no
 Where the form's spec puts focus on the submit button after every submit, call `focus()` on the button itself instead. Noting `document.activeElement` can't deliver that: after Enter in a field it is the field, and Safari on macOS doesn't focus a button on click, so after a click there it is `<body>`. The enquiry form in `cloud-box-setup.astro` does this.
 
 **When to use:** any handler that disables a control while work is pending.
+
+## Starting a click-to-play video at once
+
+**Problem:** a video that starts loading on the press starts late. In Chromium on a 1.6Mbps line with 150ms latency, a 19.7MB file took 1197ms from the press to `playing` with `preload="none"`. `preload="auto"` alone doesn't fix it: Chrome forces it to `metadata` on a cellular connection and to `none` with Data Saver (web.dev, "Fast playback with audio and video preload"), and Safari on iOS loads no media until playback starts (Apple's Safari HTML5 audio and video guide). Nothing plays until the MP4's `moov` header has arrived, and that header holds an entry for every video frame and audio packet.
+
+**Solution:** warm the video up. `Walkthrough.astro` renders it `muted`, `playsinline` and `preload="auto"`, calls `play()` at init and, on the first `playing`, pauses it and returns it to 0. WebKit lets a muted inline video play without a gesture ("New video policies for iOS"). The press unmutes it inside the click handler and plays from a frame already decoded: 19–22ms from the press to `playing` on that throttled line, pressed 4s after load. The warm-up is skipped when `navigator.connection?.saveData` is true. A player that skips it, or whose play is refused, takes its poster then, so a warmed page never fetches a poster it doesn't show.
+
+Three things decide whether the warm-up has landed by the press:
+
+- The header's size. Encode with `-movflags +faststart` and keep the header small. ffmpeg writes each packet as its own chunk, so the tables grow with the packet count, and an audio track with more packets a second than the video has frames doubles its own tables. AAC at 48kHz is 47 packets a second against 30 frames: the 4:37 walkthrough's header was 306KB, and the warm-up hadn't landed 4s after load on the throttled line. At 32kHz it is 210KB, and the warm-up lands at 3.6s
+- Other media on the page. A decorative video that loads at once competes with the warm-up for the line, so it loads once the warm-up has settled. The walkthrough's preview waits on it
+- Bytes at rest. Chrome stops buffering a paused video by itself: with nothing pressed, `/cloud-box-setup` fetches 3.8MB from the video host in its first 30s
+
+**When to use:** any video that should start the moment it is pressed.

@@ -25,7 +25,7 @@ type Element = NonNullable<ReturnType<typeof select>>;
 // Interface text that isn't page content. `.sr-only` text stays, since it
 // is what a screen reader reads.
 const DROP =
-  "[aria-hidden='true'], svg, script, style, button, form, nav, .newsletter-signup, #pagefind-search, [data-pagefind-ui]";
+  "[aria-hidden='true'], svg, script, style, button, form, nav, video, .newsletter-signup, #pagefind-search, [data-pagefind-ui]";
 
 const textOf = (node: Element["children"][number]): string =>
   node.type === "text"

@@ -17,6 +17,18 @@ Server code goes in root `api/`, never through the `@astrojs/vercel` adapter, wh
 
 `dhpwd.com` and `www.danhopwood.com` are both meant to redirect to the apex domain. Wiring that up is FID-547.
 
+### Vercel Blob
+
+The public store `danhopwood-media` holds the walkthrough on `/cloud-box-setup`, under `walkthrough/`: the full recording (`take-<hash>.mp4`) and the two five-second previews (`laptop-<hash>.mp4`, `phone-<hash>.mp4`). The page reads their public URLs, kept in `cloud-box-setup.astro`'s frontmatter, and no token. The captions (`public/cloud-box-walkthrough.vtt`) and the stills stay in the repo: a `<track>` needs the page's own origin, since the `<video>` takes no `crossorigin`.
+
+Video lives here and not in `public/`, because the repo is public and every take committed would stay in its history. The CDN serves the files with byte ranges (a `Range` request answers `206`), which Safari on iOS needs, and caches each URL for 30 days, so a file is never overwritten:
+
+- **Naming.** `<name>-<first 8 of the file's sha256>.mp4`, so a new encode is a new URL
+- **Replacing.** Upload the new file with `vercel blob put <file> --access public --pathname walkthrough/<name>-<hash>.mp4`, point the page at it, then `vercel blob del <old URL>`. `vercel blob list` reads back what is there
+- **The token.** Connecting the store to the `danhopwood-com` project added `BLOB_READ_WRITE_TOKEN` to its environments, and the CLI reads it from the checkout's `.env.local`, which `vercel env pull` writes. That file also holds a `VERCEL_OIDC_TOKEN` and no `BLOB_STORE_ID`, which the CLI refuses as a half-set OIDC login, so run `vercel blob` with `VERCEL_OIDC_TOKEN` unset and the read-write token in the environment. Never commit `.env.local`
+
+The recording is H.264 at 2560x1600, CRF 26 capped at 3Mbps, with a keyframe every 60 frames and AAC mono at 32kHz and 80kbps, `-movflags +faststart`. The audio's rate keeps the file's header small – see "Starting a click-to-play video at once" in `docs/patterns/client-scripts.md`.
+
 ## Plausible
 
 Cloud-hosted, privacy-friendly, no cookie banner. The script tag and the vendor init snippet are in `Layout.astro`'s `<head>`. The `async` attribute makes Astro treat the tag as inline – any attribute besides `src` does – so it renders as written. No Partytown: the script is about 1KB.

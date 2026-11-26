@@ -1,0 +1,398 @@
+---
+import type { ImageMetadata } from "astro";
+import { Image, getImage } from "astro:assets";
+import { clock } from "@/utils/clock";
+
+// A page's walkthrough video – see "The setup page's video opens as two
+// windows" in docs/design-decisions.md. At rest it is two stills cut from the
+// take, a laptop window and a phone window, which play a short preview once.
+// The play control swaps them for the full recording in the browser's own
+// player. How the press starts at once: "Starting a click-to-play video at
+// once" in docs/patterns/client-scripts.md.
+type Props = {
+  // Public URLs of the files on Vercel Blob – see docs/external-services.md
+  video: string;
+  previews: { laptop: string; phone: string };
+  stills: { laptop: ImageMetadata; phone: ImageMetadata };
+  // A full frame of the take, which also gives the player its aspect ratio
+  poster: ImageMetadata;
+  captions: { src: string; label: string };
+  // Seconds
+  length: number;
+  chapters: { label: string; start: number }[];
+  copy: {
+    label: string;
+    play: string;
+    playName: string;
+    laptop: string;
+    phone: string;
+    // What the video shows, for screen readers and the Markdown twin
+    summary: string;
+  };
+};
+
+const { video, previews, stills, poster, captions, length, chapters, copy } =
+  Astro.props;
+
+const posterImage = await getImage({
+  src: poster,
+  width: 2048,
+  format: "webp",
+});
+const aspect = poster.width / poster.height;
+---
+
+<figure
+  id="walkthrough"
+  class="group/walkthrough flex flex-col gap-5"
+  style={`--wt-aspect: ${aspect}`}
+  data-walkthrough
+  data-state="rest"
+>
+  <p class="sr-only">{copy.summary}</p>
+  <div class="flex flex-col items-start gap-4">
+    <div
+      class="windows peer/windows grid w-full cursor-pointer grid-cols-[minmax(0,1fr)_26.5%] items-end gap-6 group-data-[state=playing]/walkthrough:hidden max-sm:relative max-sm:block max-sm:pb-18"
+      aria-hidden="true"
+      data-walkthrough-windows
+    >
+      <div class="flex min-w-0 flex-col gap-2">
+        <p class="label-caps text-foreground/75">{copy.laptop}</p>
+        <div
+          class="relative overflow-hidden rounded-lg border border-foreground/60 bg-background"
+        >
+          <Image
+            src={stills.laptop}
+            alt=""
+            sizes="(min-width: 640px) 32rem, calc(100vw - 2rem)"
+            loading="eager"
+            class="block w-full dark:brightness-88"
+          />
+          <video
+            src={previews.laptop}
+            muted
+            playsinline
+            preload="none"
+            class="absolute inset-0 size-full object-cover opacity-0 data-shown:opacity-100 dark:brightness-88"
+            data-walkthrough-preview></video>
+        </div>
+      </div>
+      <div
+        class="flex min-w-0 flex-col gap-2 max-sm:absolute max-sm:right-3 max-sm:bottom-0 max-sm:w-[34%]"
+      >
+        <p class="label-caps text-foreground/75 max-sm:hidden">{copy.phone}</p>
+        <div
+          class="relative overflow-hidden rounded-[1.375rem] border border-foreground/60 bg-background"
+        >
+          <Image
+            src={stills.phone}
+            alt=""
+            sizes="(min-width: 640px) 12.25rem, 34vw"
+            loading="eager"
+            class="block w-full dark:brightness-88"
+          />
+          <video
+            src={previews.phone}
+            muted
+            playsinline
+            preload="none"
+            class="absolute inset-0 size-full object-cover opacity-0 data-shown:opacity-100 dark:brightness-88"
+            data-walkthrough-preview></video>
+        </div>
+      </div>
+    </div>
+    <button
+      type="button"
+      aria-label={copy.playName}
+      class="play inline-flex items-center gap-2.5 rounded-full bg-foreground px-5 py-3 font-mono text-[0.8125rem] font-medium text-background transition-[background-color,translate] group-data-[state=playing]/walkthrough:hidden peer-hover/windows:bg-accent peer-active/windows:bg-accent-strong hover:bg-accent active:bg-accent-strong motion-safe:active:translate-y-px"
+      data-walkthrough-play
+    >
+      <svg viewBox="0 0 24 24" class="size-5" aria-hidden="true">
+        <path d="M8 5.5v13l11-6.5z" fill="currentColor"></path>
+      </svg>
+      {copy.play}
+    </button>
+    <div
+      class="player hidden w-full overflow-hidden rounded-md border border-foreground/16 group-data-[state=playing]/walkthrough:block"
+      data-walkthrough-player
+    >
+      <video
+        src={video}
+        data-poster={posterImage.src}
+        muted
+        playsinline
+        preload="auto"
+        class="block aspect-(--wt-aspect) w-full"
+        data-walkthrough-video
+      >
+        <track
+          kind="captions"
+          srclang="en"
+          label={captions.label}
+          src={captions.src}
+        />
+      </video>
+    </div>
+    <noscript>
+      <div
+        class="w-full overflow-hidden rounded-md border border-foreground/16"
+      >
+        <video
+          src={video}
+          poster={posterImage.src}
+          controls
+          playsinline
+          preload="metadata"
+          class="block aspect-(--wt-aspect) w-full"
+        >
+          <track
+            kind="captions"
+            srclang="en"
+            label={captions.label}
+            src={captions.src}
+          />
+        </video>
+      </div>
+    </noscript>
+  </div>
+  <figcaption class="ledger">
+    <p class="label-caps text-foreground/75">
+      {copy.label}<span class="sm:hidden"> · </span><span
+        class="font-normal tracking-[0.02em] normal-case sm:block"
+        >{clock(length)}</span
+      >
+    </p>
+    <ol class="grid grid-cols-2 gap-x-6 gap-y-1.5 text-small sm:grid-cols-3">
+      {
+        chapters.map(({ label, start }) => (
+          <li>
+            <a
+              href="#walkthrough"
+              class="group flex items-baseline gap-2.5 py-0.5 interactive"
+              data-walkthrough-at={start}
+            >
+              <span class="meta interactive-inner group-aria-[current=time]:text-accent">
+                {clock(start)}
+              </span>
+              <span class="link-underline">{label}</span>
+            </a>
+          </li>
+        ))
+      }
+    </ol>
+  </figcaption>
+</figure>
+
+<style>
+  /* From 72rem the playing video widens past the column, centred on it. The
+     script animates the change ("The widening" in Walkthrough's script). */
+  @media (width >= 72rem) {
+    [data-state="playing"] .player {
+      --wt-wide: min(64rem, 100vw - 6rem, (100svh - 9rem) * var(--wt-aspect));
+      width: var(--wt-wide);
+      margin-inline: calc((100% - var(--wt-wide)) / 2);
+    }
+  }
+
+  /* Without the script the noscript player stands in for the windows and the
+     play control */
+  @media (scripting: none) {
+    .windows,
+    .play {
+      display: none;
+    }
+  }
+</style>
+
+<script>
+  type Connection = { saveData?: boolean };
+
+  const reducedMotion = () =>
+    matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  let previewObserver: IntersectionObserver | undefined;
+
+  // Shows the player, widened from 72rem, and plays from `at`. The press
+  // centres the player only where it widens; a chapter or a link from the
+  // copy always does, since it can sit far from the player.
+  function start(root: HTMLElement, at: number, fromLink: boolean) {
+    const video = root.querySelector<HTMLVideoElement>(
+      "[data-walkthrough-video]"
+    )!;
+    const player = root.querySelector<HTMLElement>(
+      "[data-walkthrough-player]"
+    )!;
+    let widened = false;
+    // The player's box at its final size, read before the widening's first
+    // frame narrows it again
+    let box = player.getBoundingClientRect();
+
+    if (root.dataset.state !== "playing") {
+      for (const preview of root.querySelectorAll<HTMLVideoElement>(
+        "[data-walkthrough-preview]"
+      ))
+        preview.pause();
+      const column = player.parentElement!.getBoundingClientRect().width;
+      root.dataset.state = "playing";
+      box = player.getBoundingClientRect();
+      const wide = box.width;
+      widened = wide > column + 1;
+      if (widened && !reducedMotion()) {
+        const margin = `${(column - wide) / 2}px`;
+        player.animate(
+          [
+            { width: `${column}px`, marginLeft: "0px", marginRight: "0px" },
+            { width: `${wide}px`, marginLeft: margin, marginRight: margin },
+          ],
+          {
+            duration: 400,
+            easing: getComputedStyle(document.documentElement).getPropertyValue(
+              "--default-transition-timing-function"
+            ),
+          }
+        );
+      }
+    }
+
+    // Pressed before the warm-up had a frame: the poster shows until one comes
+    if (video.readyState < HTMLMediaElement.HAVE_CURRENT_DATA)
+      video.poster = video.dataset.poster!;
+    video.muted = false;
+    video.currentTime = at;
+    video.controls = true;
+    video.play().catch(() => {});
+    if (widened || fromLink)
+      scrollTo({
+        top: Math.max(0, box.top + scrollY + box.height / 2 - innerHeight / 2),
+        behavior: reducedMotion() ? "instant" : "smooth",
+      });
+  }
+
+  function initWalkthrough() {
+    const root = document.querySelector<HTMLElement>("[data-walkthrough]");
+    if (!root || root.dataset.initialized) return;
+    root.dataset.initialized = "true";
+
+    const video = root.querySelector<HTMLVideoElement>(
+      "[data-walkthrough-video]"
+    )!;
+    const windows = root.querySelector<HTMLElement>(
+      "[data-walkthrough-windows]"
+    )!;
+    const chapters = [
+      ...root.querySelectorAll<HTMLAnchorElement>("[data-walkthrough-at]"),
+    ];
+
+    const press = () => {
+      start(root, 0, false);
+      // The control the visitor pressed has gone, so focus moves to the player
+      video.focus({ preventScroll: true });
+    };
+    root
+      .querySelector("[data-walkthrough-play]")!
+      .addEventListener("click", press);
+    windows.addEventListener("click", press);
+
+    // The warm-up: a muted play, paused on its first frame, so the press
+    // starts at once. It settles before the previews load, so they don't hold
+    // up the press on a slow connection. A player it can't warm (Save-Data,
+    // or the play refused) takes the poster, to show until its first frame.
+    const warm = new Promise<void>(settled => {
+      const cold = () => {
+        video.poster = video.dataset.poster!;
+        settled();
+      };
+      if (
+        (navigator as Navigator & { connection?: Connection }).connection
+          ?.saveData
+      )
+        return cold();
+      video.addEventListener(
+        "playing",
+        () => {
+          if (root.dataset.state !== "playing") {
+            video.pause();
+            video.currentTime = 0;
+          }
+          settled();
+        },
+        { once: true }
+      );
+      video.addEventListener("error", cold, { once: true });
+      video.play().catch(cold);
+    });
+
+    // The preview plays once, the first time half the windows are in view,
+    // and ends on the stills
+    if (!reducedMotion()) {
+      previewObserver = new IntersectionObserver(
+        entries => {
+          if (!entries.some(entry => entry.isIntersecting)) return;
+          previewObserver?.disconnect();
+          warm.then(() => {
+            if (root.dataset.state === "playing") return;
+            for (const preview of root.querySelectorAll<HTMLVideoElement>(
+              "[data-walkthrough-preview]"
+            )) {
+              preview.addEventListener(
+                "playing",
+                () => (preview.dataset.shown = ""),
+                { once: true }
+              );
+              preview.play().catch(() => {});
+            }
+          });
+        },
+        { threshold: 0.5 }
+      );
+      previewObserver.observe(windows);
+    }
+
+    video.addEventListener("timeupdate", () => {
+      if (root.dataset.state !== "playing") return;
+      let current = 0;
+      chapters.forEach((chapter, i) => {
+        if (video.currentTime >= Number(chapter.dataset.walkthroughAt))
+          current = i;
+      });
+      chapters.forEach((chapter, i) => {
+        if (i === current) chapter.setAttribute("aria-current", "time");
+        else chapter.removeAttribute("aria-current");
+      });
+    });
+  }
+
+  // Chapters and the page's links to a moment in the video. Capture phase, so
+  // the router doesn't take the #walkthrough link first – see "In-page links
+  // after replaceState" in docs/patterns/client-scripts.md. Without the
+  // script the link still goes to the video.
+  document.addEventListener(
+    "click",
+    event => {
+      if (
+        event.button !== 0 ||
+        event.metaKey ||
+        event.ctrlKey ||
+        event.shiftKey ||
+        event.altKey
+      )
+        return;
+      const link = (event.target as Element).closest<HTMLElement>(
+        "a[data-walkthrough-at]"
+      );
+      const root = document.querySelector<HTMLElement>("[data-walkthrough]");
+      if (!link || !root?.dataset.initialized) return;
+      event.preventDefault();
+      start(root, Number(link.dataset.walkthroughAt), true);
+    },
+    true
+  );
+
+  document.addEventListener("astro:before-swap", () =>
+    previewObserver?.disconnect()
+  );
+
+  // See "Client scripts and View Transitions" in docs/patterns/client-scripts.md
+  document.addEventListener("astro:page-load", initWalkthrough);
+  initWalkthrough();
+</script>
