@@ -13,8 +13,16 @@ import StatusChip from "@/components/StatusChip.astro";
 import Field from "@/components/Field.astro";
 import Button from "@/components/Button.astro";
 import ServerSessions from "@/components/diagrams/ServerSessions.astro";
+import Walkthrough from "@/components/Walkthrough.astro";
+import WalkthroughLink from "@/components/WalkthroughLink.astro";
+import { Image } from "astro:assets";
 import { SITE } from "@/config";
 import { SOCIALS } from "@/constants";
+import walkthroughLaptop from "@/assets/images/cloud-box/walkthrough-laptop.png";
+import walkthroughPhone from "@/assets/images/cloud-box/walkthrough-phone.png";
+import walkthroughPoster from "@/assets/images/cloud-box/walkthrough-poster.jpg";
+import pickerToday from "@/assets/images/cloud-box/picker-today.png";
+import pickerAfter from "@/assets/images/cloud-box/picker-after.png";
 
 const linkedIn = SOCIALS.find(({ name }) => name === "LinkedIn")!.href;
 
@@ -37,6 +45,30 @@ const places: Place[] = [
   { place: "Third", price: "£650", status: "Open" },
   { place: "After that", price: "£950", status: "" },
 ];
+
+// The walkthrough's files on Vercel Blob. Each name carries the file's content
+// hash, so a new encode is a new URL – see "Vercel Blob" in
+// docs/external-services.md.
+const blob = "https://pp41erezhiwk0unv.public.blob.vercel-storage.com";
+const walkthrough = {
+  video: `${blob}/walkthrough/take-1b05858c.mp4`,
+  previews: {
+    laptop: `${blob}/walkthrough/laptop-15850b5b.mp4`,
+    phone: `${blob}/walkthrough/phone-aa92d5c3.mp4`,
+  },
+};
+
+// Where each beat of the take starts, in seconds
+const chapters = [
+  { label: "What it is", start: 0 },
+  { label: "Why I built it", start: 11.5 },
+  { label: "Before and after", start: 61 },
+  { label: "On my phone", start: 157.8 },
+  { label: "In the web app", start: 201.4 },
+  { label: "How I use it", start: 231.4 },
+];
+const chapterStart = (label: string) =>
+  chapters.find(chapter => chapter.label === label)!.start;
 
 const questions = [
   {
@@ -97,6 +129,24 @@ const questions = [
         {opening}
       </PageIntro>
 
+      <Walkthrough
+        {...walkthrough}
+        stills={{ laptop: walkthroughLaptop, phone: walkthroughPhone }}
+        poster={walkthroughPoster}
+        captions={{ src: "/cloud-box-walkthrough.vtt", label: "English" }}
+        length={277}
+        chapters={chapters}
+        copy={{
+          label: "Walkthrough",
+          play: "Play",
+          playName: "Play the walkthrough",
+          laptop: "Laptop",
+          phone: "Phone",
+          summary:
+            'The walkthrough video is a recording of my screen with me talking over it: I start a session in the Claude desktop app and choose a repo on my server instead of "This computer", then reply to the same conversation from my phone, open it in the web app, and talk through starting work on the laptop and answering it from my phone.',
+        }}
+      />
+
       <Section id="why" title="Why I built this">
         <p>
           I built this for myself first, because I was beholden to my laptop.
@@ -135,12 +185,24 @@ const questions = [
         </p>
         <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <Panel label="Today">
+            <Image
+              src={pickerToday}
+              alt={'The row under the Claude app\'s prompt box, with "This computer" and a folder chosen'}
+              sizes="(min-width: 640px) 20rem, calc(100vw - 4.75rem)"
+              class="w-full rounded-sm border border-foreground/16 dark-dim"
+            />
             <p>
               You start a session, choose "This computer" and pick a folder. The
               work runs on your laptop, so it stops when the laptop does.
             </p>
           </Panel>
           <Panel label="After" strong>
+            <Image
+              src={pickerAfter}
+              alt="The same row under the prompt box, with a repo on the server chosen instead"
+              sizes="(min-width: 640px) 20rem, calc(100vw - 4.75rem)"
+              class="w-full rounded-sm border border-foreground/16 dark-dim"
+            />
             <p>
               You start a session and choose one of your repos on the server
               instead. Nothing else in the app changes, and the work carries on
@@ -156,12 +218,18 @@ const questions = [
             <strong class="font-semibold"
               >Send the message, shut the laptop.</strong
             > The job carries on while the laptop's in your bag
+            <WalkthroughLink at={chapterStart("Before and after")}
+              >In the video</WalkthroughLink
+            >
           </li>
           <li>
             <strong class="font-semibold">Pick it up anywhere.</strong> The same conversation,
             with your full setup behind it, is in the Claude app on your phone and
             even in the web app (claude.ai) if you need to use another computer. Reply
             from wherever you are, then carry on at the laptop when you're home
+            <WalkthroughLink at={chapterStart("On my phone")}
+              >In the video</WalkthroughLink
+            >
           </li>
           <li>
             <strong class="font-semibold"

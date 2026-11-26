@@ -23,7 +23,7 @@ Rejected: neutral `#1a1a1a`, which has nothing of the site's own in it.
 
 ## The accent at rest is a closed list
 
-At rest, the accent appears only on the mono line above a page's title (the `eyebrow`), the one filled action, prose marks (list markers and the blockquote rule), the active nav item and the reading progress bar. A drawn diagram's level labels take it too – see "A diagram is ink, with the accent on its level labels". Hover, press and focus use it on every control, except that text fields focus in the text colour. A row's rule and label take it for under 400ms as the visitor scrolls to the row, which is motion, not rest – see "Small details are a closed set".
+At rest, the accent appears only on the mono line above a page's title (the `eyebrow`), the one filled action, prose marks (list markers and the blockquote rule), the active nav item, the current chapter's time while the setup page's walkthrough plays (the active nav item's counterpart) and the reading progress bar. A drawn diagram's level labels take it too – see "A diagram is ink, with the accent on its level labels". Hover, press and focus use it on every control, except that text fields focus in the text colour. A row's rule and label take it for under 400ms as the visitor scrolls to the row, which is motion, not rest – see "Small details are a closed set".
 
 Rejected: frames, status chips, link titles and search result titles in the accent. Each reads as an error or a warning in a red.
 
@@ -38,6 +38,19 @@ Rejected: an accent focus, which reads as a validation error round a field.
 "Open" on `/cloud-box-setup` is a 60% text-colour border with text in the text colour. "Held" and "Taken" sit on `--muted`.
 
 Rejected: the accent, which reads as a warning, and a green, which adds a second semantic colour.
+
+## The setup page's video opens as two windows
+
+The walkthrough on `/cloud-box-setup` sits under the title block as two stills cut from the take, a laptop window and a phone window, with an ink play control and a row of chapters. The laptop window is the app's window from its top edge down, at about 16:10, and the phone window is the phone's screen. The first time the windows are in view, a five-second preview cut from the same moment plays once in each and ends on the stills. Pressing play swaps them for the full recording in the browser's own player, which widens past the column from 72rem. `Walkthrough.astro` builds it.
+
+Rejected:
+
+- The take as one still frame, which brings the desktop's wallpaper and window chrome onto the page
+- A third-party player, each of which brings its own loading state
+- A play control filled with the accent, a second filled accent action
+- A looping preview
+- A custom player
+- The laptop window at 3:2, which takes in the top of the camera bubble in the take's lower right
 
 ## An offer page's questions open on a tap
 
@@ -178,7 +191,7 @@ Rejected: sideways scroll inside the table, which hides a prose table's first co
 
 ## The dark theme dims a post's images
 
-`filter: brightness(0.88)`, which brings an image's white down to about the text colour. The full-size view shows the image as it was saved.
+`filter: brightness(0.88)`, which brings an image's white down to about the text colour. The full-size view shows the image as it was saved. The setup page's stills, its walkthrough's previews and its picker stills take the same dim (`dark-dim`). Its playing walkthrough doesn't.
 
 Rejected: no filter, which leaves a white screenshot as the brightest thing on the page.
 
@@ -213,6 +226,8 @@ Rejected:
 
 Motion runs only in response to something the visitor does, lasts 400ms or less, is hand-rolled rather than a library and is removed under `prefers-reduced-motion: reduce`.
 
+The one exception is the walkthrough's preview on `/cloud-box-setup`, which plays once, without sound, for five seconds the first time it is in view, and is removed under reduced motion.
+
 ## Small details are a closed set
 
 The site carries five small details that answer the visitor, for the whole site rather than per page. The set is closed. Later work adds a detail only by replacing a member, with an entry here. How the last three are built is in `docs/patterns/small-details.md`.
@@ -223,7 +238,7 @@ The site carries five small details that answer the visitor, for the whole site 
 4. The page rules itself. The first time the visitor scrolls to a labelled row, its rule draws across in the accent and dries to the border colour, and its label with it. A row already in view on arrival stays still. On a phone, opening the menu draws its rule and lifts its rows
 5. Icons answer the pointer. An arrow steps 3px, a profile or share icon tilts, the moon tilts and the sun turns one notch, and the control itself never moves – see "One interaction behaviour". On a phone the theme toggle's morph answers a tap
 
-The reading progress bar, the theme toggle's icon morph and the copy button's "Copied" label predate the set and sit outside it.
+The reading progress bar, the theme toggle's icon morph and the copy button's "Copied" label predate the set and sit outside it, and so do the walkthrough's widening and its preview on `/cloud-box-setup`, which belong to one part on one page.
 
 Rejected:
 

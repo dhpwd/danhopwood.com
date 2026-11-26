@@ -1,0 +1,236 @@
+WEBVTT
+
+00:00:00.600 --> 00:00:03.720
+Hey, so what is this? Well,
+essentially it's Claude Code
+
+00:00:03.720 --> 00:00:07.160
+running on a server rather than
+running on your laptop so that
+
+00:00:07.160 --> 00:00:10.568
+you can get work done whether
+your laptop is with you or not.
+
+00:00:11.512 --> 00:00:14.552
+So to start with just why did I
+build this for myself initially,
+
+00:00:14.552 --> 00:00:16.792
+there were three main things
+that I found frustrating.
+
+00:00:16.792 --> 00:00:20.552
+The first is that if I didn't have
+my laptop and if it wasn't connected
+
+00:00:20.552 --> 00:00:26.792
+to WiFi, then I wasn't able to really
+get any work done and the agents
+
+00:00:26.792 --> 00:00:30.936
+certainly the agents that I work with
+certainly weren't doing anything.
+
+00:00:30.936 --> 00:00:37.496
+Um the second reason is that if I was
+uh with my laptop but but the Internet
+
+00:00:37.496 --> 00:00:42.776
+connection was kind of poor, so in a
+cafe or on a train or on a flight, the
+
+00:00:42.776 --> 00:00:47.176
+um the agents would just be working
+really slowly or it would just be so slow
+
+00:00:47.176 --> 00:00:50.760
+that it would be impossible to it was
+impossible to get anything done. Um
+
+00:00:50.808 --> 00:00:54.168
+And then the third reason is that I
+wasn't really able to be productive on my
+
+00:00:54.168 --> 00:01:01.048
+phone because I didn't have my full setup
+behind it. It was really just a chat.
+
+00:01:01.048 --> 00:01:04.248
+Okay, so with that, just wanted to
+show you a quick before and after.
+
+00:01:04.248 --> 00:01:07.880
+So right now what you're probably doing
+is, so this is the Claude Desktop app.
+
+00:01:07.992 --> 00:01:10.552
+And what you're probably doing is
+starting a new session, picking
+
+00:01:10.552 --> 00:01:14.232
+this computer, picking your folder,
+and then starting a conversation.
+
+00:01:14.232 --> 00:01:16.392
+And then you go back and
+forth, and that's how you work.
+
+00:01:16.392 --> 00:01:20.952
+And that work runs is running on your
+laptop. So that means if you shut
+
+00:01:20.952 --> 00:01:26.808
+it down and kind of move somewhere,
+the agents stop the work stops.
+
+00:01:26.808 --> 00:01:29.208
+by using a server. The only
+difference is that rather than
+
+00:01:29.208 --> 00:01:33.848
+picking this computer, you choose
+a a project or a repository
+
+00:01:33.848 --> 00:01:37.128
+that's that's on your running
+on your server instead.
+
+00:01:37.128 --> 00:01:42.728
+So in this case, I'm going to pick OS,
+and OS is my sort of second brain project.
+
+00:01:44.120 --> 00:01:48.760
+And then you just work in the normal
+way. So I can paste in a prompt here.
+
+00:01:48.760 --> 00:01:54.040
+This prompt is just going to summarize
+the setup that it has access to.
+
+00:01:54.040 --> 00:01:57.560
+So what I'm doing here is just
+demonstrating that it really is my
+
+00:01:57.560 --> 00:02:03.608
+full setup. And this is running
+on the server. It's not running on
+
+00:02:03.608 --> 00:02:05.224
+my my laptop.
+
+00:02:12.408 --> 00:02:15.688
+Hopefully I won't take too long. I
+picked Sonnet at medium so that it would
+
+00:02:15.688 --> 00:02:22.888
+um so that it wouldn't be too slow. Okay,
+cool. So um here you can see we've got a
+
+00:02:22.888 --> 00:02:28.328
+bunch of skills and agents at both the
+user level and also within the project.
+
+00:02:28.328 --> 00:02:32.040
+A whole load of markdown documents,
+so almost a thousand documents.
+
+00:02:32.728 --> 00:02:37.848
+And a whole bunch of connected tools
+that I use to to get my work done.
+
+00:02:37.848 --> 00:02:42.248
+So um with that though, I can now,
+with my phone on the right-hand side,
+
+00:02:42.248 --> 00:02:46.088
+so it's that the right hand side
+is just a mirror of my my iPhone,
+
+00:02:46.088 --> 00:02:51.528
+I can open up um Code and this
+top conversation here is the exact
+
+00:02:51.640 --> 00:02:59.480
+same one. So if you see if I scroll up,
+you can see that it's exactly the same.
+
+00:02:59.480 --> 00:03:06.360
+And so I can now shut down my laptop if I
+wanted to, and start walking and continue
+
+00:03:06.360 --> 00:03:09.480
+on on my phone. So I could say, you
+know, just for now, I'll just say thanks.
+
+00:03:12.280 --> 00:03:17.800
+And you can see that showed up on the
+left-hand side back in the desktop app.
+
+00:03:17.800 --> 00:03:21.480
+And so I now have my full
+setup running from my phone.
+
+00:03:21.480 --> 00:03:27.080
+And I can even open up this
+same thing in a browser.
+
+00:03:27.080 --> 00:03:32.072
+So this is a browser logged
+into my account, so claude.ai
+
+00:03:32.504 --> 00:03:36.984
+in Code. And that same conversation
+is on the left-hand side here.
+
+00:03:36.984 --> 00:03:40.984
+And as you can see, it has
+exactly the same thread.
+
+00:03:40.984 --> 00:03:44.904
+So even if I don't have my laptop and
+I want to work on a computer, I could
+
+00:03:44.904 --> 00:03:51.144
+fire this up somewhere else and work on
+someone else's computer if I wanted to.
+
+00:03:51.384 --> 00:03:56.024
+So some really quick examples. I have
+build work running all the time, sometimes
+
+00:03:56.024 --> 00:04:00.744
+through the night, sometimes when I'm in
+meetings. And then some workflows that
+
+00:04:00.744 --> 00:04:06.024
+I run. So I have a daily workflow. You
+could start a daily workflow from your
+
+00:04:06.024 --> 00:04:10.440
+laptop before you leave the house. By the
+time you get to the train or the tube,
+
+00:04:10.936 --> 00:04:14.296
+open it up on your on your phone
+and answer the questions in
+
+00:04:14.296 --> 00:04:17.416
+order to plan your day. And
+then by the time you get to the
+
+00:04:17.416 --> 00:04:22.936
+office, your day's ready and you
+can kind of start. So that's it.
+
+00:04:22.936 --> 00:04:26.296
+Everything runs on your own account
+under your own Claude subscription.
+
+00:04:26.296 --> 00:04:30.360
+Once the server is built, we just jump
+on a quick call to get things finalized.
+
+00:04:30.360 --> 00:04:36.992
+And set and configured. And yeah,
+there's more detail on the page below.

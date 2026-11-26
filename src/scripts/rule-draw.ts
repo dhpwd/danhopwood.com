@@ -3,28 +3,9 @@
 // "pending", "run" and "seen"), which also makes a second init a no-op – see
 // "The rule that draws" in docs/patterns/small-details.md.
 
+import { landingY } from "./landing";
+
 let observer: IntersectionObserver | undefined;
-
-// :target isn't set yet when this first runs on a page loaded with a #hash
-function fragmentTarget(): HTMLElement | null {
-  try {
-    return document.getElementById(decodeURIComponent(location.hash.slice(1)));
-  } catch {
-    return null; // a malformed fragment such as #% targets nothing
-  }
-}
-
-// Where the page comes to rest. The router restores a saved position, and the
-// browser scrolls to a #hash, smoothly and after this runs, so the position
-// now is not yet where the visitor lands.
-function landingY(): number {
-  const saved = history.state?.scrollY;
-  if (typeof saved === "number" && saved > 0) return saved;
-  const target = fragmentTarget();
-  if (!target) return window.scrollY;
-  const maxY = document.documentElement.scrollHeight - window.innerHeight;
-  return Math.min(target.getBoundingClientRect().top + window.scrollY, maxY);
-}
 
 function initRuleDraw(): void {
   if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;

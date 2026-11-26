@@ -16,6 +16,8 @@ import { SITE } from "@/config";
 </Layout>
 
 <script>
+  import { isPlainClick } from "@/scripts/plain-click";
+
   // A Back, Forward or reload to /search restores the saved position before
   // the results render, so the restore is clamped to the short page. Hold
   // the position and how many results were showing, and apply them once the
@@ -116,15 +118,7 @@ import { SITE } from "@/config";
     "click",
     event => {
       const link = (event.target as Element).closest?.('a[href^="#"]');
-      if (
-        !(link instanceof HTMLAnchorElement) ||
-        !live ||
-        event.button !== 0 ||
-        event.metaKey ||
-        event.ctrlKey ||
-        event.shiftKey ||
-        event.altKey
-      )
+      if (!(link instanceof HTMLAnchorElement) || !live || !isPlainClick(event))
         return;
       event.preventDefault();
       const { state } = history;

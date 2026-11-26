@@ -181,6 +181,12 @@ html[data-theme="dark"] {
   @apply transition-[background-color,translate] enabled:hover:bg-accent-strong enabled:active:bg-accent-stronger motion-safe:enabled:active:translate-y-px;
 }
 
+/* A control filled with the text colour, which takes the accent only under
+   the pointer and on press: the walkthrough's play control */
+@utility interactive-ink {
+  @apply bg-foreground text-background transition-[background-color,translate] hover:bg-accent active:bg-accent-strong motion-safe:active:translate-y-px;
+}
+
 /* Text that sets its own colour inside a `group` control – see
    docs/patterns/interaction.md */
 @utility interactive-inner {
@@ -223,6 +229,15 @@ html[data-theme="dark"] {
 
 @utility icon-links {
   @apply -mx-3 flex flex-wrap sm:-mx-1.5 sm:gap-x-3;
+}
+
+/* The dark theme takes an image's white down to the text colour, so a
+   screenshot is never the brightest thing on the page – see "The dark theme
+   dims a post's images" in docs/design-decisions.md */
+@utility dark-dim {
+  @variant dark {
+    filter: brightness(0.88);
+  }
 }
 
 /* The reading measure: about 70 characters of body text a line. */
@@ -282,6 +297,9 @@ html[data-theme="dark"] {
     transition-property: text-decoration-color, background-size;
     transition-duration: 150ms, 300ms, 150ms;
     transition-timing-function: var(--default-transition-timing-function);
+    @supports (top: round(1px, 1px)) {
+      --ink-y: calc(100% - (round(0.295em, 1px) - 0.05em - 2.5px));
+    }
   }
   a:is(.link-underline, .title-underline),
   .app-prose a:not(.heading-link),
