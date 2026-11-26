@@ -13,6 +13,7 @@ import StatusChip from "@/components/StatusChip.astro";
 import Field from "@/components/Field.astro";
 import Button from "@/components/Button.astro";
 import ServerSessions from "@/components/diagrams/ServerSessions.astro";
+import PrPaceChart from "@/components/diagrams/PrPaceChart.astro";
 import Walkthrough from "@/components/Walkthrough.astro";
 import WalkthroughLink from "@/components/WalkthroughLink.astro";
 import { Image } from "astro:assets";
@@ -175,6 +176,35 @@ const questions = [
         <p>
           So I moved everything onto a server that never turns off. My laptop
           and phone are now just windows into it.
+        </p>
+      </Section>
+
+      <Section id="output" title="What happened to my output">
+        <p>
+          I moved onto the server at the beginning of September 2026. In the 11
+          weeks before that I averaged 16.9 weighted PRs a week (merged PRs,
+          each counted by its size), and in the 12 weeks since I've averaged
+          77.9. Put simply, my output is now 4.6 times what it was.
+        </p>
+        <div class="my-4">
+          <PrPaceChart />
+        </div>
+        <p class="text-small text-foreground/75">
+          Merged PRs across every repo I work in, 15th June to 22nd November
+          2026, read from git history with
+          <a
+            href="https://github.com/dhpwd/pr-pace"
+            class="whitespace-nowrap interactive text-foreground link-underline"
+            >pr-pace</a
+          >, my own open-source tool. Weighted PRs give each PR a weight by its
+          size, so a big change counts for more than a small one and output is
+          easier to track over time.
+        </p>
+        <p>
+          The low week right after the move is the one I spent my evenings
+          setting the server up, which is the part I do for you. Some of the
+          gains since are due to the agent team I now run, which isn't part of
+          the setup. Your numbers will depend on what you run on your server.
         </p>
       </Section>
 
@@ -363,6 +393,13 @@ const questions = [
             }
           </tbody>
         </table>
+        <p>
+          I can't tell you what you'll get back for that, but my own output is
+          now 4.6 times what it was before I moved onto the server (<a
+            href="#output-h"
+            class="interactive link-underline">the chart</a
+          > is further up).
+        </p>
         <div class="grid grid-cols-1 gap-x-8 gap-y-6 sm:grid-cols-2">
           <Detail label="Timing">
             <p>I'll offer you a call within a week of payment.</p>

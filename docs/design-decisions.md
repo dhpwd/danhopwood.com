@@ -23,7 +23,7 @@ Rejected: neutral `#1a1a1a`, which has nothing of the site's own in it.
 
 ## The accent at rest is a closed list
 
-At rest, the accent appears only on the mono line above a page's title (the `eyebrow`), the one filled action, prose marks (list markers and the blockquote rule), the active nav item, the current chapter's time while the setup page's walkthrough plays (the active nav item's counterpart) and the reading progress bar. A drawn diagram's level labels take it too – see "A diagram is ink, with the accent on its level labels". Hover, press and focus use it on every control, except that text fields focus in the text colour. A row's rule and label take it for under 400ms as the visitor scrolls to the row, which is motion, not rest – see "Small details are a closed set".
+At rest, the accent appears only on the mono line above a page's title (the `eyebrow`), the one filled action, prose marks (list markers and the blockquote rule), the active nav item, the current chapter's time while the setup page's walkthrough plays (the active nav item's counterpart), the week chosen on the setup page's chart of merged PRs (the same counterpart – see "A chart is a diagram with one switch") and the reading progress bar. A drawn diagram's level labels take it too – see "A diagram is ink, with the accent on its level labels". Hover, press and focus use it on every control, except that text fields focus in the text colour. A row's rule and label take it for under 400ms as the visitor scrolls to the row, which is motion, not rest – see "Small details are a closed set".
 
 Rejected: frames, status chips, link titles and search result titles in the accent. Each reads as an error or a warning in a red.
 
@@ -197,7 +197,7 @@ Rejected: no filter, which leaves a white screenshot as the brightest thing on t
 
 ## A diagram is ink, with the accent on its level labels
 
-A diagram drawn for a post or a page is ink on the page's ground. Titles and filled boxes are the text colour in both themes, flat, with no gradient or shadow. Lines and panels are greys mixed from the text colour. Connectors clear the 3:1 that WCAG asks of graphics, in both themes. The accent appears only on the diagram's level labels, the small mono label that heads each level or section, as the mono line above a page's title heads the page. A level's number and the diagram's other mono text, such as a card's role line, take a grey.
+A diagram drawn for a post or a page is ink on the page's ground. Titles and filled boxes are the text colour in both themes, flat, with no gradient or shadow. Lines and panels are greys mixed from the text colour. Connectors clear the 3:1 that WCAG asks of graphics, in both themes. The accent appears only on the diagram's level labels, the small mono label that heads each level or section, as the mono line above a page's title heads the page. The chart of merged PRs has one other use: its chosen week's bar – see "A chart is a diagram with one switch". A level's number and the diagram's other mono text, such as a card's role line, take a grey.
 
 Rejected:
 
@@ -221,6 +221,21 @@ Rejected:
 - A drawing wider than the text column
 - The cloud box diagram running top to bottom at the full column, which leaves the top of the drawing mostly empty
 - Labels placed on their lines
+
+## A chart is a diagram with one switch
+
+The setup page's chart of merged PRs a week is drawn in the page as a diagram, in ink: the weeks before the move to the server in grey, the weeks since in the text colour. The accent sits on its two level labels, and on a bar only under the pointer or while its week is chosen. A chosen week keeps the accent after the pointer leaves, since on a phone a tap leaves no focus and nothing else would mark the week. The chart has one switch, between weighted PRs and PRs, a line above the plot that reads out a week, and a flat line across each period at its average. `PrPaceChart.astro` builds it – see "A chart" in `docs/patterns/diagrams.md`.
+
+Rejected:
+
+- The source report's HTML page embedded, which brings its own styles and carries private repo names and PR titles into a public repo
+- A charting library
+- Bars in the accent, which are large red blocks at rest
+- A chosen bar resting in ink, which leaves nothing marking the week on a phone
+- A floating tooltip, which needs positioning and answers a pointer, a tap and the keyboard differently
+- An animated redraw, which would join the closed set of small details
+- The report's 4-week moving average, which turns the step at the move into a four-week ramp
+- The report's other controls (date range, periods, splits, the repo filter, summary tiles) and its PR list
 
 ## Motion answers the visitor
 
