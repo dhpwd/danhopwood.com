@@ -35,9 +35,10 @@ type Props = {
 const { video, previews, stills, poster, captions, length, chapters, copy } =
   Astro.props;
 
+// Small, since it loads beside the warm-up and shows only until a frame does
 const posterImage = await getImage({
   src: poster,
-  width: 2048,
+  width: 1280,
   format: "webp",
 });
 const aspect = poster.width / poster.height;
@@ -131,10 +132,10 @@ const windows = [
     >
       <video
         src={video}
-        data-poster={posterImage.src}
+        poster={posterImage.src}
         muted
         playsinline
-        preload="auto"
+        preload="none"
         class="block aspect-(--wt-aspect) w-full"
         data-walkthrough-video
       >
@@ -185,9 +186,7 @@ const windows = [
               class="group flex items-baseline gap-2.5 py-0.5 interactive"
               data-walkthrough-at={start}
             >
-              <span class="meta interactive-inner group-aria-[current=time]:text-accent">
-                {clock(start)}
-              </span>
+              <span class="time meta interactive-inner">{clock(start)}</span>
               <span class="link-underline">{label}</span>
             </a>
           </li>
@@ -208,8 +207,24 @@ const windows = [
     }
   }
 
+  /* While the video plays, the current chapter's time rests on the accent and
+     steps as the active nav item does. Unlayered, so it outranks `meta` and
+     `interactive-inner`. */
+  [data-playing] [aria-current="time"] .time {
+    color: var(--accent);
+  }
+  @media (hover: hover) {
+    [data-playing] [aria-current="time"]:hover .time {
+      color: var(--accent-strong);
+    }
+  }
+  [data-playing] [aria-current="time"]:active .time {
+    color: var(--accent-stronger);
+  }
+
   /* Without the script the noscript player stands in for the windows and the
-     play control */
+     play control. Below Chrome 120 and Safari 17 the query isn't known, so
+     there, with no script, the windows also show above that player. */
   @media (scripting: none) {
     .windows,
     .play {
@@ -219,12 +234,14 @@ const windows = [
 </style>
 
 <script>
+  import { landingY } from "@/scripts/landing";
+
   type Connection = { saveData?: boolean };
 
   // The open page's walkthrough: `playFrom` starts it at a time from a
   // chapter or a link in the copy, and `release` stops its videos loading
   // when the page goes. Both are set by init.
-  let playFrom: ((at: number) => void) | undefined;
+  let playFrom: ((at: number, link: Element) => void) | undefined;
   let release: (() => void) | undefined;
 
   function initWalkthrough() {
@@ -251,10 +268,12 @@ const windows = [
       Number(chapter.dataset.walkthroughAt)
     );
     const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
+    const wideLayout = matchMedia("(width >= 72rem)");
+    let gone = false;
 
-    // Shows the player, widened from 72rem, and plays from `at`. The press
-    // centres the player only where it widens; a chapter or a link from the
-    // copy always does, since it can sit far from the player. The smooth
+    // Shows the player, sized for the viewport from 72rem, and plays from
+    // `at`. From 72rem the press centres the player. A chapter or a link from
+    // the copy always does, since it can sit far from the player. The smooth
     // scroll, and its removal under reduced motion, come from `html`.
     const start = (at: number, fromLink: boolean) => {
       const opening = root.dataset.state !== "playing";
@@ -262,12 +281,28 @@ const windows = [
       if (opening) {
         for (const preview of previews) preview.pause();
         root.dataset.state = "playing";
+        // Sound comes on with the press. Later, a chapter keeps a mute the
+        // visitor chose
+        video.muted = false;
+        video.controls = true;
       }
-      // The player's final box, read before the widening's first frame
-      // narrows it again
+      video.currentTime = at;
+      video.play().catch(() => {});
+
+      // The player's final box, read before the resizing's first frame
       const box = player.getBoundingClientRect();
-      const widened = box.width > column + 1;
-      if (opening && widened && !reducedMotion.matches) {
+      if ((opening && wideLayout.matches) || fromLink)
+        scrollTo({
+          top: Math.max(
+            0,
+            box.top + scrollY + box.height / 2 - innerHeight / 2
+          ),
+        });
+      if (
+        opening &&
+        Math.abs(box.width - column) > 1 &&
+        !reducedMotion.matches
+      ) {
         const margin = `${(column - box.width) / 2}px`;
         player.animate(
           [
@@ -286,22 +321,6 @@ const windows = [
           }
         );
       }
-
-      // Pressed before the warm-up had a frame: the poster shows until one
-      // comes
-      if (video.readyState < HTMLMediaElement.HAVE_CURRENT_DATA)
-        video.poster = video.dataset.poster!;
-      video.muted = false;
-      video.currentTime = at;
-      video.controls = true;
-      video.play().catch(() => {});
-      if ((opening && widened) || fromLink)
-        scrollTo({
-          top: Math.max(
-            0,
-            box.top + scrollY + box.height / 2 - innerHeight / 2
-          ),
-        });
     };
 
     const press = () => {
@@ -313,22 +332,20 @@ const windows = [
       .querySelector("[data-walkthrough-play]")!
       .addEventListener("click", press);
     windows.addEventListener("click", press);
-    playFrom = at => start(at, true);
+    playFrom = (at, link) => {
+      start(at, true);
+      // Following a link from the copy would have moved focus to the video
+      if (!root.contains(link)) video.focus({ preventScroll: true });
+    };
 
-    // The warm-up: a muted play, paused on its first frame, so the press
-    // starts at once. It settles before the previews load, so they don't hold
-    // up the press on a slow connection. A player it can't warm (Save-Data,
-    // or the play refused) takes the poster, to show until its first frame.
+    // The warm-up – see "Starting a click-to-play video at once" in
+    // docs/patterns/client-scripts.md
     const warm = new Promise<void>(settled => {
-      const cold = () => {
-        video.poster = video.dataset.poster!;
-        settled();
-      };
       if (
         (navigator as Navigator & { connection?: Connection }).connection
           ?.saveData
       )
-        return cold();
+        return settled();
       video.addEventListener(
         "playing",
         () => {
@@ -340,32 +357,82 @@ const windows = [
         },
         { once: true }
       );
-      video.addEventListener("error", cold, { once: true });
-      video.play().catch(cold);
+      video.addEventListener("error", () => settled(), { once: true });
+      video.preload = "auto";
+      video.play().catch(() => settled());
     });
 
-    // The preview plays once, the first time half the windows are in view,
-    // and ends on the stills
+    // The preview plays once, the first time half the windows are in view
+    // after the warm-up has settled or 5s have passed, and ends on the
+    // stills. Both clips load before either plays, so they run together.
+    let inView = false;
+    let previewed = false;
+    let warmed = false;
+    const ready = (clip: HTMLVideoElement) =>
+      new Promise<void>((resolve, reject) => {
+        if (clip.readyState >= HTMLMediaElement.HAVE_ENOUGH_DATA)
+          return resolve();
+        clip.addEventListener("canplaythrough", () => resolve(), {
+          once: true,
+        });
+        clip.addEventListener("error", reject, { once: true });
+        clip.preload = "auto";
+        clip.load();
+      });
+    const atRest = () =>
+      !gone && !reducedMotion.matches && root.dataset.state !== "playing";
+    const preview = () => {
+      if (previewed || !warmed || !inView || !atRest()) return;
+      previewed = true;
+      previewObserver.disconnect();
+      Promise.all(previews.map(ready))
+        .then(() =>
+          atRest() ? Promise.all(previews.map(clip => clip.play())) : []
+        )
+        .then(started => {
+          if (started.length && atRest())
+            for (const clip of previews) clip.dataset.shown = "";
+        })
+        .catch(() => {});
+    };
     const previewObserver = new IntersectionObserver(
       entries => {
-        if (!entries.some(entry => entry.isIntersecting)) return;
-        previewObserver.disconnect();
-        warm.then(() => {
-          if (root.dataset.state === "playing") return;
-          for (const preview of previews) {
-            preview.addEventListener(
-              "playing",
-              () => (preview.dataset.shown = ""),
-              { once: true }
-            );
-            preview.play().catch(() => {});
-          }
-        });
+        inView = entries.at(-1)!.intersectionRatio >= 0.5;
+        preview();
       },
       { threshold: 0.5 }
     );
-    if (!reducedMotion.matches) previewObserver.observe(windows);
+    Promise.race([
+      warm,
+      new Promise(resolve => setTimeout(resolve, 5000)),
+    ]).then(() => {
+      warmed = true;
+      preview();
+    });
+    // A reload or a #hash load is still gliding to where it lands, so the
+    // windows are judged once it has landed
+    const watch = () => previewObserver.observe(windows);
+    if (Math.abs(landingY() - scrollY) < 1) watch();
+    else {
+      let fallback = 0;
+      const landed = () => {
+        clearTimeout(fallback);
+        removeEventListener("scrollend", landed);
+        watch();
+      };
+      addEventListener("scrollend", landed);
+      fallback = window.setTimeout(landed, 1000);
+    }
+    const stillsOnReducedMotion = () => {
+      if (!reducedMotion.matches) return;
+      for (const clip of previews) {
+        clip.pause();
+        delete clip.dataset.shown;
+      }
+    };
+    reducedMotion.addEventListener("change", stillsOnReducedMotion);
 
+    // The current chapter, whose time takes the accent while the video plays
     let current = -1;
     video.addEventListener("timeupdate", () => {
       if (root.dataset.state !== "playing") return;
@@ -375,10 +442,17 @@ const windows = [
       chapters[now]?.setAttribute("aria-current", "time");
       current = now;
     });
+    video.addEventListener("play", () => {
+      if (root.dataset.state === "playing") root.dataset.playing = "";
+    });
+    video.addEventListener("pause", () => delete root.dataset.playing);
 
-    // A video left in a page the router swaps out keeps loading
+    // See "Starting a click-to-play video at once" in
+    // docs/patterns/client-scripts.md
     release = () => {
+      gone = true;
       previewObserver.disconnect();
+      reducedMotion.removeEventListener("change", stillsOnReducedMotion);
       for (const media of [video, ...previews]) {
         media.removeAttribute("src");
         media.load();
@@ -387,9 +461,8 @@ const windows = [
   }
 
   // Chapters and the page's links to a moment in the video. Capture phase, so
-  // the router doesn't take the #walkthrough link first – see "In-page links
-  // after replaceState" in docs/patterns/client-scripts.md. Without the
-  // script the link still goes to the video.
+  // its preventDefault() comes before the router's own listener, which
+  // respects it. Without the script the link still goes to the video.
   document.addEventListener(
     "click",
     event => {
@@ -407,7 +480,7 @@ const windows = [
       );
       if (!link) return;
       event.preventDefault();
-      playFrom(Number(link.dataset.walkthroughAt));
+      playFrom(Number(link.dataset.walkthroughAt), link);
     },
     true
   );

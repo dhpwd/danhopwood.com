@@ -191,7 +191,7 @@ Rejected: sideways scroll inside the table, which hides a prose table's first co
 
 ## The dark theme dims a post's images
 
-`filter: brightness(0.88)`, which brings an image's white down to about the text colour. The full-size view shows the image as it was saved.
+`filter: brightness(0.88)`, which brings an image's white down to about the text colour. The full-size view shows the image as it was saved. The setup page's stills, its walkthrough's previews and its picker stills take the same dim (`dark-dim`). Its playing walkthrough doesn't.
 
 Rejected: no filter, which leaves a white screenshot as the brightest thing on the page.
 

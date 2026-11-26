@@ -190,7 +190,8 @@
     }
   }
 
-  /* The full-size view shows the image as it was saved. */
+  /* A post's images dim in the dark theme. The full-size view shows the image
+     as it was saved. */
   .app-prose img {
     @apply dark-dim;
   }
