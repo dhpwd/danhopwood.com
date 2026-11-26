@@ -109,11 +109,11 @@ MDX was chosen over raw HTML in the `.md`, which puts the drawing's markup in th
 
 ## A diagram on a page that isn't a post
 
-**Problem:** a page built from the page parts, such as `/cloud-box-setup`, has no prose styles, so a diagram there gets none of what a post gives it: the figure's margin, the caption's style or a reading time. And a page's own component takes its name from its file, so a diagram named after the page clashes with it.
+**Problem:** a page built from the page parts, such as `/cloud-box-setup`, has no prose styles, so a diagram there gets none of what a post gives it: the figure's margin, the caption's style or a reading time.
 
-**Solution:** the page imports the component directly and places it inside a `Section` at the full column, as `ServerSessions` sits in the setup page's "What you end up with", between the Today and After panels and the list. The figure takes its spacing from the section's gap, where a post gives it the prose figure margin (`my-9` on `.app-prose figure`). It takes no caption, since `figcaption` is styled only by the prose rules in `typography.css`: the section's words introduce the drawing. The component still passes its default slot on as the caption, as every diagram does.
+**Solution:** the page imports the component directly and places it inside a `Section` at the full column, as `ServerSessions` sits in the setup page's "What you end up with", between the Today and After panels and the list. The figure takes its spacing from the section's gap, where a post gives it the prose figure margin (`my-9` on `.app-prose figure`). It takes no caption: the section's words introduce the drawing, and a caption there would render unstyled, since `figcaption` is styled only by the prose rules in `typography.css`.
 
-The component's name must differ from the page's own component name. Astro names a page's component after its file, so a `CloudBoxSetup` import in `cloud-box-setup.astro` fails `astro check` with ts(2440), "Import declaration conflicts with local declaration".
+The component's name must differ from the page's own, which takes its name from the page's file – see "An import named like its file" in `docs/patterns/astro-build.md`.
 
 The page's Markdown twin carries the summary and then the diagram's words in reading order, as a post's does, since the twin reads `#main-content` and drops the same parts. Reading time doesn't apply: a page has none.
 
