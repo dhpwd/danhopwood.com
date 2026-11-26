@@ -11,7 +11,7 @@ Good places to start:
 
 - [What my AI agents decide without me](/posts/what-my-ai-agents-decide-without-me)
 - [Claude Code for founders who hate the terminal](/posts/claude-code-for-founders-who-hate-the-terminal)
-- [Running coding agents on a €30 Linux box](/posts/running-coding-agents-on-a-30-euro-linux-box)
+- [Running AI agents on a €30 Linux box](/posts/running-ai-agents-on-a-30-euro-linux-box)
 
 Fidero makes customer data trustworthy. If your deals close in a CRM, or your subscriptions start in an app or a billing tool, Google and Meta only see the enquiry or the sign-up. So their bidding learns to buy more of those, not more customers. It's a data platform that fixes your data where it's collected, so every tool and AI agent you run finally agrees. [fidero.com](https://fidero.com) has the detail and the case studies, and the [Data Infrastructure Audit](https://fidero.com/audit) is where to start.
 

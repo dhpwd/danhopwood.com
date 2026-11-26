@@ -3,6 +3,18 @@
   "trailingSlash": false,
   "routes": [
     {
+      "src": "^/posts/running-coding-agents-on-a-30-euro-linux-box/?$",
+      "headers": { "Location": "/posts/running-ai-agents-on-a-30-euro-linux-box" },
+      "status": 308
+    },
+    {
+      "src": "^/posts/running-coding-agents-on-a-30-euro-linux-box\\.md$",
+      "headers": {
+        "Location": "/posts/running-ai-agents-on-a-30-euro-linux-box.md"
+      },
+      "status": 308
+    },
+    {
       "src": "^/posts/writing-loops-is-a-ladder-not-a-command/?$",
       "headers": { "Location": "/posts/writing-loops" },
       "status": 308

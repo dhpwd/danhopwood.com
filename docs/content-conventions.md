@@ -24,7 +24,7 @@ The homepage opens on one first screen – the headline, the portrait, the newsl
 - Post images go in `src/assets/images/` and render through `<Image />` – see `docs/patterns/images.md`
 - An italic line directly under an image, with no blank line between them, becomes its caption – see `docs/patterns/images.md`
 - Reading time is computed from the raw markdown at build time by `src/utils/readingTime.ts`. There is nothing to set
-- Renaming a published post's slug breaks inbound links. Add a permanent redirect from the old path as a `routes` entry placed first in `vercel.json` – see `docs/patterns/urls.md`
+- Renaming a published post's slug breaks inbound links. Add a permanent redirect from the old path as a `routes` entry placed first in `vercel.json`, and a second from its old `.md` twin to the new one – see `docs/patterns/urls.md`. The RSS item's `guid` is the post's URL, so feed readers list a renamed post as a new item whether or not `modDatetime` changes
 
 ## Licence
 
