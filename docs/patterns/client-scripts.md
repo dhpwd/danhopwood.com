@@ -65,7 +65,9 @@ Three things decide whether the warm-up has landed by the press:
 
 - The header's size. Encode with `-movflags +faststart` and keep the header small. ffmpeg writes each packet as its own chunk, so the tables grow with the packet count, and an audio track with more packets a second than the video has frames doubles its own tables: AAC at 48kHz runs 47 packets a second against 30 frames. The walkthrough's audio rate is set for this – see "Vercel Blob" in `docs/external-services.md`. Its 210KB header lands on the throttled line 3.6s after load
 - Other media on the page. A decorative video that loads at once competes with the warm-up for the line, so the walkthrough's preview loads once the warm-up has settled, or after 5s if it hasn't
-- Bytes at rest. Chrome stops buffering a paused video by itself: with nothing pressed, `/cloud-box-setup` fetches 3.8MB from the video host in its first 30s
+- Bytes at rest. Chrome stops buffering a paused video by itself: with nothing pressed, `/cloud-box-setup` fetches about 3.5MB from the video host in its first 30s
+
+The router builds the next page in a document with no browsing context, where Chromium refuses a video's load ("Media load rejected by URL safety check"), and the element keeps that error once swapped in. `play()` doesn't retry it, so the script calls `load()` on each video before its first `play()`. The walkthrough's preview clips are primed the same way, with a muted `play()` that also makes a phone load them, since a phone holds an unplayed video to its metadata or less.
 
 A page the router swaps out keeps loading its videos, which then take the line from the next page, so the script releases each at `astro:before-swap`: `removeAttribute("src")`, then `load()`.
 

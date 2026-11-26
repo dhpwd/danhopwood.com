@@ -223,13 +223,12 @@ const windows = [
   }
 
   /* Without the script the noscript player stands in for the windows and the
-     play control. Below Chrome 120 and Safari 17 the query isn't known, so
-     there, with no script, the windows also show above that player. */
-  @media (scripting: none) {
-    .windows,
-    .play {
-      display: none;
-    }
+     play control. A noscript block's contents are elements only when
+     scripting is off, at the browser floor too, and the router's swapped-in
+     page drops them. */
+  [data-walkthrough]:has(noscript video) .windows,
+  [data-walkthrough]:has(noscript video) .play {
+    display: none;
   }
 </style>
 
@@ -339,13 +338,14 @@ const windows = [
     };
 
     // The warm-up – see "Starting a click-to-play video at once" in
-    // docs/patterns/client-scripts.md
+    // docs/patterns/client-scripts.md, which also says why each video is
+    // loaded again before it first plays
+    const saveData = (navigator as Navigator & { connection?: Connection })
+      .connection?.saveData;
+    if (!saveData) video.preload = "auto";
+    video.load();
     const warm = new Promise<void>(settled => {
-      if (
-        (navigator as Navigator & { connection?: Connection }).connection
-          ?.saveData
-      )
-        return settled();
+      if (saveData) return settled();
       video.addEventListener(
         "playing",
         () => {
@@ -358,40 +358,45 @@ const windows = [
         { once: true }
       );
       video.addEventListener("error", () => settled(), { once: true });
-      video.preload = "auto";
       video.play().catch(() => settled());
     });
 
     // The preview plays once, the first time half the windows are in view
     // after the warm-up has settled or 5s have passed, and ends on the
-    // stills. Both clips load before either plays, so they run together.
+    // stills. Each clip is primed with a muted play, which a phone needs
+    // before it loads one, and then both start together from 0.
     let inView = false;
     let previewed = false;
     let warmed = false;
-    const ready = (clip: HTMLVideoElement) =>
+    let primed: Promise<unknown> | undefined;
+    const prime = (clip: HTMLVideoElement) =>
       new Promise<void>((resolve, reject) => {
-        if (clip.readyState >= HTMLMediaElement.HAVE_ENOUGH_DATA)
-          return resolve();
-        clip.addEventListener("canplaythrough", () => resolve(), {
-          once: true,
-        });
+        clip.addEventListener(
+          "playing",
+          () => {
+            clip.pause();
+            resolve();
+          },
+          { once: true }
+        );
         clip.addEventListener("error", reject, { once: true });
-        clip.preload = "auto";
         clip.load();
+        clip.play().catch(reject);
       });
     const atRest = () =>
       !gone && !reducedMotion.matches && root.dataset.state !== "playing";
     const preview = () => {
       if (previewed || !warmed || !inView || !atRest()) return;
-      previewed = true;
-      previewObserver.disconnect();
-      Promise.all(previews.map(ready))
-        .then(() =>
-          atRest() ? Promise.all(previews.map(clip => clip.play())) : []
-        )
-        .then(started => {
-          if (started.length && atRest())
-            for (const clip of previews) clip.dataset.shown = "";
+      primed ??= Promise.all(previews.map(prime));
+      primed
+        .then(() => {
+          if (previewed || !inView || !atRest()) return;
+          previewed = true;
+          previewObserver.disconnect();
+          for (const clip of previews) clip.currentTime = 0;
+          return Promise.all(previews.map(clip => clip.play())).then(() => {
+            if (atRest()) for (const clip of previews) clip.dataset.shown = "";
+          });
         })
         .catch(() => {});
     };
@@ -442,7 +447,8 @@ const windows = [
       chapters[now]?.setAttribute("aria-current", "time");
       current = now;
     });
-    video.addEventListener("play", () => {
+    // `playing`, since a press during the warm-up's play fires no `play`
+    video.addEventListener("playing", () => {
       if (root.dataset.state === "playing") root.dataset.playing = "";
     });
     video.addEventListener("pause", () => delete root.dataset.playing);
