@@ -5,7 +5,11 @@
 // weeks starting on a Monday in Europe/London. One switch moves
 // the bars between weighted PRs and PRs. See "A chart" in
 // docs/patterns/diagrams.md
+import dayjs from "dayjs";
+import advancedFormat from "dayjs/plugin/advancedFormat";
 import Diagram from "./Diagram.astro";
+
+dayjs.extend(advancedFormat);
 
 const summary =
   "Chart: the PRs I merged each week from 15th June to 22nd November 2026, each counted by its size as weighted PRs, with a marker at the beginning of September, when I moved my Claude Code setup onto the server. I averaged 16.9 weighted PRs a week in the 11 weeks before the marker and 77.9 in the 12 weeks from the week of 31st August (11.7 and 34.4 by plain PR count). The week of 7th September (my first full week on the server) was 64.5 weighted PRs, more than any week before it.";
@@ -43,59 +47,64 @@ const BEFORE = 11;
 const measures = {
   weighted: {
     label: "Weighted PRs",
+    unit: "weighted PRs",
     max: 132,
     ticks: [0, 50, 100],
     average: { before: 16.9, after: 77.9 },
-    count: (value: number) => `${value.toFixed(1)} weighted PRs`,
+    figure: (value: number) => value.toFixed(1),
   },
   prs: {
     label: "PRs",
+    unit: "PRs",
     max: 64,
     ticks: [0, 20, 40, 60],
     average: { before: 11.7, after: 34.4 },
-    count: (value: number) => `${value} ${value === 1 ? "PR" : "PRs"}`,
+    figure: (value: number) => String(value),
   },
 };
 type Measure = keyof typeof measures;
 const ORDER: Measure[] = ["weighted", "prs"];
 
-const MONTHS = "Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec".split(" ");
-const monthOf = (iso: string) => MONTHS[Number(iso.slice(5, 7)) - 1];
-const ordinal = (day: number) =>
-  day >= 11 && day <= 13
-    ? `${day}th`
-    : `${day}${["th", "st", "nd", "rd"][day % 10] ?? "th"}`;
+// A week with one PR reads "1 PR"
+const count = (key: Measure, value: number) =>
+  `${measures[key].figure(value)} ${key === "prs" && value === 1 ? "PR" : measures[key].unit}`;
 
 const weeks = rows.map(([iso, prs, weighted], i) => {
   const period = i < BEFORE ? "before" : "after";
   const value = { weighted, prs };
+  const date = dayjs(iso);
   return {
     after: period === "after",
-    week: `${ordinal(Number(iso.slice(8)))} ${monthOf(iso)}`,
-    count: {
-      weighted: measures.weighted.count(weighted),
-      prs: measures.prs.count(prs),
-    },
+    week: date.format("Do MMM"),
+    value,
+    count: { weighted: count("weighted", weighted), prs: count("prs", prs) },
     // A month's name sits under the first week that starts in it
     month:
-      i === 0 || monthOf(iso) !== monthOf(rows[i - 1][0]) ? monthOf(iso) : "",
-    // Each measure's value, and whether the bar rises past its period's
-    // average, where the average line cuts it
-    style: ORDER.map(
-      key =>
-        `--${key}:${value[key]};--cut-${key}:${value[key] > measures[key].average[period] ? 1 : 0}`
-    ).join(";"),
+      i === 0 || date.month() !== dayjs(rows[i - 1][0]).month()
+        ? date.format("MMM")
+        : "",
+    // Each measure's bar and its period's average as fractions of the
+    // scale, and whether the bar rises past the average, where the average
+    // line cuts it
+    style: ORDER.map(key => {
+      const { max, average } = measures[key];
+      return `--${key}:${value[key] / max};--${key}-avg:${average[period] / max};--${key}-cut:${value[key] > average[period] ? 1 : 0}`;
+    }).join(";"),
   };
 });
 
-const chartStyle = [
-  `--n:${rows.length}`,
-  `--before:${BEFORE}`,
-  ...ORDER.map(
-    key =>
-      `--${key}-max:${measures[key].max};--${key}-before:${measures[key].average.before};--${key}-after:${measures[key].average.after}`
+// The marker sits between the last week before the move and the first since
+const chartStyle = `--n:${rows.length};--split:${(BEFORE / rows.length) * 100}%`;
+
+const REST = "Pick a week to see its number";
+// The readout's longest text, which sizes its box. The face is mono, so the
+// longest string is the widest.
+const longest = [
+  REST,
+  ...weeks.flatMap(week =>
+    ORDER.map(key => `Week of ${week.week} · ${week.count[key]}`)
   ),
-].join(";");
+].reduce((a, b) => (b.length > a.length ? b : a));
 
 const periods = [
   { heading: "On my laptop", key: "before" as const },
@@ -106,8 +115,9 @@ const periods = [
 <Diagram summary={summary}>
   <div class="chart" data-chart data-metric="weighted" style={chartStyle}>
     <div class="top">
-      <p class="readout dg-mono" aria-hidden="true" data-readout>
-        Pick a week to see its number
+      <p class="readout dg-mono" aria-hidden="true">
+        <span class="sizer">{longest}</span>
+        <span data-readout>{REST}</span>
       </p>
       <div class="switch" role="group" aria-label="Count">
         {
@@ -134,7 +144,7 @@ const periods = [
                 <span class="dg-name dg-name-lg">
                   {measures[key].average[period.key]}
                 </span>{" "}
-                {key === "weighted" ? "weighted PRs" : "PRs"} a week
+                {measures[key].unit} a week
               </p>
             ))}
           </div>
@@ -154,7 +164,7 @@ const periods = [
           </div>
         ))
       }
-      <div class="bars" role="group" aria-label="Weeks">
+      <div class="bars" role="group" aria-label="Weeks" data-weeks>
         {
           weeks.map((week, i) => (
             <button
@@ -196,11 +206,12 @@ const periods = [
         </thead>
         <tbody>
           {
-            rows.map(([, prs, weighted], i) => (
+            weeks.map(week => (
               <tr>
-                <th scope="row">{weeks[i].week}</th>
-                <td>{weighted.toFixed(1)}</td>
-                <td>{prs}</td>
+                <th scope="row">{week.week}</th>
+                {ORDER.map(key => (
+                  <td>{measures[key].figure(week.value[key])}</td>
+                ))}
               </tr>
             ))
           }
@@ -220,20 +231,8 @@ const periods = [
     --inset: 1px;
   }
 
-  /* Which measure shows is one attribute. Every height reads its value over
-     the scale's top, so setting it redraws the chart. */
-  .chart[data-metric="weighted"] {
-    --max: var(--weighted-max);
-    --avg-before: var(--weighted-before);
-    --avg-after: var(--weighted-after);
-  }
-
-  .chart[data-metric="prs"] {
-    --max: var(--prs-max);
-    --avg-before: var(--prs-before);
-    --avg-after: var(--prs-after);
-  }
-
+  /* Which measure shows is one attribute. Each week carries both measures'
+     heights as fractions of their scale, so setting it redraws the chart. */
   .chart[data-metric="weighted"] .prs,
   .chart[data-metric="prs"] .weighted {
     display: none;
@@ -241,12 +240,14 @@ const periods = [
 
   .chart[data-metric="weighted"] .week {
     --v: var(--weighted);
-    --cut: var(--cut-weighted);
+    --avg: var(--weighted-avg);
+    --cut: var(--weighted-cut);
   }
 
   .chart[data-metric="prs"] .week {
     --v: var(--prs);
-    --cut: var(--cut-prs);
+    --avg: var(--prs-avg);
+    --cut: var(--prs-cut);
   }
 
   /* The readout and the switch. The row keeps its space until the script
@@ -264,12 +265,21 @@ const periods = [
     visibility: hidden;
   }
 
-  /* As wide as the longest week's text, so the switch wraps by the figure's
-     width and never by what the readout says */
+  /* A hidden copy of the longest text sizes the readout, wrapped or not, so
+     the switch wraps by the figure's width and what the readout says never
+     moves the plot */
   .readout {
+    display: grid;
     flex: 1 1 auto;
-    min-width: min(100%, 39ch);
     color: var(--dg-note);
+  }
+
+  .readout > span {
+    grid-area: 1 / 1;
+  }
+
+  .sizer {
+    visibility: hidden;
   }
 
   .switch {
@@ -311,7 +321,7 @@ const periods = [
   /* Each period's heading sits over its own weeks */
   .periods {
     display: grid;
-    grid-template-columns: calc(var(--before) / var(--n) * 100%) minmax(0, 1fr);
+    grid-template-columns: var(--split) minmax(0, 1fr);
     margin: 1.25rem 0 0 var(--gutter);
   }
 
@@ -366,13 +376,7 @@ const periods = [
   /* Each week's button fills its column to the plot's full height, with the
      bar drawn at its foot, so a bar 1px tall can still be tapped */
   .week {
-    --avg: var(--avg-before);
-
     position: relative;
-  }
-
-  .week.after {
-    --avg: var(--avg-after);
   }
 
   .week:focus-visible {
@@ -384,7 +388,7 @@ const periods = [
     right: var(--inset);
     bottom: 0;
     left: var(--inset);
-    height: max(1px, var(--v) / var(--max) * 100%);
+    height: max(1px, var(--v) * 100%);
     border-radius: 2px 2px 0 0;
     background: var(--dg-wire);
     transition: background-color var(--default-transition-duration)
@@ -416,7 +420,7 @@ const periods = [
   .week::after {
     content: "";
     position: absolute;
-    bottom: calc(var(--avg) / var(--max) * 100%);
+    bottom: calc(var(--avg) * 100%);
     border-top: 1px solid;
   }
 
@@ -437,7 +441,7 @@ const periods = [
     position: absolute;
     top: -8px;
     bottom: 0;
-    left: calc(var(--before) / var(--n) * 100%);
+    left: var(--split);
     border-left: 1px dashed var(--dg-wire);
     pointer-events: none;
   }
@@ -447,7 +451,7 @@ const periods = [
     position: absolute;
     top: -8px;
     left: 0;
-    width: calc(var(--before) / var(--n) * 100% - 0.5rem);
+    width: calc(var(--split) - 0.5rem);
     font-size: 0.8125rem;
     line-height: 1.2;
     text-align: right;
@@ -470,14 +474,6 @@ const periods = [
   .months li {
     padding-left: var(--inset);
     white-space: nowrap;
-  }
-
-  /* Narrower than the readout's longest text, which wraps there, the
-     readout keeps two lines so a week's text doesn't move the plot */
-  @container diagram (width < 21rem) {
-    .readout {
-      min-height: 2lh;
-    }
   }
 
   @container diagram (width >= 46rem) {
@@ -541,9 +537,14 @@ const periods = [
     const switches = [
       ...chart.querySelectorAll<HTMLButtonElement>("[data-metric-to]"),
     ];
-    const weeks = [...chart.querySelectorAll<HTMLButtonElement>("[data-week]")];
+    const bars = chart.querySelector<HTMLElement>("[data-weeks]")!;
+    const weeks = [...bars.querySelectorAll<HTMLButtonElement>("[data-week]")];
+    const last = weeks.length - 1;
     let pointed: HTMLButtonElement | undefined;
     let chosen: HTMLButtonElement | undefined;
+    const weekAt = (event: Event) =>
+      (event.target as Element).closest<HTMLButtonElement>("[data-week]") ??
+      undefined;
 
     // The week under the pointer, or else the chosen week
     const show = () => {
@@ -553,12 +554,14 @@ const periods = [
         : rest;
     };
 
-    // The tab stop moves to the chosen week
+    // The tab stop moves from the first week to the chosen one
     const choose = (week: HTMLButtonElement) => {
       if (week === chosen) return;
-      chosen?.removeAttribute("data-chosen");
+      const stop = chosen ?? weeks[0];
+      stop.tabIndex = -1;
+      stop.removeAttribute("data-chosen");
+      week.tabIndex = 0;
       week.setAttribute("data-chosen", "");
-      weeks.forEach(other => (other.tabIndex = other === week ? 0 : -1));
       chosen = week;
       show();
     };
@@ -573,30 +576,36 @@ const periods = [
       })
     );
 
-    const last = weeks.length - 1;
-    weeks.forEach((week, i) => {
-      week.addEventListener("pointerenter", () => {
-        pointed = week;
-        show();
-      });
-      week.addEventListener("pointerleave", () => {
-        pointed = undefined;
-        show();
-      });
-      // Safari doesn't focus a button on a click, so the click chooses too
-      week.addEventListener("click", () => choose(week));
-      week.addEventListener("focus", () => choose(week));
-      week.addEventListener("keydown", event => {
-        const to = (
-          { ArrowLeft: i - 1, ArrowRight: i + 1, Home: 0, End: last } as Record<
-            string,
-            number
-          >
-        )[event.key];
-        if (to === undefined) return;
-        event.preventDefault();
-        weeks[Math.min(Math.max(to, 0), last)].focus();
-      });
+    // The weeks fill the bars' box with no gap, so the box's own
+    // pointerleave is the pointer leaving the last week
+    bars.addEventListener("pointerover", event => {
+      pointed = weekAt(event);
+      show();
+    });
+    bars.addEventListener("pointerleave", () => {
+      pointed = undefined;
+      show();
+    });
+    // Safari doesn't focus a button on a click, so the click chooses too
+    bars.addEventListener("click", event => {
+      const week = weekAt(event);
+      if (week) choose(week);
+    });
+    bars.addEventListener("focusin", event => {
+      const week = weekAt(event);
+      if (week) choose(week);
+    });
+    bars.addEventListener("keydown", event => {
+      const i = weeks.indexOf(weekAt(event)!);
+      const to = (
+        { ArrowLeft: i - 1, ArrowRight: i + 1, Home: 0, End: last } as Record<
+          string,
+          number
+        >
+      )[event.key];
+      if (to === undefined) return;
+      event.preventDefault();
+      weeks[Math.min(Math.max(to, 0), last)].focus();
     });
   }
 
