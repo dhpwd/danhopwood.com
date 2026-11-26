@@ -41,7 +41,7 @@ Rejected: the accent, which reads as a warning, and a green, which adds a second
 
 ## An offer page's questions open on a tap
 
-A ruled list of questions, each at the body size in the heading weight on the 1.3 line height `title-item` gives headings, with its answer opening on a tap through the browser's own `<details>`. All are closed on arrival, and several can be open at once. A mono `+` marks a closed question and a `−` an open one, swapped with no animation. The answers stay in the page's HTML for screen readers, agents and the Markdown twin. `Questions.astro` builds it.
+A ruled list of questions, each at the body size in the heading weight on the 1.3 line height `title-item` gives headings, with its answer opening on a tap through the browser's own `<details>`. The questions wrap with `text-wrap: pretty` rather than the site's `balance`, since in a left-aligned list of longer questions balance breaks a line early for no visible reason, where pretty fills each line and still avoids a lone last word. All are closed on arrival, and several can be open at once. A mono `+` marks a closed question and a `−` an open one, swapped with no animation. The answers stay in the page's HTML for screen readers, agents and the Markdown twin. `Questions.astro` builds it.
 
 Rejected:
 
