@@ -586,10 +586,16 @@ const periods = [
 
     // The weeks fill the bars' box with no gap, so the box's own
     // pointerleave is the pointer leaving the last week
-    bars.addEventListener("pointerover", event => {
-      pointed = weekAt(event);
+    // pointermove too, since after the arrow keys the pointer can move on
+    // inside the week it rests on, where pointerover doesn't fire
+    const point = (event: PointerEvent) => {
+      const week = weekAt(event);
+      if (week === pointed) return;
+      pointed = week;
       show();
-    });
+    };
+    bars.addEventListener("pointerover", point);
+    bars.addEventListener("pointermove", point);
     bars.addEventListener("pointerleave", () => {
       pointed = undefined;
       show();
