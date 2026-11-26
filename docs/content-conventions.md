@@ -4,7 +4,7 @@ Posts are `.md` or `.mdx` files in `src/data/blog/`, loaded by the glob `**/[^_]
 
 The underscore only works on filenames. `[^_]` tests that segment alone, so a `_drafts/` directory is still walked and every post inside it publishes – with the underscore stripped from the URL, so `_drafts/my-post.md` lands at `/posts/my-post`. Prefix the filename, or set `draft: true`.
 
-The homepage opens on one first screen – the headline, the portrait, the newsletter signup and the advisory row – with the post lists directly below it. There is no splash page and no "blog" label.
+The homepage opens on one first screen – the headline, the portrait, the newsletter signup and the advisory row – followed by the cloud box row and the post lists. There is no splash page and no "blog" label.
 
 ## Frontmatter
 

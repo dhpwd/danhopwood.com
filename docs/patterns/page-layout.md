@@ -41,6 +41,6 @@ Prose and long lines take `max-w-measure` (38rem), the reading measure – see "
 
 **Problem:** a page that is neither a list nor a post – an offer or a form – composes its own sections, cards and lists. Written inline, its classes become page constants that the next such page copies and changes.
 
-**Solution:** build it from the parts `/cloud-box-setup` is made of, in `src/components/`: `PageIntro`, `Section`, `Panel`, `Detail`, `MarkedList`, `StatusChip`, `Field` and `Button`. Each uses the shared styles by name, so the page needs no class constants of its own. A part that a new page needs and the set lacks joins `src/components/` rather than the page.
+**Solution:** build it from the parts `/cloud-box-setup` is made of, in `src/components/`: `PageIntro`, `Section`, `Panel`, `Detail`, `MarkedList`, `Questions` (a list of questions, each opening its answer on a tap), `StatusChip`, `Field` and `Button`. Each uses the shared styles by name, so the page needs no class constants of its own. A part that a new page needs and the set lacks joins `src/components/` rather than the page.
 
 **When to use:** building a new page that isn't a list or a post.

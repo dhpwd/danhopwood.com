@@ -39,6 +39,18 @@ Rejected: an accent focus, which reads as a validation error round a field.
 
 Rejected: the accent, which reads as a warning, and a green, which adds a second semantic colour.
 
+## An offer page's questions open on a tap
+
+A ruled list of questions, each at the body size in the heading weight on the 1.3 line height `title-item` gives headings, with its answer opening on a tap through the browser's own `<details>`. The questions wrap with `text-wrap: pretty` rather than the site's `balance`, since in a left-aligned list of longer questions balance breaks a line early for no visible reason, where pretty fills each line and still avoids a lone last word. All are closed on arrival, and several can be open at once. A mono `+` marks a closed question and a `−` an open one, swapped with no animation. The answers stay in the page's HTML for screen readers, agents and the Markdown twin. `Questions.astro` builds it.
+
+Rejected:
+
+- Every answer open under its question, which takes too much of a phone's height with nine answers
+- A scripted accordion, where the native element needs no script
+- A chevron that turns, which adds a motion to the closed set of small details
+- The `Detail` part, whose label is uppercase mono and unreadable at a question's length
+- A `FAQPage` node in the JSON-LD graph, which nobody has asked for
+
 ## Titles are Geist at 600
 
 Page, post and card titles and in-post headings are Geist at 600 on the shared scale. Geist Mono stays on the site name, labels, the eyebrow, dates and metadata.
@@ -75,7 +87,7 @@ Rejected: warming the code ground, which needs `!important` over shiki's inline 
 
 ## The homepage's first screen
 
-A mono accent line, the headline, the rest of its sentence and a short paragraph, with the portrait beside them as a rounded tile. Below a rule, Build Notes and advisory sit as two ledger rows. At 390 the portrait is a small tile on a row with the mono line, and the headline, the signup and the advisory line fit one screen. The post lists follow.
+A mono accent line, the headline, the rest of its sentence and a short paragraph, with the portrait beside them as a rounded tile. Below a rule, Build Notes, advisory and the cloud box setup sit as three ledger rows. At 390 the portrait is a small tile on a row with the mono line, and the headline, the signup and the advisory line fit one screen. The post lists follow.
 
 Rejected: a type-led composition with the portrait as a byline and the boxed signup, which at 1440 ends the first screen on the "Featured" label with no post in view.
 
