@@ -65,9 +65,17 @@ const measures = {
 type Measure = keyof typeof measures;
 const ORDER: Measure[] = ["weighted", "prs"];
 
+// The plot's heights in px, below and from the figure's 46rem
+const PLOT = { narrow: 216, wide: 256 };
+
 // A week with one PR reads "1 PR"
 const count = (key: Measure, value: number) =>
   `${measures[key].figure(value)} ${key === "prs" && value === 1 ? "PR" : measures[key].unit}`;
+
+// The average line cuts a bar only where the bar clears it by 2px on the
+// shorter plot. Closer, the cut would land on the bar's top row.
+const clears = (value: number, average: number, max: number) =>
+  ((value - average) / max) * PLOT.narrow >= 2;
 
 const weeks = rows.map(([iso, prs, weighted], i) => {
   const period = i < BEFORE ? "before" : "after";
@@ -84,17 +92,16 @@ const weeks = rows.map(([iso, prs, weighted], i) => {
         ? date.format("MMM")
         : "",
     // Each measure's bar and its period's average as fractions of the
-    // scale, and whether the bar rises past the average, where the average
-    // line cuts it
+    // scale, and whether the average line cuts the bar
     style: ORDER.map(key => {
       const { max, average } = measures[key];
-      return `--${key}:${value[key] / max};--${key}-avg:${average[period] / max};--${key}-cut:${value[key] > average[period] ? 1 : 0}`;
+      return `--${key}:${value[key] / max};--${key}-avg:${average[period] / max};--${key}-cut:${clears(value[key], average[period], max) ? 1 : 0}`;
     }).join(";"),
   };
 });
 
 // The marker sits between the last week before the move and the first since
-const chartStyle = `--n:${rows.length};--split:${(BEFORE / rows.length) * 100}%`;
+const chartStyle = `--n:${rows.length};--split:${(BEFORE / rows.length) * 100}%;--plot-narrow:${PLOT.narrow}px;--plot-wide:${PLOT.wide}px`;
 
 const REST = "Pick a week to see its number";
 // The readout's longest text, which sizes its box. The face is mono, so the
@@ -164,7 +171,7 @@ const periods = [
           </div>
         ))
       }
-      <div class="bars" role="group" aria-label="Weeks" data-weeks>
+      <div class="bars" role="group" aria-label="Weeks" data-weeks inert>
         {
           weeks.map((week, i) => (
             <button
@@ -192,8 +199,6 @@ const periods = [
       {weeks.map(week => <li>{week.month}</li>)}
     </ol>
 
-    <!-- A table keeps the width of its contents whatever width it is given,
-    so the box that hides it is a div -->
     <div class="sr-only">
       <table>
         <caption>Merged PRs and weighted PRs by week</caption>
@@ -222,12 +227,9 @@ const periods = [
 </Diagram>
 
 <style>
-  /* The plot's heights are px, so a reader's larger text grows the words and
-     not the drawing. The gutter for the grid values is rem, so a value still
-     fits it at a larger text size, and the bars share out what is left. */
   .chart {
     --gutter: 1.75rem;
-    --plot: 216px;
+    --plot: var(--plot-narrow);
     --inset: 1px;
   }
 
@@ -265,9 +267,6 @@ const periods = [
     visibility: hidden;
   }
 
-  /* A hidden copy of the longest text sizes the readout, wrapped or not, so
-     the switch wraps by the figure's width and what the readout says never
-     moves the plot */
   .readout {
     display: grid;
     flex: 1 1 auto;
@@ -352,7 +351,9 @@ const periods = [
     border-top: 1px solid var(--dg-border);
   }
 
+  /* The 0 line sits under the bars, so a 1px bar shows above it */
   .rule:first-child {
+    bottom: -1px;
     border-top-color: var(--dg-wire);
   }
 
@@ -399,18 +400,28 @@ const periods = [
     background: var(--foreground);
   }
 
-  @media (hover: hover) {
-    .week:hover .bar {
-      background: var(--accent);
-    }
-  }
-
+  /* The chosen week rests on the accent, so it steps as the active nav item
+     does */
   .week[data-chosen] .bar {
     background: var(--accent);
   }
 
+  @media (hover: hover) {
+    .week:hover .bar {
+      background: var(--accent);
+    }
+
+    .week[data-chosen]:hover .bar {
+      background: var(--accent-strong);
+    }
+  }
+
   .week:active .bar {
     background: var(--accent-strong);
+  }
+
+  .week[data-chosen]:active .bar {
+    background: var(--accent-stronger);
   }
 
   /* The period's average: a line behind the bars, and a cut in the ground
@@ -459,8 +470,6 @@ const periods = [
     pointer-events: none;
   }
 
-  /* Wrapped on a phone, it can reach down to a grid line, which breaks
-     round its words */
   .moved span {
     background: var(--background);
   }
@@ -478,14 +487,12 @@ const periods = [
 
   @container diagram (width >= 46rem) {
     .chart {
-      --plot: 256px;
+      --plot: var(--plot-wide);
       --inset: 2px;
     }
   }
 
-  /* Forced colours repaint every background as the page's ground, so the
-     bars and lines paint themselves. The selectors match the specificity of
-     the rules they override. */
+  /* Each selector matches the specificity of the rule it overrides */
   @media (forced-colors: active) {
     .week .bar,
     .week::before,
@@ -514,6 +521,7 @@ const periods = [
     }
 
     .week[data-chosen] .bar,
+    .week[data-chosen]:is(:hover, :active) .bar,
     .week:active .bar {
       background: Highlight;
     }
@@ -596,6 +604,8 @@ const periods = [
       if (week) choose(week);
     });
     bars.addEventListener("keydown", event => {
+      if (event.altKey || event.ctrlKey || event.metaKey || event.shiftKey)
+        return;
       const i = weeks.indexOf(weekAt(event)!);
       const to = (
         { ArrowLeft: i - 1, ArrowRight: i + 1, Home: 0, End: last } as Record<
@@ -605,8 +615,16 @@ const periods = [
       )[event.key];
       if (to === undefined) return;
       event.preventDefault();
+      // The keys are the latest move, so the readout follows them rather
+      // than a pointer left resting on another week
+      pointed = undefined;
       weeks[Math.min(Math.max(to, 0), last)].focus();
+      show();
     });
+
+    // The bars are inert in the markup, so without the script they are a
+    // drawing, not controls that do nothing
+    bars.inert = false;
   }
 
   // See "Client scripts and View Transitions" in docs/patterns/client-scripts.md
