@@ -111,7 +111,7 @@ MDX was chosen over raw HTML in the `.md`, which puts the drawing's markup in th
 
 **Problem:** a page built from the page parts, such as `/cloud-box-setup`, has no prose styles, so a diagram there gets none of what a post gives it: the figure's margin, the caption's style or a reading time.
 
-**Solution:** the page imports the component directly and places it inside a `Section` at the full column, as `ServerSessions` sits in the setup page's "What you end up with", between the Today and After panels and the list. The figure takes its spacing from the section's gap, where a post gives it the prose figure margin (`my-9` on `.app-prose figure`). It takes no caption: the section's words introduce the drawing, and a caption there would render unstyled, since `figcaption` is styled only by the prose rules in `typography.css`.
+**Solution:** the page imports the component directly and places it inside a `Section` at the full column, as `ServerSessions` sits in the setup page's "What you end up with", between the Today and After panels and the list. The page wraps it in a `div` with `my-4`, so the section's 1.25rem gap plus 1rem gives the figure the 2.25rem above and below that a post gives one (`my-9` on `.app-prose figure`), further apart than the section's other blocks. It takes no caption: the section's words introduce the drawing, and a caption there would render unstyled, since `figcaption` is styled only by the prose rules in `typography.css`.
 
 The component's name must differ from the page's own, which takes its name from the page's file – see "An import named like its file" in `docs/patterns/astro-build.md`.
 
