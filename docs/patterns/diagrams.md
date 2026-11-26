@@ -1,12 +1,12 @@
 # Diagrams
 
-A diagram in a post is drawn in the page as an Astro component on the theme tokens, not saved as an image. The calls behind it, and the options they rejected, are in `docs/design-decisions.md`: "A diagram is ink, with the accent on its level labels" and "A diagram is drawn in the page".
+A diagram in a post or on a page is drawn in the page as an Astro component on the theme tokens, not saved as an image. The calls behind it, and the options they rejected, are in `docs/design-decisions.md`: "A diagram is ink, with the accent on its level labels" and "A diagram is drawn in the page".
 
 ## A diagram is a component built from shared parts
 
 **Problem:** a diagram saved as an image is one size and one theme. On a phone its text is a few pixels tall, the dark theme can only dim it, and its words aren't text.
 
-**Solution:** each diagram is a component in `src/components/diagrams/`, built on `Diagram.astro`, and the post that shows it is an `.mdx` file that imports it (see "Posts that embed a component" below). `Diagram.astro` renders `<figure class="diagram not-prose">`: a visually hidden paragraph holding its `summary` prop, then the drawing, then a `<figcaption>` when its `caption` slot is filled. A diagram component wraps its drawing in `Diagram` and passes its own default slot on as the caption, so a post writes the caption as the tag's content:
+**Solution:** each diagram is a component in `src/components/diagrams/`, built on `Diagram.astro`, and it sits in a post or on a page. A post imports it from an `.mdx` file (see "Posts that embed a component" below), and an `.astro` page imports it directly (see "A diagram on a page that isn't a post"). `Diagram.astro` renders `<figure class="diagram not-prose">`: a visually hidden paragraph holding its `summary` prop, then the drawing, then a `<figcaption>` when its `caption` slot is filled. A diagram component wraps its drawing in `Diagram` and passes its own default slot on as the caption, so a post writes the caption as the tag's content:
 
 ```mdx
 <AgentTeam>
@@ -23,7 +23,7 @@ The figure takes the full column and is a size container (`container: diagram / 
 - `dg-chip` is a chip, `dg-frame` a 1px dashed frame at a 0.75rem radius and `dg-tag` the words on a connector, 13px in a 1px border at a 0.75rem radius
 - `dg-wires` is an SVG of connectors, unfilled with a 1px stroke, whose `.end` paths fill as half discs. `dg-end` is a 7 by 4px half disc on its own, for the end of a line drawn in CSS
 
-Type sizes, the whole list: 12px (the two mono labels, and the hand-off label at the full column), 13px (connector labels, chips, device chips, steps, processes and literal strings), 14px (text), 15px at 600 (a closing box's title), and 17px and 20px (names and the frame's heading). Every colour is a theme token or a custom property on `.diagram` that mixes `--foreground` into `--background`. Each mix is opaque, so two lines that cross paint one colour:
+Type sizes, the whole list: 12px (the two mono labels, and the hand-off label at the full column), 13px (connector labels, chips, device chips, steps, processes, literal strings, what a device card opens and a session's state), 14px (text), 15px at 600 (a closing box's title), and 17px and 20px (names and the frame's heading). Every colour is a theme token or a custom property on `.diagram` that mixes `--foreground` into `--background`. Each mix is opaque, so two lines that cross paint one colour:
 
 | Property                                 | Mix                                               | Used for                                              |
 | ---------------------------------------- | ------------------------------------------------- | ----------------------------------------------------- |
@@ -54,7 +54,7 @@ Anti-patterns:
 - A colour literal, or a rule per theme. The mixes follow the theme on their own
 - A fixed-size drawing scaled down to the column, which shrinks its text as an image does
 
-**When to use:** drawing or changing any diagram in a post.
+**When to use:** drawing or changing any diagram in a post or on a page.
 
 ## Connectors on a fixed grid
 
@@ -62,7 +62,7 @@ Anti-patterns:
 
 **Solution:** the layout follows the figure's own width by container query, never the viewport. The default is stacked, for a phone: each level is its label over its cards, a rail down the left joins one level to the next, and the words about that step sit to the rail's right. From 46rem the figure is the column's full, fixed width (736px), and the second layout sits on a grid in px. A diagram may add a step between the two where the stacked layout has room, as the agent team diagram does at 30rem.
 
-The stacked layout holds a phone's column at a reader's larger text size too. A fixed-size part of it is sized in px, not rem, so larger text grows its words but not its geometry: the cloud box diagram's device pair and the SVG under it are 136px cards and a 282px drawing at any text size. A `dg-label` wraps when stacked rather than run past its card, and keeps to one line at the full column.
+The stacked layout holds a phone's column at a reader's larger text size too. A fixed-size part of it is sized in px, not rem, so larger text grows its words but not its geometry: the cloud box diagram's device pair and the SVG under it are 136px cards and a 282px drawing at any text size, and the setup page's three device cards and the rail beside them are 44px tall cards and a 32 by 152px SVG at any text size. A `dg-label` wraps when stacked rather than run past its card, and keeps to one line at the full column.
 
 Wherever the layout is a fixed size, connectors are SVG drawn on the grid's own numbers: one `svg.dg-wires` per row, its `viewBox` the row's size in px. Lines sit on half-pixel coordinates, so a line down the centre of a card at x 355 is drawn at x 355.5 and its 1px stroke fills one column of pixels. Every line is 1px, and every line that meets a card ends there in a half disc of radius 3.5, flat against the card's edge, drawn in the row's `.end` path. An arrow's head and shaft are one path, so the head sits on its shaft. A line whose length follows the text, such as the spine past a note that wraps, is a 1px CSS line at the same integer x as the SVG's line, with a `dg-end` where it meets a card. `src/components/diagrams/paths.ts` builds the path data: `under`, `over`, `left` and `right` for a half disc on each side of an edge, and `bracket` for a bar with a drop at each x. `AgentTeam.astro` is the worked example: its constants name every x and each row's height, and its paths are built from them with those helpers.
 
@@ -107,16 +107,28 @@ MDX was chosen over raw HTML in the `.md`, which puts the drawing's markup in th
 
 **When to use:** embedding a component in a post, or converting a post to `.mdx`.
 
+## A diagram on a page that isn't a post
+
+**Problem:** a page built from the page parts, such as `/cloud-box-setup`, has no prose styles, so a diagram there gets none of what a post gives it: the figure's margin, the caption's style or a reading time. And a page's own component takes its name from its file, so a diagram named after the page clashes with it.
+
+**Solution:** the page imports the component directly and places it inside a `Section` at the full column, as `ServerSessions` sits in the setup page's "What you end up with", between the Today and After panels and the list. The figure takes its spacing from the section's gap, where a post gives it the prose figure margin (`my-9` on `.app-prose figure`). It takes no caption, since `figcaption` is styled only by the prose rules in `typography.css`: the section's words introduce the drawing. The component still passes its default slot on as the caption, as every diagram does.
+
+The component's name must differ from the page's own component name. Astro names a page's component after its file, so a `CloudBoxSetup` import in `cloud-box-setup.astro` fails `astro check` with ts(2440), "Import declaration conflicts with local declaration".
+
+The page's Markdown twin carries the summary and then the diagram's words in reading order, as a post's does, since the twin reads `#main-content` and drops the same parts. Reading time doesn't apply: a page has none.
+
+**When to use:** placing a diagram on an `.astro` page that isn't a post.
+
 ## Checking a diagram
 
 Run each step on `pnpm build && pnpm preview`, in Playwright, at both themes. The methods are in `docs/patterns/browser-testing.md`.
 
 1. Where the diagram replaces an image, compare its words with the image's source, word for word
 2. Measure every text at 4.5:1 or more and the connector colour at 3:1 or more, from computed colours composited onto their ground
-3. Load the post at every width from 320 to 1440, and at 320 and 390 with the root font at 20px. Nothing scrolls sideways, no text runs wider than its part, and the figure switches to its fixed grid where it reaches 46rem
+3. Load the post or page at every width from 320 to 1440, and at 320 and 390 with the root font at 20px. Nothing scrolls sideways, no text runs wider than its part, and the figure switches to its fixed grid where it reaches 46rem
 4. Crop every band of connectors at 1x, 2x and 3x and enlarge each crop without smoothing. Each line is one sharp pixel wide at 1x, no line is offset from the line it continues, no junction is darker than its lines, every line that meets a card ends in a half disc and each arrowhead sits on its shaft
-5. Reach the post by a client-side navigation from the homepage, and check the diagram is styled on arrival
-6. Read the post's Markdown twin: the summary, then the diagram's words in reading order, and no image line
+5. Reach the post or page by a client-side navigation from the homepage, and check the diagram is styled on arrival. `/cloud-box-setup` is reached from the homepage's "See the cloud box setup" link
+6. Read the post's or page's Markdown twin: the summary, then the diagram's words in reading order, and no image line
 7. Emulate forced colours (`page.emulateMedia({ forcedColors: "active" })`, which repaints computed colours in Chromium) and read every connector's computed colour, the CSS-drawn ones from their `::before` or element background: each is `CanvasText`
 
 **When to use:** finishing any change to a diagram.
