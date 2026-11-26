@@ -34,7 +34,7 @@ The file is the `# ` title, the `SUMMARY` blockquote, `## When to use this site`
 
 `vercel.json` holds `$schema`, `trailingSlash: false` and `routes`, in this order:
 
-1. The renamed-post redirects: each old post path, with or without its trailing slash, answers `308` to the new one (`^/posts/writing-loops-is-a-ladder-not-a-command/?$` to `/posts/writing-loops`, for example), and a post renamed since the twins were advertised also sends its old `.md` URL to the new twin
+1. The renamed-post redirects, each a `308` from an old post URL to the new one – see "Renamed slugs" in `docs/patterns/urls.md`
 2. `^/$` adds `link: </index.md>; rel="alternate"; type="text/markdown"` and continues
 3. The page regex, `^/((?!_astro/|pagefind/|api/)[^.]+?)/?$`, adds `link: </$1.md>; …` and continues
 4. `^/.+\.md$` adds `x-robots-tag: noindex` and continues
