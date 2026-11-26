@@ -45,13 +45,13 @@ pnpm generate:favicons  # regenerate public/ favicons from the brand tokens
 - any visual, layout, colour or motion change, or reviewing one → read `docs/design-decisions.md` before proposing
 - adding a dashed link, a ruled row or an icon inside a control, or changing one of the small details → read `docs/patterns/small-details.md`
 - adding or replacing images, the avatar or favicons → read `docs/patterns/images.md`
-- drawing or changing a diagram in a post, or converting a post to `.mdx` → read `docs/patterns/diagrams.md`
+- drawing or changing a diagram in a post or on a page, or converting a post to `.mdx` → read `docs/patterns/diagrams.md`
 - editing `src/utils/og-templates/` or `src/utils/loadGoogleFont.ts`, or changing the satori version → read `docs/patterns/og-images.md`
 - sitemap, `llms.txt`, JSON-LD, OG metadata, `vercel.json` routes, response headers or the Markdown twins → read `docs/patterns/machine-readability.md`
 - a post's title block, body, tables, figures or what follows the article → read `docs/patterns/post-page.md`
 - adding routes, changing route config or writing internal links → read `docs/patterns/urls.md`
 - a client-side script: listeners across View Transitions, a widget whose state comes from the URL, scrolling the page, `history.replaceState`, browser storage or disabling a control while work is pending → read `docs/patterns/client-scripts.md`
-- server endpoints (`api/`), content collections (including any route that reads posts), stale build output, build-time code that names CSS classes, nested CSS, the build's browser targets, a component's `Props` type, upgrading Astro or editing `patches/` → read `docs/patterns/astro-build.md`
+- server endpoints (`api/`), content collections (including any route that reads posts), stale build output, build-time code that names CSS classes, nested CSS, the build's browser targets, a component's `Props` type, ts(2440) on an import named like its file, upgrading Astro or editing `patches/` → read `docs/patterns/astro-build.md`
 - browser-testing a client script or a change to what a page renders, testing an `api/` function, or checking build-time code with a temporary log → read `docs/patterns/browser-testing.md`
 - adding, removing or upgrading a dependency → read `docs/patterns/dependencies.md`
 

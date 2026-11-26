@@ -12,6 +12,7 @@ import Questions from "@/components/Questions.astro";
 import StatusChip from "@/components/StatusChip.astro";
 import Field from "@/components/Field.astro";
 import Button from "@/components/Button.astro";
+import ServerSessions from "@/components/diagrams/ServerSessions.astro";
 import { SITE } from "@/config";
 import { SOCIALS } from "@/constants";
 
@@ -146,6 +147,9 @@ const questions = [
               whether your laptop is open or not.
             </p>
           </Panel>
+        </div>
+        <div class="my-4">
+          <ServerSessions />
         </div>
         <MarkedList>
           <li>

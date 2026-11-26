@@ -82,6 +82,14 @@ To check the patch, build a temporary post and a temporary Markdown page in `src
 
 **When to use:** writing a component with an `as` prop, or when `astro check` reports that hint for `Props`.
 
+## An import named like its file
+
+**Problem:** `astro check` gives each `.astro` file's own component the file's name in PascalCase: `cloud-box-setup.astro` declares `CloudBoxSetup`. An import of the same name in that file, such as a `CloudBoxSetup` component imported into `cloud-box-setup.astro`, fails with ts(2440), "Import declaration conflicts with local declaration".
+
+**Solution:** name a component for what it is, not for the page or component that imports it. The setup page's diagram is `ServerSessions`, not `CloudBoxSetup`.
+
+**When to use:** naming a component, or when `astro check` reports ts(2440) on an import.
+
 ## Class names in build-time code reach the CSS
 
 **Problem:** Tailwind v4 finds its classes by scanning every source file it isn't told to skip, not only templates. A build-time module that names classes as strings, such as a selector in an integration, is read the same way, and any name no page uses yet adds a rule to the site's CSS. The stylesheet's hashed file name then changes, and with it every page's HTML, though no page uses the rule. Nothing in the build reports it.

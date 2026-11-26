@@ -184,7 +184,7 @@ Rejected: no filter, which leaves a white screenshot as the brightest thing on t
 
 ## A diagram is ink, with the accent on its level labels
 
-A diagram drawn for a post is ink on the page's ground. Titles and filled boxes are the text colour in both themes, flat, with no gradient or shadow. Lines and panels are greys mixed from the text colour. Connectors clear the 3:1 that WCAG asks of graphics, in both themes. The accent appears only on the diagram's level labels, the small mono label that heads each level or section, as the mono line above a page's title heads the page. A level's number and the diagram's other mono text, such as a card's role line, take a grey.
+A diagram drawn for a post or a page is ink on the page's ground. Titles and filled boxes are the text colour in both themes, flat, with no gradient or shadow. Lines and panels are greys mixed from the text colour. Connectors clear the 3:1 that WCAG asks of graphics, in both themes. The accent appears only on the diagram's level labels, the small mono label that heads each level or section, as the mono line above a page's title heads the page. A level's number and the diagram's other mono text, such as a card's role line, take a grey.
 
 Rejected:
 
@@ -196,9 +196,9 @@ Rejected:
 
 ## A diagram is drawn in the page
 
-A diagram in a post is drawn as a component on the theme tokens, at the page's text size, with real colours in both themes and no full-size view. It is the image's drawing at a readable size: centred lead cards with their labels to the left, a half disc where a line meets a card, and labels beside their lines. On a phone it stacks, with a rail down the left from each level to the next. The cloud box diagram runs across at the full column. How it is built is in `docs/patterns/diagrams.md`.
+A diagram in a post or on a page is drawn as a component on the theme tokens, at the page's text size, with real colours in both themes and no full-size view. A post's diagram is its image's drawing at a readable size: centred lead cards with their labels to the left, a half disc where a line meets a card, and labels beside their lines. On a phone it stacks, with a rail down the left from each level to the next. The cloud box diagram and the setup page's diagram run across at the full column. How it is built is in `docs/patterns/diagrams.md`.
 
-Known cost: height. With its caption the agent team diagram is 1352px tall at 1440 and 2386px at 390, where the image was 862px and 457px.
+Known cost: height. With its caption the agent team diagram is 1352px tall at 1440 and 2386px at 390, where the image was 862px and 457px. The setup page's diagram, which has no caption, is 315px tall at 1440 and 566px at 390.
 
 Rejected:
 
