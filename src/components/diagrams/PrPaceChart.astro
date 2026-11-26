@@ -1,0 +1,638 @@
+---
+// The setup page's chart of the PRs I merged each week, before and after I
+// moved onto the server. Its figures are fixed, from one run of pr-pace
+// 1.3.0 on its default rules, with weeks starting on a Monday in
+// Europe/London. One switch moves the bars between weighted PRs and PRs.
+// See "A chart" in docs/patterns/diagrams.md
+import dayjs from "dayjs";
+import advancedFormat from "dayjs/plugin/advancedFormat";
+import Diagram from "./Diagram.astro";
+
+dayjs.extend(advancedFormat);
+
+const summary =
+  "Chart: the PRs I merged each week from 15th June to 22nd November 2026, each counted by its size as weighted PRs, with a marker at the beginning of September, when I moved my Claude Code setup onto the server. I averaged 16.9 weighted PRs a week in the 11 weeks before the marker and 77.9 in the 12 weeks from the week of 31st August (11.7 and 34.4 by plain PR count). The week of 7th September (my first full week on the server) was 64.5 weighted PRs, more than any week before it.";
+
+// Week of, merged PRs, weighted PRs
+const rows: [string, number, number][] = [
+  ["2026-06-15", 25, 22.9],
+  ["2026-06-22", 8, 8.1],
+  ["2026-06-29", 11, 4.4],
+  ["2026-07-06", 22, 32.2],
+  ["2026-07-13", 11, 7.5],
+  ["2026-07-20", 1, 0.2],
+  ["2026-07-27", 12, 16.7],
+  ["2026-08-03", 11, 9.8],
+  ["2026-08-10", 11, 25.6],
+  ["2026-08-17", 7, 21.5],
+  ["2026-08-24", 10, 37.3],
+  ["2026-08-31", 2, 4.8],
+  ["2026-09-07", 30, 64.5],
+  ["2026-09-14", 21, 38.2],
+  ["2026-09-21", 22, 50.7],
+  ["2026-09-28", 29, 110.6],
+  ["2026-10-05", 18, 60.2],
+  ["2026-10-12", 37, 109.2],
+  ["2026-10-19", 48, 124.4],
+  ["2026-10-26", 61, 109.1],
+  ["2026-11-02", 53, 91.4],
+  ["2026-11-09", 34, 70.9],
+  ["2026-11-16", 58, 100.4],
+];
+
+// The first 11 weeks are before the move, the last 12 since
+const BEFORE = 11;
+
+const measures = {
+  weighted: {
+    label: "Weighted PRs",
+    unit: "weighted PRs",
+    max: 132,
+    ticks: [0, 50, 100],
+    average: { before: 16.9, after: 77.9 },
+    figure: (value: number) => value.toFixed(1),
+  },
+  prs: {
+    label: "PRs",
+    unit: "PRs",
+    max: 64,
+    ticks: [0, 20, 40, 60],
+    average: { before: 11.7, after: 34.4 },
+    figure: (value: number) => String(value),
+  },
+};
+type Measure = keyof typeof measures;
+const ORDER: Measure[] = ["weighted", "prs"];
+
+// The plot's heights in px, below and from the figure's 46rem
+const PLOT = { narrow: 216, wide: 256 };
+
+// A week with one PR reads "1 PR"
+const count = (key: Measure, value: number) =>
+  `${measures[key].figure(value)} ${key === "prs" && value === 1 ? "PR" : measures[key].unit}`;
+
+// The average line cuts a bar only where the bar clears it by 2px on the
+// shorter plot. Closer, the cut would land on the bar's top row.
+const clears = (value: number, average: number, max: number) =>
+  ((value - average) / max) * PLOT.narrow >= 2;
+
+const weeks = rows.map(([iso, prs, weighted], i) => {
+  const period = i < BEFORE ? "before" : "after";
+  const value = { weighted, prs };
+  const date = dayjs(iso);
+  return {
+    after: period === "after",
+    week: date.format("Do MMM"),
+    value,
+    count: { weighted: count("weighted", weighted), prs: count("prs", prs) },
+    // A month's name sits under the first week that starts in it
+    month:
+      i === 0 || date.month() !== dayjs(rows[i - 1][0]).month()
+        ? date.format("MMM")
+        : "",
+    // Each measure's bar and its period's average as fractions of the
+    // scale, and whether the average line cuts the bar
+    style: ORDER.map(key => {
+      const { max, average } = measures[key];
+      return `--${key}:${value[key] / max};--${key}-avg:${average[period] / max};--${key}-cut:${clears(value[key], average[period], max) ? 1 : 0}`;
+    }).join(";"),
+  };
+});
+
+// The marker sits between the last week before the move and the first since
+const chartStyle = `--n:${rows.length};--split:${(BEFORE / rows.length) * 100}%;--plot-narrow:${PLOT.narrow}px;--plot-wide:${PLOT.wide}px`;
+
+const REST = "Pick a week to see its number";
+// The readout's longest text, which sizes its box. The face is mono, so the
+// longest string is the widest.
+const longest = [
+  REST,
+  ...weeks.flatMap(week =>
+    ORDER.map(key => `Week of ${week.week} · ${week.count[key]}`)
+  ),
+].reduce((a, b) => (b.length > a.length ? b : a));
+
+const periods = [
+  { heading: "On my laptop", key: "before" as const },
+  { heading: "On the server", key: "after" as const },
+];
+---
+
+<Diagram summary={summary}>
+  <div class="chart" data-chart data-metric="weighted" style={chartStyle}>
+    <div class="top">
+      <p class="readout dg-mono" aria-hidden="true">
+        <span class="sizer">{longest}</span>
+        <span data-readout>{REST}</span>
+      </p>
+      <div class="switch" role="group" aria-label="Count">
+        {
+          ORDER.map(key => (
+            <button
+              type="button"
+              aria-pressed={key === "weighted" ? "true" : "false"}
+              data-metric-to={key}
+            >
+              {measures[key].label}
+            </button>
+          ))
+        }
+      </div>
+    </div>
+
+    <div class="periods">
+      {
+        periods.map(period => (
+          <div class="period">
+            <p class="dg-level">{period.heading}</p>
+            {ORDER.map(key => (
+              <p class:list={["average", key]}>
+                <span class="dg-name dg-name-lg">
+                  {measures[key].average[period.key]}
+                </span>{" "}
+                {measures[key].unit} a week
+              </p>
+            ))}
+          </div>
+        ))
+      }
+    </div>
+
+    <div class="plot">
+      {
+        ORDER.map(key => (
+          <div class:list={["rules", key]} aria-hidden="true">
+            {measures[key].ticks.map(tick => (
+              <span class="rule" style={`--at:${tick / measures[key].max}`}>
+                <span class="value">{tick}</span>
+              </span>
+            ))}
+          </div>
+        ))
+      }
+      <div class="bars" role="group" aria-label="Weeks" data-weeks inert>
+        {
+          weeks.map((week, i) => (
+            <button
+              type="button"
+              class:list={["week", { after: week.after }]}
+              tabindex={i === 0 ? 0 : -1}
+              aria-label={`Week of ${week.week}: ${week.count.weighted}, ${week.count.prs}`}
+              data-week={week.week}
+              data-weighted={week.count.weighted}
+              data-prs={week.count.prs}
+              style={week.style}
+            >
+              <span class="bar" />
+            </button>
+          ))
+        }
+      </div>
+      <span class="marker" aria-hidden="true"></span>
+      <span class="moved" aria-hidden="true"
+        ><span>Moved to the server</span></span
+      >
+    </div>
+
+    <ol class="months dg-label" aria-hidden="true">
+      {weeks.map(week => <li>{week.month}</li>)}
+    </ol>
+
+    <div class="sr-only">
+      <table>
+        <caption>Merged PRs and weighted PRs by week</caption>
+        <thead>
+          <tr>
+            <th scope="col">Week of</th>
+            <th scope="col">Weighted PRs</th>
+            <th scope="col">PRs</th>
+          </tr>
+        </thead>
+        <tbody>
+          {
+            weeks.map(week => (
+              <tr>
+                <th scope="row">{week.week}</th>
+                {ORDER.map(key => (
+                  <td>{measures[key].figure(week.value[key])}</td>
+                ))}
+              </tr>
+            ))
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+</Diagram>
+
+<style>
+  .chart {
+    --gutter: 1.75rem;
+    --plot: var(--plot-narrow);
+    --inset: 1px;
+  }
+
+  /* Which measure shows is one attribute. Each week carries both measures'
+     heights as fractions of their scale, so setting it redraws the chart. */
+  .chart[data-metric="weighted"] .prs,
+  .chart[data-metric="prs"] .weighted {
+    display: none;
+  }
+
+  .chart[data-metric="weighted"] .week {
+    --v: var(--weighted);
+    --avg: var(--weighted-avg);
+    --cut: var(--weighted-cut);
+  }
+
+  .chart[data-metric="prs"] .week {
+    --v: var(--prs);
+    --avg: var(--prs-avg);
+    --cut: var(--prs-cut);
+  }
+
+  /* The readout and the switch. The row keeps its space until the script
+     runs, so nothing moves when it appears and a control that can't work
+     never shows. */
+  .top {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem 1rem;
+  }
+
+  .chart:not([data-initialized]) .top {
+    visibility: hidden;
+  }
+
+  .readout {
+    display: grid;
+    flex: 1 1 auto;
+    color: var(--dg-note);
+  }
+
+  .readout > span {
+    grid-area: 1 / 1;
+  }
+
+  .sizer {
+    visibility: hidden;
+  }
+
+  .switch {
+    display: flex;
+    gap: 0.25rem;
+  }
+
+  /* The unchosen button has no border, not a transparent one, which forced
+     colours would paint. Its padding stands in for the border's pixel. */
+  .switch button {
+    border-radius: 9999px;
+    padding: calc(0.1875rem + 1px) calc(0.625rem + 1px);
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    line-height: 1.35;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--dg-note);
+    transition: color var(--default-transition-duration)
+      var(--default-transition-timing-function);
+  }
+
+  @media (hover: hover) {
+    .switch button[aria-pressed="false"]:hover {
+      color: var(--accent);
+    }
+  }
+
+  .switch button[aria-pressed="false"]:active {
+    color: var(--accent-strong);
+  }
+
+  .switch button[aria-pressed="true"] {
+    border: 1px solid var(--dg-wire);
+    padding: 0.1875rem 0.625rem;
+    color: var(--foreground);
+  }
+
+  /* Each period's heading sits over its own weeks */
+  .periods {
+    display: grid;
+    grid-template-columns: var(--split) minmax(0, 1fr);
+    margin: 1.25rem 0 0 var(--gutter);
+  }
+
+  .period + .period {
+    padding-left: 0.75rem;
+  }
+
+  .period .dg-level {
+    white-space: normal;
+  }
+
+  .average {
+    margin-top: 0.125rem;
+    color: var(--dg-note);
+  }
+
+  .plot {
+    position: relative;
+    height: var(--plot);
+    margin: 0.875rem 0 0 var(--gutter);
+  }
+
+  .rule {
+    position: absolute;
+    right: 0;
+    bottom: calc(var(--at) * 100%);
+    left: 0;
+    border-top: 1px solid var(--dg-border);
+  }
+
+  /* The 0 line sits under the bars, so a 1px bar shows above it */
+  .rule:first-child {
+    bottom: -1px;
+    border-top-color: var(--dg-wire);
+  }
+
+  .value {
+    position: absolute;
+    top: -0.5rem;
+    right: calc(100% + 0.375rem);
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    line-height: 1rem;
+    color: var(--dg-note);
+  }
+
+  .bars {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    grid-template-columns: repeat(var(--n), minmax(0, 1fr));
+  }
+
+  /* Each week's button fills its column to the plot's full height, with the
+     bar drawn at its foot, so a bar 1px tall can still be tapped */
+  .week {
+    position: relative;
+  }
+
+  .week:focus-visible {
+    z-index: 1;
+  }
+
+  .bar {
+    position: absolute;
+    right: var(--inset);
+    bottom: 0;
+    left: var(--inset);
+    height: max(1px, var(--v) * 100%);
+    border-radius: 2px 2px 0 0;
+    background: var(--dg-wire);
+    transition: background-color var(--default-transition-duration)
+      var(--default-transition-timing-function);
+  }
+
+  .week.after .bar {
+    background: var(--foreground);
+  }
+
+  /* The chosen week rests on the accent, so it steps as the active nav item
+     does */
+  .week[data-chosen] .bar {
+    background: var(--accent);
+  }
+
+  @media (hover: hover) {
+    .week:hover .bar {
+      background: var(--accent);
+    }
+
+    .week[data-chosen]:hover .bar {
+      background: var(--accent-strong);
+    }
+  }
+
+  .week:active .bar {
+    background: var(--accent-strong);
+  }
+
+  .week[data-chosen]:active .bar {
+    background: var(--accent-stronger);
+  }
+
+  /* The period's average: a line behind the bars, and a cut in the ground
+     colour through each bar that rises past it. Both sit on the button's
+     box, which is the plot's height, so the two land on the same pixel. */
+  .week::before,
+  .week::after {
+    content: "";
+    position: absolute;
+    bottom: calc(var(--avg) * 100%);
+    border-top: 1px solid;
+  }
+
+  .week::before {
+    right: 0;
+    left: 0;
+    border-top-color: var(--dg-wire);
+  }
+
+  .week::after {
+    right: var(--inset);
+    left: var(--inset);
+    border-top-color: var(--background);
+    opacity: var(--cut);
+  }
+
+  .marker {
+    position: absolute;
+    top: -8px;
+    bottom: 0;
+    left: var(--split);
+    border-left: 1px dashed var(--dg-wire);
+    pointer-events: none;
+  }
+
+  /* The marker's label wraps inside the room to the marker's left */
+  .moved {
+    position: absolute;
+    top: -8px;
+    left: 0;
+    width: calc(var(--split) - 0.5rem);
+    font-size: 0.8125rem;
+    line-height: 1.2;
+    text-align: right;
+    color: var(--dg-note);
+    pointer-events: none;
+  }
+
+  .moved span {
+    background: var(--background);
+  }
+
+  .months {
+    display: grid;
+    grid-template-columns: repeat(var(--n), minmax(0, 1fr));
+    margin: 0.375rem 0 0 var(--gutter);
+  }
+
+  .months li {
+    padding-left: var(--inset);
+    white-space: nowrap;
+  }
+
+  @container diagram (width >= 46rem) {
+    .chart {
+      --plot: var(--plot-wide);
+      --inset: 2px;
+    }
+  }
+
+  /* Each selector matches the specificity of the rule it overrides */
+  @media (forced-colors: active) {
+    .week .bar,
+    .week::before,
+    .week::after,
+    .rule:first-child,
+    .marker {
+      forced-color-adjust: none;
+    }
+
+    .week .bar,
+    .week.after .bar {
+      background: CanvasText;
+    }
+
+    .week::before,
+    .rule:first-child {
+      border-top-color: CanvasText;
+    }
+
+    .week::after {
+      border-top-color: Canvas;
+    }
+
+    .marker {
+      border-left-color: CanvasText;
+    }
+
+    .week[data-chosen] .bar,
+    .week[data-chosen]:is(:hover, :active) .bar,
+    .week:active .bar {
+      background: Highlight;
+    }
+  }
+
+  @media (forced-colors: active) and (hover: hover) {
+    .week:hover .bar {
+      background: Highlight;
+    }
+  }
+</style>
+
+<script>
+  function initPrPaceChart() {
+    const chart = document.querySelector<HTMLElement>("[data-chart]");
+    if (!chart || chart.dataset.initialized) return;
+    chart.dataset.initialized = "true";
+
+    const readout = chart.querySelector<HTMLElement>("[data-readout]")!;
+    const rest = readout.textContent!.trim();
+    const switches = [
+      ...chart.querySelectorAll<HTMLButtonElement>("[data-metric-to]"),
+    ];
+    const bars = chart.querySelector<HTMLElement>("[data-weeks]")!;
+    const weeks = [...bars.querySelectorAll<HTMLButtonElement>("[data-week]")];
+    const last = weeks.length - 1;
+    let pointed: HTMLButtonElement | undefined;
+    let chosen: HTMLButtonElement | undefined;
+    const weekAt = (event: Event) =>
+      (event.target as Element).closest<HTMLButtonElement>("[data-week]") ??
+      undefined;
+
+    // The week under the pointer, or else the chosen week
+    const show = () => {
+      const week = pointed ?? chosen;
+      readout.textContent = week
+        ? `Week of ${week.dataset.week} · ${week.dataset[chart.dataset.metric!]}`
+        : rest;
+    };
+
+    // The tab stop moves from the first week to the chosen one
+    const choose = (week: HTMLButtonElement) => {
+      if (week === chosen) return;
+      const stop = chosen ?? weeks[0];
+      stop.tabIndex = -1;
+      stop.removeAttribute("data-chosen");
+      week.tabIndex = 0;
+      week.setAttribute("data-chosen", "");
+      chosen = week;
+      show();
+    };
+
+    switches.forEach(button =>
+      button.addEventListener("click", () => {
+        chart.dataset.metric = button.dataset.metricTo;
+        switches.forEach(other =>
+          other.setAttribute("aria-pressed", String(other === button))
+        );
+        show();
+      })
+    );
+
+    // The weeks fill the bars' box with no gap, so the box's own
+    // pointerleave is the pointer leaving the last week
+    // pointermove too, since after the arrow keys the pointer can move on
+    // inside the week it rests on, where pointerover doesn't fire
+    const point = (event: PointerEvent) => {
+      const week = weekAt(event);
+      if (week === pointed) return;
+      pointed = week;
+      show();
+    };
+    bars.addEventListener("pointerover", point);
+    bars.addEventListener("pointermove", point);
+    bars.addEventListener("pointerleave", () => {
+      pointed = undefined;
+      show();
+    });
+    // Safari doesn't focus a button on a click, so the click chooses too
+    bars.addEventListener("click", event => {
+      const week = weekAt(event);
+      if (week) choose(week);
+    });
+    bars.addEventListener("focusin", event => {
+      const week = weekAt(event);
+      if (week) choose(week);
+    });
+    bars.addEventListener("keydown", event => {
+      if (event.altKey || event.ctrlKey || event.metaKey || event.shiftKey)
+        return;
+      const i = weeks.indexOf(weekAt(event)!);
+      const to = (
+        { ArrowLeft: i - 1, ArrowRight: i + 1, Home: 0, End: last } as Record<
+          string,
+          number
+        >
+      )[event.key];
+      if (to === undefined) return;
+      event.preventDefault();
+      // The keys are the latest move, so the readout follows them rather
+      // than a pointer left resting on another week
+      pointed = undefined;
+      weeks[Math.min(Math.max(to, 0), last)].focus();
+      show();
+    });
+
+    // The bars are inert in the markup, so without the script they are a
+    // drawing, not controls that do nothing
+    bars.inert = false;
+  }
+
+  // See "Client scripts and View Transitions" in docs/patterns/client-scripts.md
+  document.addEventListener("astro:page-load", initPrPaceChart);
+  initPrPaceChart();
+</script>
