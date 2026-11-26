@@ -23,7 +23,8 @@ const sessions = [
 const holds = ["GitHub repos", "Skills and agents", "Connectors"];
 
 // Stacked, the three 44px device cards sit 10px apart and 32px in from the
-// rail, which runs down x 16 from the first card's centre to the server.
+// figure's edge, and the rail runs down x 16 from the first card's centre to
+// the server.
 const comb = {
   lines: "M32 22.5H16.5V152M16.5 76.5H32M16.5 130.5H32",
   ends: [22.5, 76.5, 130.5].map(y => left(32, y)).join(""),

@@ -115,7 +115,7 @@ MDX was chosen over raw HTML in the `.md`, which puts the drawing's markup in th
 
 The component's name must differ from the page's own, which takes its name from the page's file – see "An import named like its file" in `docs/patterns/astro-build.md`.
 
-The page's Markdown twin carries the summary and then the diagram's words in reading order, as a post's does, since the twin reads `#main-content` and drops the same parts. Reading time doesn't apply: a page has none.
+The page's Markdown twin carries the summary and then the diagram's words in reading order, as a post's does, since the twin reads `#main-content` and drops the same parts. Nothing in the twin marks where the drawing ends: its words sit under the page heading before it (the After panel's `### After` on the setup page), and where its last part is a list and the page's next block is one too, the converter marks the page's list with `*` to keep the two apart. Reading time doesn't apply: a page has none.
 
 **When to use:** placing a diagram on an `.astro` page that isn't a post.
 

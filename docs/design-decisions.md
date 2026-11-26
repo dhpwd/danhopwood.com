@@ -196,7 +196,7 @@ Rejected:
 
 ## A diagram is drawn in the page
 
-A diagram in a post or on a page is drawn as a component on the theme tokens, at the page's text size, with real colours in both themes and no full-size view. It is the image's drawing at a readable size: centred lead cards with their labels to the left, a half disc where a line meets a card, and labels beside their lines. On a phone it stacks, with a rail down the left from each level to the next. The cloud box diagram and the setup page's diagram run across at the full column. How it is built is in `docs/patterns/diagrams.md`.
+A diagram in a post or on a page is drawn as a component on the theme tokens, at the page's text size, with real colours in both themes and no full-size view. A post's diagram is its image's drawing at a readable size: centred lead cards with their labels to the left, a half disc where a line meets a card, and labels beside their lines. On a phone it stacks, with a rail down the left from each level to the next. The cloud box diagram and the setup page's diagram run across at the full column. How it is built is in `docs/patterns/diagrams.md`.
 
 Known cost: height. With its caption the agent team diagram is 1352px tall at 1440 and 2386px at 390, where the image was 862px and 457px. The setup page's diagram, which has no caption, is 315px tall at 1440 and 566px at 390.
 
