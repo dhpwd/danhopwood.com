@@ -1,0 +1,21 @@
+---
+import { clock } from "@/utils/clock";
+
+// A link from the page's copy to a moment in its walkthrough, on a line of
+// its own under the text it follows. Walkthrough's script starts the video
+// there; without the script the link goes to the video. The slot is the
+// link's words, which the time follows.
+type Props = {
+  // Seconds into the video
+  at: number;
+};
+
+const { at } = Astro.props;
+---
+
+<a
+  href="#walkthrough"
+  class="mt-1 block w-fit meta interactive"
+  data-walkthrough-at={at}
+  ><span class="link-underline"><slot /> · {clock(at)}</span></a
+>

@@ -30,7 +30,7 @@ A list's text starts 1.625em in, with each marker inside the column, from the `l
 
 An image keeps its 1px border and radius and fills the column. An image narrower than the column shows at its own width on the column's left edge, under the text, rather than centred. A caption sits 0.75rem under its image, from the image's left edge, in `text-sm` at 75%, and wraps at the image's width or the reading measure, whichever is narrower. The figure takes its image's width (`w-fit`) and the caption sets `contain: inline-size`, so a long caption can't widen the figure past a narrow image. A figure has 2.25rem above and below. Captions are written as described in `docs/patterns/images.md`.
 
-In the dark theme `.app-prose img` takes `filter: brightness(0.88)`, which brings an image's white down to about the text colour, so a screenshot is never the brightest thing on the page.
+In the dark theme `.app-prose img` takes `filter: brightness(0.88)`, which brings an image's white down to about the text colour, so a screenshot is never the brightest thing on the page. The filter is the `dark-dim` utility in `global.css`, which an image outside a post takes too (the setup page's stills).
 
 A coded diagram is a figure at the full column with the same caption style, and takes no dim and no dialog – see `docs/patterns/diagrams.md`.
 

@@ -67,4 +67,6 @@ Three things decide whether the warm-up has landed by the press:
 - Other media on the page. A decorative video that loads at once competes with the warm-up for the line, so it loads once the warm-up has settled. The walkthrough's preview waits on it
 - Bytes at rest. Chrome stops buffering a paused video by itself: with nothing pressed, `/cloud-box-setup` fetches 3.8MB from the video host in its first 30s
 
+A page the router swaps out keeps loading its videos, which then take the line from the next page, so the script releases each at `astro:before-swap`: `removeAttribute("src")`, then `load()`.
+
 **When to use:** any video that should start the moment it is pressed.

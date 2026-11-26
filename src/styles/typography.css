@@ -190,11 +190,9 @@
     }
   }
 
-  /* The dark theme takes an image's white down to the text colour, so a
-     screenshot is never the brightest thing on the page. The full-size view
-     shows it as it was saved. */
-  html[data-theme="dark"] .app-prose img {
-    filter: brightness(0.88);
+  /* The full-size view shows the image as it was saved. */
+  .app-prose img {
+    @apply dark-dim;
   }
 
   .image-zoom {

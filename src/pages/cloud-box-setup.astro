@@ -14,10 +14,10 @@ import Field from "@/components/Field.astro";
 import Button from "@/components/Button.astro";
 import ServerSessions from "@/components/diagrams/ServerSessions.astro";
 import Walkthrough from "@/components/Walkthrough.astro";
+import WalkthroughLink from "@/components/WalkthroughLink.astro";
 import { Image } from "astro:assets";
 import { SITE } from "@/config";
 import { SOCIALS } from "@/constants";
-import { clock } from "@/utils/clock";
 import walkthroughLaptop from "@/assets/images/cloud-box/walkthrough-laptop.png";
 import walkthroughPhone from "@/assets/images/cloud-box/walkthrough-phone.png";
 import walkthroughPoster from "@/assets/images/cloud-box/walkthrough-poster.jpg";
@@ -52,8 +52,10 @@ const places: Place[] = [
 const blob = "https://pp41erezhiwk0unv.public.blob.vercel-storage.com";
 const walkthrough = {
   video: `${blob}/walkthrough/take-1b05858c.mp4`,
-  laptop: `${blob}/walkthrough/laptop-15850b5b.mp4`,
-  phone: `${blob}/walkthrough/phone-aa92d5c3.mp4`,
+  previews: {
+    laptop: `${blob}/walkthrough/laptop-15850b5b.mp4`,
+    phone: `${blob}/walkthrough/phone-aa92d5c3.mp4`,
+  },
 };
 
 // Where each beat of the take starts, in seconds
@@ -128,8 +130,7 @@ const questions = [
       </PageIntro>
 
       <Walkthrough
-        video={walkthrough.video}
-        previews={{ laptop: walkthrough.laptop, phone: walkthrough.phone }}
+        {...walkthrough}
         stills={{ laptop: walkthroughLaptop, phone: walkthroughPhone }}
         poster={walkthroughPoster}
         captions={{ src: "/cloud-box-walkthrough.vtt", label: "English" }}
@@ -188,7 +189,7 @@ const questions = [
               src={pickerToday}
               alt={'The row under the Claude app\'s prompt box, with "This computer" and a folder chosen'}
               sizes="20rem"
-              class="w-full rounded-sm border border-foreground/16 dark:brightness-88"
+              class="w-full rounded-sm border border-foreground/16 dark-dim"
             />
             <p>
               You start a session, choose "This computer" and pick a folder. The
@@ -200,7 +201,7 @@ const questions = [
               src={pickerAfter}
               alt="The same row under the prompt box, with a repo on the server chosen instead"
               sizes="20rem"
-              class="w-full rounded-sm border border-foreground/16 dark:brightness-88"
+              class="w-full rounded-sm border border-foreground/16 dark-dim"
             />
             <p>
               You start a session and choose one of your repos on the server
@@ -217,13 +218,8 @@ const questions = [
             <strong class="font-semibold"
               >Send the message, shut the laptop.</strong
             > The job carries on while the laptop's in your bag
-            <a
-              href="#walkthrough"
-              class="mt-1 block w-fit meta interactive"
-              data-walkthrough-at={chapterStart("Before and after")}
-              ><span class="link-underline"
-                >In the video · {clock(chapterStart("Before and after"))}</span
-              ></a
+            <WalkthroughLink at={chapterStart("Before and after")}
+              >In the video</WalkthroughLink
             >
           </li>
           <li>
@@ -231,13 +227,8 @@ const questions = [
             with your full setup behind it, is in the Claude app on your phone and
             even in the web app (claude.ai) if you need to use another computer. Reply
             from wherever you are, then carry on at the laptop when you're home
-            <a
-              href="#walkthrough"
-              class="mt-1 block w-fit meta interactive"
-              data-walkthrough-at={chapterStart("On my phone")}
-              ><span class="link-underline"
-                >In the video · {clock(chapterStart("On my phone"))}</span
-              ></a
+            <WalkthroughLink at={chapterStart("On my phone")}
+              >In the video</WalkthroughLink
             >
           </li>
           <li>
