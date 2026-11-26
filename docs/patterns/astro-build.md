@@ -2,13 +2,13 @@
 
 ## Stale content from Astro's content store
 
-**Problem:** deleting a blog markdown file doesn't remove its route from the build output. Astro persists content collection data in `node_modules/.astro/data-store.json`, which survives both the file deletion and clearing `.astro/`.
+**Problem:** Astro persists content collection data in `node_modules/.astro/data-store.json`, which survives clearing `.astro/`. Deleting or renaming a post doesn't leave a stale route: on every sync the glob loader drops each stored entry whose file it no longer finds, so the store keeps nothing for a file that's gone.
 
-The same store holds each post's rendered HTML, and Astro renders a post again only when its file, the content config or the Astro config changes. The Astro config's digest serialises a plugin as `null`, so an edit inside a markdown plugin changes none of them, and every unchanged post keeps the HTML the old plugin made. Adding or removing a plugin does change the digest. Vercel restores `node_modules` from its build cache, so a deploy keeps that HTML too.
+What goes stale is rendered HTML. The store holds each post's rendered HTML, and Astro renders a post again only when its file, the content config or the Astro config changes. The Astro config's digest serialises a plugin as `null`, so an edit inside a markdown plugin changes none of them, and every unchanged post keeps the HTML the old plugin made. Adding or removing a plugin does change the digest. Vercel restores `node_modules` from its build cache, so a deploy keeps that HTML too.
 
 **Solution:** delete `node_modules/.astro/data-store.json` (and `node_modules/.astro/assets/` if images are stale too), then rebuild. On Vercel, redeploy without the build cache.
 
-**When to use:** after deleting or renaming a content collection entry, when a route you removed still appears in `dist/`, and after editing a markdown plugin in `src/utils/`.
+**When to use:** after editing a markdown plugin in `src/utils/`, or when a built post's HTML doesn't match its source.
 
 ## Reading posts in a route
 
