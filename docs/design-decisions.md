@@ -224,11 +224,11 @@ Rejected:
 
 ## A chart is a diagram with one switch
 
-The setup page's chart of merged PRs a week is drawn in the page as a diagram, in ink: the weeks before the move to the server in grey, the weeks since in the text colour. The accent sits on its two level labels, and on a bar only under the pointer or while its week is chosen. A chosen week keeps the accent after the pointer leaves, since on a phone a tap leaves no focus and nothing else would mark the week. The chart has one switch, between weighted PRs and PRs, a line above the plot that reads out a week, and a flat line across each period at its average. Its figures are fixed weekly rows taken from the HTML report of the open-source tool the page credits under the chart. `PrPaceChart.astro` builds it – see "A chart" in `docs/patterns/diagrams.md`.
+The setup page's chart of merged PRs a week is drawn in the page as a diagram, in ink: the weeks before the move to the server in grey, the weeks since in the text colour. The accent sits on its two level labels, and on a bar only under the pointer or while its week is chosen. A chosen week keeps the accent after the pointer leaves, since on a phone a tap leaves no focus and nothing else would mark the week. The chart has one switch, between weighted PRs and PRs, a line above the plot that reads out a week, and a flat line across each period at its average. Its figures are fixed weekly rows from pr-pace, the open-source tool the page credits under the chart. `PrPaceChart.astro` builds it – see "A chart" in `docs/patterns/diagrams.md`.
 
 Rejected:
 
-- That report embedded, which brings its own styles and carries private repo names and PR titles into a public repo
+- pr-pace's HTML report embedded, which brings its own styles and carries private repo names and PR titles into a public repo
 - A charting library
 - Bars in the accent, which are large red blocks at rest
 - A chosen bar resting in ink, which leaves nothing marking the week on a phone
