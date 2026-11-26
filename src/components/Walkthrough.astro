@@ -234,6 +234,7 @@ const windows = [
 
 <script>
   import { landingY } from "@/scripts/landing";
+  import { isPlainClick } from "@/scripts/plain-click";
 
   type Connection = { saveData?: boolean };
 
@@ -472,15 +473,7 @@ const windows = [
   document.addEventListener(
     "click",
     event => {
-      if (
-        !playFrom ||
-        event.button !== 0 ||
-        event.metaKey ||
-        event.ctrlKey ||
-        event.shiftKey ||
-        event.altKey
-      )
-        return;
+      if (!playFrom || !isPlainClick(event)) return;
       const link = (event.target as Element).closest<HTMLElement>(
         "a[data-walkthrough-at]"
       );
