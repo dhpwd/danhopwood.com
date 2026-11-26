@@ -1,7 +1,8 @@
 ---
-title: "Running coding agents on a €30 Linux box"
-description: "Every hosted agent product ties you to one repo and one vendor. A plain VPS with Tailscale, mosh and tmux doesn't – close the laptop, pick the session up on your phone. The setup and the scripts."
+title: "Running AI agents on a €30 Linux box"
+description: "Close the laptop mid-job and pick the same session up on your phone. My AI agents live on a €30 Linux box that never turns off – the stack, the scripts and why the hosted products didn't fit."
 pubDatetime: 2026-09-08T20:14:50Z
+modDatetime: 2026-11-26T11:53:26Z
 featured: true
 featuredOrder: 3
 draft: false
@@ -20,9 +21,9 @@ I'm moving between places a lot more this year and every agent run I had depende
 
 The obvious answer is one of the hosted products, so I had six research agents look at the options in parallel (hosting, phone access, connector logins, browser testing, hosted alternatives and security) and consolidate 965 lines of findings into one runbook. Their verdict on the packaged products was the same across the board.
 
-Every hosted agent product (Claude Code on the web, Anthropic's Managed Agents, OpenAI's Codex cloud, Google's Jules) scopes a session to one GitHub repo and one vendor. That's fine for one codebase but my work needs 13 repos that read each other (a coding repo reads the knowledge vault, the vault reads specs), 16 MCP servers (the connectors that give agents Gmail, Linear, Slack and a browser) and several vendors' CLIs pointed at the same files. None of the products can see across that.
+Every hosted agent product (Claude Code cloud sessions, Anthropic's Managed Agents, OpenAI's Codex cloud) runs one vendor's agent on their own machines, which can't see what's set up on yours. That's fine if everything you need is committed, but my work sits across 13 repos that read each other (a coding repo reads the knowledge vault, the vault reads specs), 16 MCP servers (the connectors that give agents Gmail, Linear, Slack and a browser) and several vendors' CLIs pointed at the same files. None of the products runs all of that in one place.
 
-The cloud dev environments have the opposite problem, because they're built to switch off. Codespaces stops after 30 idle minutes, E2B caps a session at 24 hours, and the one that will stay awake (Sprites) is about $460 a month. A plain VPS with four times the memory is €30.
+The cloud dev environments have the opposite problem, because they're built to switch off. Codespaces stops after 30 idle minutes, E2B caps a session at 24 hours, and the one that will stay awake (Sprites) is about $460 a month. A plain VPS with 16GB is about €30.
 
 So the answer was the old one: a Linux box that never turns off, and every device I own is simply a terminal into it.
 
@@ -49,7 +50,7 @@ _Emma (my EA agent) from the phone – the same tmux session the laptop attaches
 
 ## Three things I didn't expect
 
-**Remote Control needs tmux anyway.** `claude remote-control` is the one native Claude feature that fits this setup – it puts a live session in the iOS app. But Anthropic's own docs tell you to run it inside tmux or screen so it survives a dropped connection. It's a phone view on top of tmux, not a replacement for it. Claude Code on the web, routines and `--teleport` all run on Anthropic's machines rather than yours, so they don't support your MCP servers or your cross-repo reads.
+**Remote Control needs tmux, unless it runs as a server.** `claude remote-control` is the one native Claude feature that fits this setup – it puts a live session in the mobile app. If you start it from a terminal, Anthropic's own docs tell you to run it inside tmux or screen so it survives a dropped connection. If you run it as a service in server mode, the app can start new sessions on the box too, and that's how I start and pick up most of my Claude sessions now.
 
 **The sandbox only wraps Bash.** Claude Code's built-in sandbox constrains the Bash tool. MCP servers and hooks run unconstrained on the host. The control that does the work is the permission layer: auto mode, an allow-list of read-only tools, and an ask-list gating anything that sends, deletes or posts. My unattended jobs never need an ask-list tool, so they run to completion, and anything that reaches another person still stops and waits for me.
 
@@ -58,7 +59,7 @@ _Emma (my EA agent) from the phone – the same tmux session the laptop attaches
 ## Known gaps
 
 - Gitignored `.env` files don't travel with anything. I copied mine across by hand, so a rebuild starts without them until they live in 1Password too
-- Codex and Gemini have no phone bridge – tmux only, nothing like Remote Control
+- Codex and Gemini still run in tmux. Both now have a Remote Control of their own (OpenAI's `codex remote-control` and Google's in Antigravity CLI, which replaced Gemini CLI), but they're newer and less proven than Claude's
 - Prompt injection reaching a tool that can send is the same risk it was on the laptop, gated the same way. Agents already read email and scraped pages for me, but I point them at specific threads and senders, and nothing sends without me answering a prompt. I'd add real isolation (a container per job) the day an unattended job trawls untrusted content to pick its own work – a whole inbox, other people's issue comments
 
 ## Take it
