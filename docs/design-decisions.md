@@ -58,7 +58,7 @@ A ruled list of questions, each at the body size in the heading weight on the 1.
 
 Rejected:
 
-- Every answer open under its question, which takes too much of a phone's height with nine answers
+- Every answer open under its question, which takes too much of a phone's height with ten answers
 - A scripted accordion, where the native element needs no script
 - A chevron that turns, which adds a motion to the closed set of small details
 - The `Detail` part, whose label is uppercase mono and unreadable at a question's length
