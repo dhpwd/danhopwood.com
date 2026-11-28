@@ -22,7 +22,7 @@ Anti-patterns:
 
 - A mono heading – `font-mono` on a title, or in the global heading rule. Mono runs about a fifth wider, so a long title has to drop a size at 390 to wrap as well
 - A title sized by hand (`text-2xl font-bold sm:text-3xl`) in place of `title-page` or `title-item`
-- The dashed underline written out (`underline decoration-dashed underline-offset-4`), which rests at full strength and misses a change to `link-underline`
+- The dashed underline written out (`underline decoration-dashed decoration-1 underline-offset-4`), which rests at full strength and misses a change to `link-underline`
 - `text-[0.9375rem]` in place of `text-small`, which a change to the step misses
 
 ## Type the classes can't reach
