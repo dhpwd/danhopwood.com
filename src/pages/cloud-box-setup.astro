@@ -29,7 +29,7 @@ const linkedIn = SOCIALS.find(({ name }) => name === "LinkedIn")!.href;
 
 const heading = "Claude Code that keeps working when your laptop is shut";
 const opening =
-  "I'll set up an always-on server for you that runs Claude Code with your repos, skills and connectors on it. You keep working in the Claude app the way you do now, and your whole setup is there on your phone too.";
+  "I'll set up an always-on server for you that runs Claude Code with your projects, skills and connectors on it. You keep working in the Claude app the way you do now, and your whole setup is there on your phone too.";
 
 // One row per place. Changing a place's status is a one-line edit here: the
 // table and its chip both follow from it. The empty status marks the
@@ -79,6 +79,11 @@ const questions = [
       "No. On the handover call you share your screen and (if you're happy to) hand me control of your keyboard for the steps that run on your laptop. You sign in to your own accounts yourself, and after the call everything happens in the Claude app.",
   },
   {
+    question: "My work's in Obsidian, not GitHub. Will this work for me?",
+    answer:
+      "Yes, and it's fine to have both. Each vault lives on the server, and Obsidian Sync keeps it in step with Obsidian on your laptop and phone, both ways. A note an agent writes shows up in Obsidian and your own edits reach the server, with no commit or push. You need your own Obsidian Sync plan for that.",
+  },
+  {
     question: "Can you get into my server afterwards?",
     answer:
       "No. I remove my key at the end of the handover and have no way in after that. You keep the admin login through your host's console, and if something needs fixing in the 14 days we do it on a call while you share your screen.",
@@ -115,7 +120,7 @@ const questions = [
   {
     question: "I don't use Claude Code yet. Is this for me?",
     answer:
-      "Not yet. The setup moves the repos, skills and connectors you already work with onto a server, so it's for people who use Claude Code day to day.",
+      "Not yet. The setup copies the projects, skills and connectors you already work with onto a server, so it's for people who use Claude Code day to day.",
   },
 ];
 ---
@@ -203,8 +208,12 @@ const questions = [
         <p>
           The low week right after the move is the one I spent my evenings
           setting the server up, which is the part I do for you. Some of the
-          gains since are due to the agent team I now run, which isn't part of
-          the setup. Your numbers will depend on what you run on your server.
+          gains since are due to the
+          <a
+            href="/posts/what-my-ai-agents-decide-without-me"
+            class="interactive link-underline">agent team</a
+          > I now run, which isn't part of the setup. Your numbers will depend on
+          what you run on your server.
         </p>
       </Section>
 
@@ -234,9 +243,9 @@ const questions = [
               class="w-full rounded-sm border border-foreground/16 dark-dim"
             />
             <p>
-              You start a session and choose one of your repos on the server
-              instead. Nothing else in the app changes, and the work carries on
-              whether your laptop is open or not.
+              You start a session and pick a folder on the server instead.
+              Nothing else in the app changes, and the work carries on whether
+              your laptop is open or not.
             </p>
           </Panel>
         </div>
@@ -304,13 +313,12 @@ const questions = [
       <Section id="included" title="What's included">
         <MarkedList>
           <li>
-            A server in your own account, running Claude Code all the time on
-            your own Claude subscription
+            A server in your own account, running Claude Code on your own Claude
+            subscription
           </li>
-          <li>
-            Your GitHub repos on it with their dependencies installed, and your
-            skills, agents and settings copied from your laptop
-          </li>
+          <li>Your GitHub repos on it with their dependencies installed</li>
+          <li>Any Obsidian vaults you have too, kept in sync across devices</li>
+          <li>Your skills, agents and settings copied from your laptop</li>
           <li>Your connectors working there too</li>
           <li>
             Nothing on the server is reachable from the public internet, the
@@ -318,7 +326,7 @@ const questions = [
             install themselves
           </li>
           <li>
-            A 45-minute handover call where I move your setup across and we test
+            A 45-minute handover call where I copy your setup across and we test
             it together
           </li>
           <li>14 days of fixes after the call</li>
@@ -338,9 +346,10 @@ const questions = [
           </li>
           <li>
             <strong class="font-semibold">We do one 45-minute call.</strong> You sign
-            in to your own accounts (Claude, GitHub, your connectors) and I move your
-            setup across. By the end your sessions run on the server, and we prove
-            it by carrying one on from your phone with the laptop shut
+            in to your own accounts (Claude, GitHub and Obsidian where you use them,
+            your connectors) and I copy your setup across. By the end your sessions
+            run on the server, and we prove it by carrying one on from your phone
+            with the laptop shut
           </li>
           <li>
             <strong class="font-semibold">I remove my access.</strong> The server
@@ -412,15 +421,17 @@ const questions = [
           <Detail label="Guarantee">
             <p>
               If Claude Code isn't running on your server with your repos,
-              skills and connectors once we're done, I refund you in full. We
-              check it by carrying on a session from your phone with your laptop
-              shut.
+              vaults, skills and connectors once we're done, I refund you in
+              full. We check it by carrying on a session from your phone with
+              your laptop shut. A fault in Obsidian's own syncing is covered by
+              the 14 days of fixes, not by the refund.
             </p>
           </Detail>
           <Detail label="Running costs">
             <p>
               You pay for the server (about €31 a month on a one-month contract)
-              and for your Claude plan, both direct.
+              and for your Claude plan, both direct. With Obsidian, you also pay
+              Obsidian for an Obsidian Sync plan.
             </p>
           </Detail>
         </div>
@@ -429,7 +440,9 @@ const questions = [
       <Section id="need" title="What you need">
         <MarkedList>
           <li>A paid Claude plan</li>
-          <li>Your work in GitHub</li>
+          <li>
+            Your work in GitHub, in Obsidian vaults (on Obsidian Sync), or both
+          </li>
           <li>The Claude app on your phone</li>
           <li>A Mac or Linux laptop</li>
         </MarkedList>
@@ -438,10 +451,10 @@ const questions = [
           switch on Remote Control in Claude's admin settings.
         </p>
         <p class="text-small text-foreground/75">
-          The fixed price covers up to 10 repos and 5 connectors that use their
-          own API keys. It doesn't cover maintenance after the 14 days, or
-          designing and building agents, skills or loops. That's separate work,
-          so ask me if you want it.
+          The fixed price covers up to 10 repos and vaults in total, and 5
+          connectors that use their own API keys. It doesn't cover maintenance
+          after the 14 days, or designing and building agents, skills or loops.
+          That's separate work, so ask me if you want it.
         </p>
       </Section>
 

@@ -6,7 +6,7 @@ import Diagram from "./Diagram.astro";
 import { left, right } from "./paths";
 
 const summary =
-  "Diagram: the Claude app on your laptop, the Claude app on your phone and claude.ai in any browser all open the same three sessions. The sessions run on one always-on server in your own account, which also holds your repos, skills, agents and connectors. Nothing runs on the laptop, the phone or the browser.";
+  "Diagram: the Claude app on your laptop, the Claude app on your phone and claude.ai in any browser all open the same three sessions. The sessions run on one always-on server in your own account, which also holds your repos, vaults, skills, agents and connectors. Nothing runs on the laptop, the phone or the browser.";
 
 const devices = [
   { name: "Laptop", opens: "Claude app" },
@@ -20,7 +20,7 @@ const sessions = [
   { repo: "product-app", state: "Waiting for your reply", running: false },
 ];
 
-const holds = ["GitHub repos", "Skills and agents", "Connectors"];
+const holds = ["Repos & vaults", "Skills & agents", "Connectors"];
 
 // Stacked, the three 44px device cards sit 10px apart and 32px in from the
 // figure's edge, and the rail runs down x 16 from the first card's centre to
