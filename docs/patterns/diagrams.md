@@ -6,7 +6,7 @@ A diagram in a post or on a page is drawn in the page as an Astro component on t
 
 **Problem:** a diagram saved as an image is one size and one theme. On a phone its text is a few pixels tall, the dark theme can only dim it, and its words aren't text.
 
-**Solution:** each diagram is a component in `src/components/diagrams/`, built on `Diagram.astro`, and it sits in a post or on a page. A post imports it from an `.mdx` file (see "Posts that embed a component" below), and an `.astro` page imports it directly (see "A diagram on a page that isn't a post"). `Diagram.astro` renders `<figure class="diagram not-prose">`: a visually hidden paragraph holding its `summary` prop, then the drawing, then a `<figcaption>` when its `caption` slot is filled. A diagram component wraps its drawing in `Diagram` and passes its own default slot on as the caption, so a post writes the caption as the tag's content:
+**Solution:** each diagram is a component in `src/components/diagrams/`, built on `Diagram.astro`, and it sits in a post or on a page. A post imports it from an `.mdx` file (see "Posts that embed a component" below), and an `.astro` page imports it directly (see "A diagram on a page that isn't a post"). `Diagram.astro` renders `<figure class="diagram not-prose">`: a visually hidden paragraph holding its `summary` prop, then the drawing, then a `<figcaption>` when its `caption` slot is filled. With `as="div"` it renders a `div` instead, for a diagram inside another figure, and takes no caption. A diagram component wraps its drawing in `Diagram` and passes its own default slot on as the caption, so a post writes the caption as the tag's content:
 
 ```mdx
 <AgentTeam>
@@ -23,7 +23,7 @@ The figure takes the full column and is a size container (`container: diagram / 
 - `dg-chip` is a chip, `dg-frame` a 1px dashed frame at a 0.75rem radius and `dg-tag` the words on a connector, 13px in a 1px border at a 0.75rem radius
 - `dg-wires` is an SVG of connectors, unfilled with a 1px stroke, whose `.end` paths fill as half discs. `dg-end` is a 7 by 4px half disc on its own, for the end of a line drawn in CSS
 
-Type sizes, the whole list: 12px (the two mono labels, the hand-off label at the full column and the chart's switch and grid values), 13px (connector labels, chips, device chips, steps, processes, literal strings, what a device card opens, a session's state and the chart's readout and marker label), 14px (text), 15px at 600 (a closing box's title), and 17px and 20px (names, the frame's heading and the chart's averages). Every colour is a theme token or a custom property on `.diagram` that mixes `--foreground` into `--background`. Each mix is opaque, so two lines that cross paint one colour:
+Type sizes, the whole list: 12px (the two mono labels, the hand-off label at the full column and the chart's switch and grid values), 13px (connector labels, chips, device chips, steps, processes, literal strings, what a device card opens, a session's state, its title on a card or a drawn screen and the chart's readout and marker label), 14px (text), 15px at 600 (a closing box's title), and 17px and 20px (names, the frame's heading and the chart's averages). Every colour is a theme token or a custom property on `.diagram` that mixes `--foreground` into `--background`. Each mix is opaque, so two lines that cross paint one colour:
 
 | Property                                 | Mix                                               | Used for                                                                                                                                              |
 | ---------------------------------------- | ------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -31,9 +31,9 @@ Type sizes, the whole list: 12px (the two mono labels, the hand-off label at the
 | `--dg-note`                              | 75%                                               | Labels, notes and the words on a connector, and the chart's readout, grid values, marker label, averages' words and unchosen switch                   |
 | `--dg-wire`                              | 60%                                               | Connectors, their half-disc ends and the outlined box, and the chart's bars before the move, average lines, 0 line, marker and chosen switch's border |
 | `--dg-frame`                             | 32%                                               | The dashed frame                                                                                                                                      |
-| `--dg-dot`                               | 25%                                               | Step dots and the rule between them                                                                                                                   |
-| `--dg-border`                            | 16%                                               | Card borders, and the chart's other grid lines                                                                                                        |
-| `--dg-chip`                              | 7%                                                | Chips                                                                                                                                                 |
+| `--dg-dot`                               | 25%                                               | Step dots and the rule between them, and a drawn screen's marks |
+| `--dg-border`                            | 16%                                               | Card borders, the chart's other grid lines, and a drawn screen's title rule and bubble |
+| `--dg-chip`                              | 7%                                                | Chips, and a drawn screen's title band |
 | `--dg-tint`                              | 4%                                                | A tinted card                                                                                                                                         |
 | `--dg-fill`, `--dg-on-fill`              | `--foreground`, `--background`                    | A filled box or chip, and the names or words on it                                                                                                    |
 | `--dg-on-fill-text`, `--dg-on-fill-line` | `--background` at 84% and 32% into `--foreground` | A filled box's text and inner borders                                                                                                                 |
@@ -62,7 +62,7 @@ Anti-patterns:
 
 **Solution:** the layout follows the figure's own width by container query, never the viewport. The default is stacked, for a phone: each level is its label over its cards, a rail down the left joins one level to the next, and the words about that step sit to the rail's right. From 46rem the figure is the column's full, fixed width (736px), and the second layout sits on a grid in px. A diagram may add a step between the two where the stacked layout has room, as the agent team diagram does at 30rem.
 
-The stacked layout holds a phone's column at a reader's larger text size too. A fixed-size part of it is sized in px, not rem, so larger text grows its words but not its geometry: the cloud box diagram's device pair and the SVG under it are 136px cards and a 282px drawing at any text size, and the setup page's three device cards and the rail beside them are 44px tall cards and a 32 by 152px SVG at any text size. A `dg-label` wraps when stacked rather than run past its card, and keeps to one line at the full column.
+The stacked layout holds a phone's column at a reader's larger text size too. A fixed-size part of it is sized in px, not rem, so larger text grows its words but not its geometry: the cloud box diagram's device pair and the SVG under it are 136px cards and a 282px drawing at any text size, `ServerSessions`' three device cards and the rail beside them are 44px tall cards and a 32 by 152px SVG, and `LaptopShut`'s laptops and phones are 125 by 71px and 65 by 112px, with a 177 by 112px SVG per pair, at any text size. A `dg-label` wraps when stacked rather than run past its card, and keeps to one line at the full column.
 
 Wherever the layout is a fixed size, connectors are SVG drawn on the grid's own numbers: one `svg.dg-wires` per row, its `viewBox` the row's size in px. Lines sit on half-pixel coordinates, so a line down the centre of a card at x 355 is drawn at x 355.5 and its 1px stroke fills one column of pixels. Every line is 1px, and every line that meets a card ends there in a half disc of radius 3.5, flat against the card's edge, drawn in the row's `.end` path. An arrow's head and shaft are one path, so the head sits on its shaft. A line whose length follows the text, such as the spine past a note that wraps, is a 1px CSS line at the same integer x as the SVG's line, with a `dg-end` where it meets a card. `src/components/diagrams/paths.ts` builds the path data: `under`, `over`, `left` and `right` for a half disc on each side of an edge, and `bracket` for a bar with a drop at each x. `AgentTeam.astro` is the worked example: its constants name every x and each row's height, and its paths are built from them with those helpers.
 
@@ -113,15 +113,27 @@ MDX was chosen over raw HTML in the `.md`, which puts the drawing's markup in th
 
 **Solution:** the page imports the component directly and places it inside a `Section` at the full column, as `ServerSessions` sits in the setup page's "What you end up with", between the Today and After panels and the list. The page wraps it in a `div` with `my-4`, so the section's 1.25rem gap plus 1rem gives the figure the 2.25rem above and below that a post gives one (`my-9` on `.app-prose figure`), further apart than the section's other blocks. It takes no caption: the section's words introduce the drawing, and a caption there would render unstyled, since `figcaption` is styled only by the prose rules in `typography.css`.
 
+A diagram can also sit inside another part: `LaptopShut` sits inside `Walkthrough`'s figure, rendered with `as="div"` so no figure holds another, and with no `my-4` wrapper, since the part spaces its own blocks.
+
 The component's name must differ from the page's own, which takes its name from the page's file – see "An import named like its file" in `docs/patterns/astro-build.md`.
 
 The page's Markdown twin carries the summary and then the diagram's words in reading order, as a post's does, since the twin reads `#main-content` and drops the same parts. Nothing in the twin marks where the drawing ends: its words sit under the page heading before it (the After panel's `### After` on the setup page), and where its last part is a list and the page's next block is one too, the converter marks the page's list with `*` to keep the two apart. Reading time doesn't apply: a page has none.
 
 **When to use:** placing a diagram on an `.astro` page that isn't a post.
 
+## A diagram that plays once
+
+**Problem:** a diagram can play its story through on load, but motion run by a script shows nothing until the script runs, and motion that leaves a style applied parts the drawing from what reduced motion shows.
+
+**Solution:** CSS keyframes and no script, as `LaptopShut.astro` plays its three moments. Each keyframe set holds its part's start (opacity 0, a line's whole dash offset, a frame's colour), any stop that times it to a later moment and a line's one dash throughout, and runs once with `animation-fill-mode: backwards`, so the start shows from the first frame through its delay and the part ends on the rules that draw it at rest. `--at` times each moment. The animations are armed inside the layout step's `@container diagram (width >= 46rem)` and, within that, `@media (prefers-reduced-motion: no-preference)`, so stacked or under reduced motion the drawing is static from the first frame. Keyframe names are global, so each takes the component's prefix (`ls-`).
+
+To check it on `pnpm preview`: at `DOMContentLoaded`, inside the first delay, each part reads its start state. After the last change, `document.getAnimations()` is empty and each part's computed opacity, colours and `stroke-dashoffset` match a load with `reducedMotion: "reduce"`. Stacked or under reduced motion, `document.getAnimations()` is empty at `DOMContentLoaded`. Playwright's full-page screenshot restarts the motion: capture from a tall viewport.
+
+**When to use:** a diagram whose story plays once on load, which is a design call first – see "Motion answers the visitor" in `docs/design-decisions.md`.
+
 ## A chart
 
-**Problem:** a chart the visitor can switch and read needs controls and a script, where every other diagram is static. Bars drawn by script show nothing until it runs, and numbers shown only as bars reach no screen reader or twin.
+**Problem:** a chart the visitor can switch and read needs controls and a script, where every other diagram takes no input. Bars drawn by script show nothing until it runs, and numbers shown only as bars reach no screen reader or twin.
 
 **Solution:** `PrPaceChart.astro`, the setup page's chart of merged PRs a week, wraps its drawing in `Diagram` with its summary and no caption, and takes no props.
 

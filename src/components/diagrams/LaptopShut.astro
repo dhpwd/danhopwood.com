@@ -1,0 +1,660 @@
+---
+// The picture the setup page's walkthrough opens on: one always-on server and
+// three moments, each a laptop and a phone that are open or off, with a
+// connector from the server to each open one. The open screens are drawn, not
+// screenshots. See docs/patterns/diagrams.md
+import Diagram from "./Diagram.astro";
+import { left, over, under } from "./paths";
+
+// Every word in the picture. `running` fills the state's chip, and `laptop`
+// and `phone` say which devices are open in that moment. `line` shows at the
+// full column only.
+const words = {
+  summary:
+    "Diagram: your always-on server runs one Claude Code session, drawn across the top of three moments. In the first, your laptop is open on the conversation in the Claude app and joined to the server, and your phone is locked. In the second, the laptop is shut and the phone is locked, nothing is joined to the server, and the session is still working. In the third, the laptop and the phone are both open on the same conversation, each joined to the server, at where the job has got to. The session runs on the server the whole time, and never on the laptop or the phone.",
+  server: {
+    level: "Your server",
+    label: "Always on",
+    heading: "Claude Code runs here",
+    session: "Build pricing page",
+  },
+  // `on` is read out ahead of the session's name on an open screen, and
+  // never shown
+  devices: {
+    laptop: { on: "Laptop open", off: "Laptop shut" },
+    phone: { on: "Phone open", off: "Phone locked" },
+  },
+  moments: [
+    {
+      lead: "Start a job at your laptop",
+      line: "The job runs on the server, not on the laptop",
+      state: "Working",
+      running: true,
+      laptop: true,
+      phone: false,
+    },
+    {
+      lead: "Shut the laptop and leave",
+      line: "The job carries on with it offline in your bag",
+      state: "Still working",
+      running: true,
+      laptop: false,
+      phone: false,
+    },
+    {
+      lead: "Open either one, any time",
+      line: "Both show the same conversation, where the job has got to",
+      state: "Finished",
+      running: false,
+      laptop: true,
+      phone: true,
+    },
+  ],
+};
+
+type Moment = (typeof words.moments)[number];
+const kinds = ["laptop", "phone"] as const;
+
+// The full column: three 224px columns 32px apart. In each, a 143px laptop
+// and a 71px phone sit 10px apart on one baseline, the phone's top 28px under
+// the server and the laptop's 70px under it. A line drops from the server to
+// the centre of each open device's top edge.
+const STEP = 256;
+const DROP = { laptop: { x: 71.5, y: 70 }, phone: { x: 188.5, y: 28 } };
+const drops = words.moments.flatMap((moment, i) =>
+  kinds
+    .filter(kind => moment[kind])
+    .map(kind => ({ i, x: i * STEP + DROP[kind].x, y: DROP[kind].y }))
+);
+
+// Stacked: the rail runs down x 28 from the server's session, and each pair
+// is 112px tall, 44px in from the figure's edge. A 125 by 71px laptop sits at
+// the pair's left, its centre 76.5px down, and the phone starts 177px from
+// the figure's edge. The phone's line crosses above the laptop, 18.5px down.
+const RAIL = 28;
+const REACH = { laptop: { x: 44, y: 76.5 }, phone: { x: 177, y: 18.5 } };
+const reaches = (moment: Moment) =>
+  kinds.filter(kind => moment[kind]).map(kind => REACH[kind]);
+
+// The rail stops at the last moment's lowest line
+const last = words.moments.at(-1)!;
+const railEnd = Math.ceil(Math.max(0, ...reaches(last).map(({ y }) => y)));
+
+// When each moment's part of the motion starts, in seconds after the page
+// loads. The motion runs at the full column only. The rule between the
+// states is drawn across the same times: see `ls-rule` below.
+const AT = [0.3, 1.4, 2.2];
+---
+
+<Diagram summary={words.summary} as="div">
+  <div class="picture" style={`--rail-end: ${railEnd}px`}>
+    <div class="dg-frame server">
+      <div class="head">
+        <p class="dg-level">{words.server.level}</p>
+        <p class="dg-label">{words.server.label}</p>
+      </div>
+      <p class="dg-name">{words.server.heading}</p>
+      <!-- Each moment names the session beside its state, so this one is
+           the drawing's alone -->
+      <div class="dg-card session" aria-hidden="true">
+        <span class="title">{words.server.session}</span>
+        <svg class="dg-end" viewBox="0 0 7 4">
+          <path d={under(3.5, 0)}></path>
+        </svg>
+      </div>
+    </div>
+
+    <div class="below">
+      <svg class="dg-wires down" viewBox="0 0 736 70" aria-hidden="true">
+        {
+          drops.map(({ i, x, y }) => (
+            <g style={`--at: ${AT[i]}s`}>
+              <path class="wire" pathLength="1" d={`M${x} 0V${y}`} />
+              <path class="end" d={over(x, y)} />
+            </g>
+          ))
+        }
+      </svg>
+      <ol class="moments">
+        {
+          words.moments.map((moment, i) => (
+            <li class="moment" style={`--at: ${AT[i]}s`}>
+              <div class="cap">
+                <p>
+                  <strong>{moment.lead}</strong>
+                </p>
+                <p class="line">{moment.line}</p>
+              </div>
+              <p class="state">
+                <span class="sr-only">{words.server.session}</span>{" "}
+                <span class:list={["chip", { running: moment.running }]}>
+                  {moment.state}
+                </span>
+              </p>
+              <div class="pair">
+                <svg
+                  class="dg-wires branch"
+                  viewBox="0 0 177 112"
+                  aria-hidden="true"
+                >
+                  {reaches(moment).map(({ x, y }) => (
+                    <g>
+                      <path d={`M${RAIL} ${y}H${x}`} />
+                      <path class="end" d={left(x, y)} />
+                    </g>
+                  ))}
+                </svg>
+                {kinds.map(kind =>
+                  moment[kind] ? (
+                    <p class:list={["dev on", kind]}>
+                      <span class="bar">
+                        <span class="sr-only">{words.devices[kind].on}</span>{" "}
+                        <span class="title">{words.server.session}</span>
+                      </span>
+                      <span class="marks" aria-hidden="true">
+                        <i class="said" />
+                        <i />
+                        <i />
+                        <i />
+                        {kind === "phone" && <i class="reply" />}
+                      </span>
+                    </p>
+                  ) : (
+                    <p class:list={["dev off dg-label", kind]}>
+                      {words.devices[kind].off}
+                    </p>
+                  )
+                )}
+              </div>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </div>
+</Diagram>
+
+<style>
+  /* Stacked, the default: a timeline down the page. The rail is the server's
+     session: it leaves the session's card, runs down the left and carries
+     each moment's state as a chip. Beside each chip is what you do, and under
+     it the two devices, with a line from the rail to each open one. The
+     devices, the rail and the lines are a fixed size in px, so the SVG stays
+     on the devices' numbers at a reader's larger text size. */
+  .head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.25rem 0.75rem;
+  }
+
+  .head > p {
+    line-height: 1rem;
+  }
+
+  .server > .dg-name {
+    margin-top: 0.375rem;
+  }
+
+  .session {
+    margin-top: 0.625rem;
+    padding: 0.4375rem 0.75rem;
+  }
+
+  .session > .title {
+    display: block;
+    line-height: 1.25rem;
+    color: var(--dg-text);
+  }
+
+  /* Where the rail leaves the session's card, at the rail's x */
+  .session > .dg-end {
+    top: calc(100% + 1px);
+    left: calc(25px - 0.75rem - 2px);
+    width: 7px;
+    height: 4px;
+  }
+
+  .down {
+    display: none;
+  }
+
+  .moment {
+    --up: 22px;
+    position: relative;
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 8px 10px;
+    padding-top: var(--up);
+  }
+
+  /* The first moment's rail runs up through the server's frame to the
+     session's card */
+  .moment:first-child {
+    --up: 14px;
+    --up-rail: calc(14px + 0.75rem + 1px);
+  }
+
+  /* The rail, in two stretches a moment: past the state and its words, then
+     past the devices */
+  .state::before,
+  .pair::before {
+    content: "";
+    position: absolute;
+    width: 1px;
+    background: var(--dg-wire);
+  }
+
+  .state {
+    position: relative;
+    grid-area: 1 / 1;
+  }
+
+  .state::before {
+    top: calc(-1 * var(--up-rail, var(--up)));
+    bottom: -8px;
+    left: 28px;
+  }
+
+  .pair::before {
+    top: 0;
+    bottom: 0;
+    left: -16px;
+  }
+
+  .moment:last-child .pair::before {
+    bottom: auto;
+    height: var(--rail-end);
+  }
+
+  .cap {
+    grid-area: 1 / 2;
+    padding-top: 3px;
+  }
+
+  .pair {
+    position: relative;
+    display: flex;
+    align-items: flex-end;
+    gap: 8px;
+    grid-area: 2 / 1 / auto / span 2;
+    height: 112px;
+    margin-left: 44px;
+  }
+
+  .branch {
+    position: absolute;
+    top: 0;
+    left: -44px;
+    width: 177px;
+    height: 112px;
+  }
+
+  /* A device is a frame. Open, it takes a connector's line and shows the
+     session's title over a few marks of a conversation. Off, it is the same
+     frame dashed and empty but for what it is doing, in words. */
+  .dev {
+    flex: none;
+    overflow: hidden;
+    border: 1px solid var(--dg-wire);
+    background: var(--background);
+  }
+
+  .laptop {
+    width: 125px;
+    height: 71px;
+    border-radius: 4px;
+  }
+
+  .phone {
+    width: 65px;
+    height: 112px;
+    border-radius: 9px;
+  }
+
+  /* An off phone widens with its words at a reader's larger text size. Its
+     left edge, which its line meets, stays put. */
+  .phone.off {
+    min-width: min-content;
+  }
+
+  .dev.off {
+    display: grid;
+    place-items: center;
+    border: 1px dashed var(--dg-frame);
+    padding: 0 3px;
+    text-align: center;
+    white-space: normal;
+  }
+
+  .dev.on {
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* The session's title, at the size of a chip's words. A screen too narrow
+     for it cuts it short, as the app does. */
+  .title {
+    font-size: 0.8125rem;
+  }
+
+  .bar {
+    flex: none;
+    overflow: hidden;
+    border-bottom: 1px solid var(--dg-border);
+    background: var(--dg-chip);
+    padding: 0 7px;
+    line-height: 20px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: var(--dg-text);
+  }
+
+  .phone .bar {
+    padding: 0 3px;
+  }
+
+  .marks {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: 5px;
+    min-height: 0;
+    padding: 7px 7px 6px;
+  }
+
+  .marks > i {
+    flex: none;
+    width: 85%;
+    height: 4px;
+    border-radius: 2px;
+    background: var(--dg-dot);
+  }
+
+  .marks > i:nth-child(3) {
+    width: 68%;
+  }
+
+  .marks > i:nth-child(4) {
+    width: 44%;
+  }
+
+  .marks > .said {
+    align-self: flex-end;
+    width: 34%;
+    height: 9px;
+    border-radius: 4px;
+    background: var(--dg-border);
+  }
+
+  .marks > .reply {
+    width: auto;
+    height: 11px;
+    margin-top: auto;
+    border: 1px solid var(--dg-dot);
+    border-radius: 6px;
+    background: none;
+  }
+
+  /* On the rail a chip sits over its line */
+  .state > .chip {
+    position: relative;
+  }
+
+  .chip {
+    display: inline-block;
+    border-radius: 0.25rem;
+    background: var(--dg-chip);
+    padding: 0.1875rem 0.625rem;
+    font-size: 0.8125rem;
+    line-height: 1.25rem;
+    white-space: nowrap;
+  }
+
+  /* The session while it works: a working state is the only part the
+     drawing fills */
+  .chip.running {
+    background: var(--dg-fill);
+    color: var(--dg-on-fill);
+  }
+
+  /* Visually hidden when stacked, as `sr-only` hides, and shown at the full
+     column */
+  .line {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  /* The full column: the server across the top, 160px tall, and the three
+     moments in 224px columns 32px apart. Each moment's state sits in the
+     server's session card, centred over its column, on a rule that joins the
+     three in the order they happen. */
+  @container diagram (width >= 46rem) {
+    .server > .dg-name {
+      line-height: 1.375rem;
+    }
+
+    .session {
+      height: 4.75rem;
+      margin-top: 0.875rem;
+      padding: 0.625rem 0.75rem;
+    }
+
+    .session > .title {
+      color: var(--dg-note);
+    }
+
+    .session > .dg-end {
+      display: none;
+    }
+
+    .session::after {
+      content: "";
+      position: absolute;
+      top: 3.1875rem;
+      right: 6.125rem;
+      left: 6.125rem;
+      height: 1px;
+      background: var(--dg-dot);
+    }
+
+    .below {
+      position: relative;
+    }
+
+    .down {
+      display: block;
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 46rem;
+      height: 4.375rem;
+    }
+
+    .moments {
+      display: grid;
+      grid-template-columns: repeat(3, 14rem);
+      gap: 0 2rem;
+    }
+
+    .moment {
+      grid-template-columns: 14rem;
+      gap: 0.75rem 0;
+      padding: 1.75rem 0 0;
+    }
+
+    .state::before,
+    .pair::before {
+      content: none;
+    }
+
+    .branch {
+      display: none;
+    }
+
+    .pair {
+      grid-area: 1 / 1;
+      gap: 0.625rem;
+      height: 8.25rem;
+      margin-left: 0;
+    }
+
+    .laptop {
+      width: 8.9375rem;
+      height: 5.625rem;
+      border-radius: 0.25rem;
+    }
+
+    .phone {
+      width: 4.4375rem;
+      height: 8.25rem;
+      border-radius: 0.5625rem;
+    }
+
+    .bar {
+      padding: 0 0.5rem;
+      line-height: 1.375rem;
+    }
+
+    .phone .bar {
+      padding: 0 0.375rem;
+    }
+
+    .marks {
+      gap: 0.3125rem;
+      padding: 0.5rem 0.5rem 0.4375rem;
+    }
+
+    .cap {
+      grid-area: 2 / 1;
+      padding-top: 0;
+    }
+
+    .line {
+      position: static;
+      width: auto;
+      height: auto;
+      overflow: visible;
+      clip-path: none;
+      white-space: normal;
+      color: var(--dg-note);
+    }
+
+    /* Out of the grid, or its grid area would be what it is placed in */
+    .state {
+      grid-area: auto;
+      position: absolute;
+      top: -3.125rem;
+      right: 0;
+      left: 0;
+      text-align: center;
+    }
+  }
+
+  /* The motion, at the full column only: each state arrives in turn on the
+     rule as it is drawn across, a line drops to each open device and its
+     screen comes on. How it is built and checked: "A diagram that plays once"
+     in docs/patterns/diagrams.md */
+  @container diagram (width >= 46rem) {
+    @media (prefers-reduced-motion: no-preference) {
+      .picture {
+        --ease: var(--default-transition-timing-function);
+      }
+
+      .chip {
+        animation: ls-arrive 0.3s var(--ease) var(--at) backwards;
+      }
+
+      .down .wire {
+        animation: ls-draw 0.4s var(--ease) calc(var(--at) + 0.15s) backwards;
+      }
+
+      .down .end {
+        animation: ls-arrive 0.15s linear calc(var(--at) + 0.5s) backwards;
+      }
+
+      .dev.on {
+        animation: ls-wake 0.35s var(--ease) calc(var(--at) + 0.45s) backwards;
+      }
+
+      .dev.on > span {
+        animation: ls-arrive 0.35s var(--ease) calc(var(--at) + 0.45s) backwards;
+      }
+
+      .session::after {
+        animation: ls-rule 1.9s linear 0.3s backwards;
+      }
+    }
+  }
+
+  @keyframes ls-arrive {
+    from {
+      opacity: 0;
+    }
+  }
+
+  /* The line's one dash is its whole length, drawn in from its start */
+  @keyframes ls-draw {
+    from {
+      stroke-dasharray: 1;
+      stroke-dashoffset: 1;
+    }
+
+    to {
+      stroke-dasharray: 1;
+      stroke-dashoffset: 0;
+    }
+  }
+
+  @keyframes ls-wake {
+    from {
+      border-color: var(--dg-frame);
+    }
+  }
+
+  /* The rule grows from the first state's column. It reaches the second
+     state as that arrives, 1.1s into its 1.9s, and the third at its end. */
+  @keyframes ls-rule {
+    0% {
+      right: calc(100% - 6.125rem);
+    }
+
+    58% {
+      right: 50%;
+    }
+  }
+
+  /* Forced colours repaint every background as the page's ground, which
+     would erase the lines and marks drawn as one, the chips' grounds and the
+     bubble. A running state stays filled and the finished one takes an
+     outline, so the two still differ, and the chip keeps its size. */
+  @media (forced-colors: active) {
+    .state::before,
+    .pair::before,
+    .session::after,
+    .marks > i:not(.said, .reply) {
+      forced-color-adjust: none;
+      background: CanvasText;
+    }
+
+    .chip.running {
+      forced-color-adjust: none;
+      background: CanvasText;
+      color: Canvas;
+    }
+
+    .chip:not(.running) {
+      border: 1px solid CanvasText;
+      padding: calc(0.1875rem - 1px) calc(0.625rem - 1px);
+    }
+
+    .marks > .said {
+      border: 1px solid CanvasText;
+    }
+  }
+</style>

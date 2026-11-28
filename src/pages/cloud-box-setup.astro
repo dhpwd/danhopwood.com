@@ -19,8 +19,6 @@ import WalkthroughLink from "@/components/WalkthroughLink.astro";
 import { Image } from "astro:assets";
 import { SITE } from "@/config";
 import { SOCIALS } from "@/constants";
-import walkthroughLaptop from "@/assets/images/cloud-box/walkthrough-laptop.png";
-import walkthroughPhone from "@/assets/images/cloud-box/walkthrough-phone.png";
 import walkthroughPoster from "@/assets/images/cloud-box/walkthrough-poster.jpg";
 import pickerToday from "@/assets/images/cloud-box/picker-today.png";
 import pickerAfter from "@/assets/images/cloud-box/picker-after.png";
@@ -47,16 +45,12 @@ const places: Place[] = [
   { place: "After that", price: "£950", status: "" },
 ];
 
-// The walkthrough's files on Vercel Blob. Each name carries the file's content
+// The walkthrough's file on Vercel Blob. Its name carries the file's content
 // hash, so a new encode is a new URL – see "Vercel Blob" in
 // docs/external-services.md.
 const blob = "https://pp41erezhiwk0unv.public.blob.vercel-storage.com";
 const walkthrough = {
   video: `${blob}/walkthrough/take-1b05858c.mp4`,
-  previews: {
-    laptop: `${blob}/walkthrough/laptop-15850b5b.mp4`,
-    phone: `${blob}/walkthrough/phone-aa92d5c3.mp4`,
-  },
 };
 
 // Where each beat of the take starts, in seconds
@@ -137,7 +131,6 @@ const questions = [
 
       <Walkthrough
         {...walkthrough}
-        stills={{ laptop: walkthroughLaptop, phone: walkthroughPhone }}
         poster={walkthroughPoster}
         captions={{ src: "/cloud-box-walkthrough.vtt", label: "English" }}
         length={277}
@@ -146,8 +139,6 @@ const questions = [
           label: "Walkthrough",
           play: "Play",
           playName: "Play the walkthrough",
-          laptop: "Laptop",
-          phone: "Phone",
           summary:
             'The walkthrough video is a recording of my screen with me talking over it: I start a session in the Claude desktop app and choose a repo on my server instead of "This computer", then reply to the same conversation from my phone, open it in the web app, and talk through starting work on the laptop and answering it from my phone.',
         }}

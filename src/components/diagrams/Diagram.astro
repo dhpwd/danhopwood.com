@@ -2,12 +2,18 @@
 // The figure a coded diagram sits in, and the parts every diagram is drawn
 // from. `summary` says what the drawing shows for a reader who can't see how
 // its parts are placed. The caption, when there is one, goes in the
-// `caption` slot. See docs/patterns/diagrams.md
-type Props = {
+// `caption` slot. `as` is the wrapper's element: a `div` where the diagram
+// already sits inside a figure. See docs/patterns/diagrams.md
+//
+// An interface, named again on the destructuring: with an `as` key the props
+// otherwise go untyped – see "A `Props` type with an `as` key goes untyped"
+// in docs/patterns/astro-build.md
+interface Props {
   summary: string;
-};
+  as?: "figure" | "div";
+}
 
-const { summary } = Astro.props;
+const { summary, as: Wrapper = "figure" }: Props = Astro.props;
 
 // A diagram passes its caption slot from inside an expression, which
 // registers the slot even when the post gave no caption, so test what it
@@ -17,11 +23,11 @@ const caption = Astro.slots.has("caption")
   : "";
 ---
 
-<figure class="diagram not-prose">
+<Wrapper class="diagram not-prose">
   <p class="sr-only">{summary}</p>
   <slot />
-  {caption && <figcaption set:html={caption} />}
-</figure>
+  {Wrapper === "figure" && caption && <figcaption set:html={caption} />}
+</Wrapper>
 
 <style is:global>
   /* Every colour is a theme token or a mix of the text colour into the

@@ -1,20 +1,19 @@
 ---
 import type { ImageMetadata } from "astro";
-import { Image, getImage } from "astro:assets";
+import { getImage } from "astro:assets";
+import LaptopShut from "@/components/diagrams/LaptopShut.astro";
 import { clock } from "@/utils/clock";
 
-// The setup page's walkthrough video – see "The setup page's video opens as
-// two windows" in docs/design-decisions.md. At rest it is two stills cut from
-// the take, a laptop window and a phone window, which play a short preview
-// once. The play control swaps them for the full recording in the browser's
-// own player. How the press starts at once: "Starting a click-to-play video
-// at once" in docs/patterns/client-scripts.md. `WalkthroughLink` links the
-// page's copy to a moment in it.
+// The setup page's walkthrough video. At rest it is a drawn picture,
+// `LaptopShut`, over the play control, which swaps the picture for the full
+// recording in the browser's own player – see "The setup page's video opens
+// under a drawing of the server" in docs/design-decisions.md. How the press
+// starts at once: "Starting a click-to-play video at once" in
+// docs/patterns/client-scripts.md. `WalkthroughLink` links the page's copy to
+// a moment in it.
 type Props = {
-  // Public URLs of the files on Vercel Blob – see docs/external-services.md
+  // Public URL of the file on Vercel Blob – see docs/external-services.md
   video: string;
-  previews: { laptop: string; phone: string };
-  stills: { laptop: ImageMetadata; phone: ImageMetadata };
   // A full frame of the take, which also gives the player its aspect ratio
   poster: ImageMetadata;
   captions: { src: string; label: string };
@@ -25,15 +24,12 @@ type Props = {
     label: string;
     play: string;
     playName: string;
-    laptop: string;
-    phone: string;
     // What the video shows, for screen readers and the Markdown twin
     summary: string;
   };
 };
 
-const { video, previews, stills, poster, captions, length, chapters, copy } =
-  Astro.props;
+const { video, poster, captions, length, chapters, copy } = Astro.props;
 
 // Small, since it loads beside the warm-up and shows only until a frame does
 const posterImage = await getImage({
@@ -42,29 +38,6 @@ const posterImage = await getImage({
   format: "webp",
 });
 const aspect = poster.width / poster.height;
-
-// Below 640px the phone sits over the laptop's bottom-right corner, without
-// its label
-const windows = [
-  {
-    label: copy.laptop,
-    still: stills.laptop,
-    preview: previews.laptop,
-    sizes: "(min-width: 640px) 32rem, calc(100vw - 2rem)",
-    place: "",
-    labelPlace: "",
-    corner: "rounded-lg",
-  },
-  {
-    label: copy.phone,
-    still: stills.phone,
-    preview: previews.phone,
-    sizes: "(min-width: 640px) 12.25rem, 34vw",
-    place: "max-sm:absolute max-sm:right-3 max-sm:bottom-0 max-sm:w-[34%]",
-    labelPlace: "max-sm:hidden",
-    corner: "rounded-[1.375rem]",
-  },
-];
 ---
 
 <figure
@@ -74,90 +47,37 @@ const windows = [
   data-walkthrough
   data-state="rest"
 >
-  <p class="sr-only">{copy.summary}</p>
   <div class="flex flex-col items-start gap-4">
-    <div
-      class="windows peer/windows grid w-full cursor-pointer grid-cols-[minmax(0,1fr)_26.5%] items-end gap-6 group-data-[state=playing]/walkthrough:hidden max-sm:relative max-sm:block max-sm:pb-18"
-      aria-hidden="true"
-      data-walkthrough-windows
-    >
-      {
-        windows.map(window => (
-          <div class:list={["flex min-w-0 flex-col gap-2", window.place]}>
-            <p
-              class:list={["label-caps text-foreground/75", window.labelPlace]}
-            >
-              {window.label}
-            </p>
-            <div
-              class:list={[
-                "relative overflow-hidden border border-foreground/60 bg-background",
-                window.corner,
-              ]}
-            >
-              <Image
-                src={window.still}
-                alt=""
-                sizes={window.sizes}
-                loading="eager"
-                class="block w-full dark-dim"
-              />
-              <video
-                src={window.preview}
-                muted
-                playsinline
-                preload="none"
-                class="absolute inset-0 size-full object-cover opacity-0 dark-dim data-shown:opacity-100"
-                data-walkthrough-preview
-              />
-            </div>
-          </div>
-        ))
-      }
+    <div class="w-full group-data-[state=playing]/walkthrough:hidden">
+      <LaptopShut />
     </div>
-    <button
-      type="button"
-      aria-label={copy.playName}
-      class="play inline-flex interactive-ink items-center gap-2.5 rounded-full px-5 py-3 font-mono text-[0.8125rem] font-medium group-data-[state=playing]/walkthrough:hidden peer-hover/windows:bg-accent peer-active/windows:bg-accent-strong"
-      data-walkthrough-play
-    >
-      <svg viewBox="0 0 24 24" class="size-5" aria-hidden="true">
-        <path d="M8 5.5v13l11-6.5z" fill="currentColor"></path>
-      </svg>
-      {copy.play}
-    </button>
-    <div
-      class="player hidden w-full overflow-hidden rounded-md border border-foreground/16 group-data-[state=playing]/walkthrough:block"
-      data-walkthrough-player
-    >
-      <video
-        src={video}
-        poster={posterImage.src}
-        muted
-        playsinline
-        preload="none"
-        class="block aspect-(--wt-aspect) w-full"
-        data-walkthrough-video
+    <!-- Where the chapters and the copy's links land: the play control, and
+         without the script the player, which sits under the drawing -->
+    <div id="walkthrough-video" class="flex w-full flex-col items-start gap-4">
+      <p class="sr-only">{copy.summary}</p>
+      <button
+        type="button"
+        aria-label={copy.playName}
+        class="play inline-flex interactive-ink items-center gap-2.5 rounded-full px-5 py-3 font-mono text-[0.8125rem] font-medium group-data-[state=playing]/walkthrough:hidden"
+        data-walkthrough-play
       >
-        <track
-          kind="captions"
-          srclang="en"
-          label={captions.label}
-          src={captions.src}
-        />
-      </video>
-    </div>
-    <noscript>
+        <svg viewBox="0 0 24 24" class="size-5" aria-hidden="true">
+          <path d="M8 5.5v13l11-6.5z" fill="currentColor"></path>
+        </svg>
+        {copy.play}
+      </button>
       <div
-        class="w-full overflow-hidden rounded-md border border-foreground/16"
+        class="player hidden w-full overflow-hidden rounded-md border border-foreground/16 group-data-[state=playing]/walkthrough:block"
+        data-walkthrough-player
       >
         <video
           src={video}
           poster={posterImage.src}
-          controls
+          muted
           playsinline
-          preload="metadata"
+          preload="none"
           class="block aspect-(--wt-aspect) w-full"
+          data-walkthrough-video
         >
           <track
             kind="captions"
@@ -167,7 +87,28 @@ const windows = [
           />
         </video>
       </div>
-    </noscript>
+      <noscript>
+        <div
+          class="w-full overflow-hidden rounded-md border border-foreground/16"
+        >
+          <video
+            src={video}
+            poster={posterImage.src}
+            controls
+            playsinline
+            preload="metadata"
+            class="block aspect-(--wt-aspect) w-full"
+          >
+            <track
+              kind="captions"
+              srclang="en"
+              label={captions.label}
+              src={captions.src}
+            />
+          </video>
+        </div>
+      </noscript>
+    </div>
   </div>
   <figcaption class="ledger">
     <p>
@@ -182,7 +123,7 @@ const windows = [
         chapters.map(({ label, start }) => (
           <li>
             <a
-              href="#walkthrough"
+              href="#walkthrough-video"
               class="group flex items-baseline gap-2.5 py-0.5 interactive"
               data-walkthrough-at={start}
             >
@@ -224,24 +165,22 @@ const windows = [
     color: var(--accent-stronger);
   }
 
-  /* Without the script the noscript player stands in for the windows and the
-     play control. A noscript block's contents are elements only when
+  /* Without the script the noscript player stands in for the play control,
+     under the picture. A noscript block's contents are elements only when
      scripting is off, at the browser floor too, and the router's swapped-in
      page drops them. */
-  [data-walkthrough]:has(noscript video) .windows,
   [data-walkthrough]:has(noscript video) .play {
     display: none;
   }
 </style>
 
 <script>
-  import { landingY } from "@/scripts/landing";
   import { isPlainClick } from "@/scripts/plain-click";
 
   type Connection = { saveData?: boolean };
 
   // The open page's walkthrough: `playFrom` starts it at a time from a
-  // chapter or a link in the copy, and `release` stops its videos loading
+  // chapter or a link in the copy, and `release` stops its video loading
   // when the page goes. Both are set by init.
   let playFrom: ((at: number, link: Element) => void) | undefined;
   let release: (() => void) | undefined;
@@ -257,12 +196,6 @@ const windows = [
     const player = root.querySelector<HTMLElement>(
       "[data-walkthrough-player]"
     )!;
-    const windows = root.querySelector<HTMLElement>(
-      "[data-walkthrough-windows]"
-    )!;
-    const previews = [
-      ...root.querySelectorAll<HTMLVideoElement>("[data-walkthrough-preview]"),
-    ];
     const chapters = [
       ...root.querySelectorAll<HTMLAnchorElement>("[data-walkthrough-at]"),
     ];
@@ -271,17 +204,22 @@ const windows = [
     );
     const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
     const wideLayout = matchMedia("(width >= 72rem)");
-    let gone = false;
 
     // Shows the player, sized for the viewport from 72rem, and plays from
-    // `at`. From 72rem the press centres the player. A chapter or a link from
-    // the copy always does, since it can sit far from the player. The smooth
-    // scroll, and its removal under reduced motion, come from `html`.
+    // `at`. From 72rem the press brings the player into view. Below it the
+    // press does only when the player would open out of view: the drawing it
+    // replaces is taller than the player, so a press with the drawing's top
+    // scrolled off leaves the player above the screen. Chromium's scroll
+    // anchoring usually holds the player where Play was, so the check mostly
+    // serves browsers that don't anchor. A chapter or a link from the copy
+    // always does, since it can sit far from the player. A player that fits
+    // the screen is centred, and a taller one, as on a phone held sideways,
+    // ends at the screen's foot, so its controls show. The smooth scroll, and
+    // its removal under reduced motion, come from `html`.
     const start = (at: number, fromLink: boolean) => {
       const opening = root.dataset.state !== "playing";
       const column = player.parentElement!.getBoundingClientRect().width;
       if (opening) {
-        for (const preview of previews) preview.pause();
         root.dataset.state = "playing";
         // Sound comes on with the press. Later, a chapter keeps a mute the
         // visitor chose
@@ -293,11 +231,15 @@ const windows = [
 
       // The player's final box, read before the resizing's first frame
       const box = player.getBoundingClientRect();
-      if ((opening && wideLayout.matches) || fromLink)
+      const outOfView = box.top < 0 || box.bottom > innerHeight;
+      const fits = box.height <= innerHeight;
+      if ((opening && (wideLayout.matches || outOfView)) || fromLink)
         scrollTo({
           top: Math.max(
             0,
-            box.top + scrollY + box.height / 2 - innerHeight / 2
+            fits
+              ? box.top + scrollY + box.height / 2 - innerHeight / 2
+              : box.bottom + scrollY - innerHeight
           ),
         });
       if (
@@ -333,7 +275,6 @@ const windows = [
     root
       .querySelector("[data-walkthrough-play]")!
       .addEventListener("click", press);
-    windows.addEventListener("click", press);
     playFrom = (at, link) => {
       start(at, true);
       // Following a link from the copy would have moved focus to the video
@@ -341,14 +282,13 @@ const windows = [
     };
 
     // The warm-up – see "Starting a click-to-play video at once" in
-    // docs/patterns/client-scripts.md, which also says why each video is
+    // docs/patterns/client-scripts.md, which also says why the video is
     // loaded again before it first plays
     const saveData = (navigator as Navigator & { connection?: Connection })
       .connection?.saveData;
     if (!saveData) video.preload = "auto";
     video.load();
-    const warm = new Promise<void>(settled => {
-      if (saveData) return settled();
+    if (!saveData) {
       video.addEventListener(
         "playing",
         () => {
@@ -356,89 +296,11 @@ const windows = [
             video.pause();
             video.currentTime = 0;
           }
-          settled();
         },
         { once: true }
       );
-      video.addEventListener("error", () => settled(), { once: true });
-      video.play().catch(() => settled());
-    });
-
-    // The preview plays once, the first time half the windows are in view
-    // after the warm-up has settled or 5s have passed, and ends on the
-    // stills. Each clip is primed with a muted play, which a phone needs
-    // before it loads one, and then both start together from 0.
-    let inView = false;
-    let previewed = false;
-    let warmed = false;
-    let primed: Promise<unknown> | undefined;
-    const prime = (clip: HTMLVideoElement) =>
-      new Promise<void>((resolve, reject) => {
-        clip.addEventListener(
-          "playing",
-          () => {
-            clip.pause();
-            resolve();
-          },
-          { once: true }
-        );
-        clip.addEventListener("error", reject, { once: true });
-        clip.load();
-        clip.play().catch(reject);
-      });
-    const atRest = () =>
-      !gone && !reducedMotion.matches && root.dataset.state !== "playing";
-    const preview = () => {
-      if (previewed || !warmed || !inView || !atRest()) return;
-      primed ??= Promise.all(previews.map(prime));
-      primed
-        .then(() => {
-          if (previewed || !inView || !atRest()) return;
-          previewed = true;
-          previewObserver.disconnect();
-          for (const clip of previews) clip.currentTime = 0;
-          return Promise.all(previews.map(clip => clip.play())).then(() => {
-            if (atRest()) for (const clip of previews) clip.dataset.shown = "";
-          });
-        })
-        .catch(() => {});
-    };
-    const previewObserver = new IntersectionObserver(
-      entries => {
-        inView = entries.at(-1)!.intersectionRatio >= 0.5;
-        preview();
-      },
-      { threshold: 0.5 }
-    );
-    Promise.race([
-      warm,
-      new Promise(resolve => setTimeout(resolve, 5000)),
-    ]).then(() => {
-      warmed = true;
-      preview();
-    });
-    // A reload or a #hash load is still gliding to where it lands, so the
-    // windows are judged once it has landed
-    const watch = () => previewObserver.observe(windows);
-    if (Math.abs(landingY() - scrollY) < 1) watch();
-    else {
-      let fallback = 0;
-      const landed = () => {
-        clearTimeout(fallback);
-        removeEventListener("scrollend", landed);
-        watch();
-      };
-      addEventListener("scrollend", landed);
-      fallback = window.setTimeout(landed, 1000);
+      video.play().catch(() => {});
     }
-    const stillsOnReducedMotion = () => {
-      if (!reducedMotion.matches) return;
-      for (const clip of previews) {
-        clip.pause();
-        delete clip.dataset.shown;
-      }
-    };
-    reducedMotion.addEventListener("change", stillsOnReducedMotion);
 
     // The current chapter, whose time takes the accent while the video plays
     let current = -1;
@@ -459,13 +321,8 @@ const windows = [
     // See "Starting a click-to-play video at once" in
     // docs/patterns/client-scripts.md
     release = () => {
-      gone = true;
-      previewObserver.disconnect();
-      reducedMotion.removeEventListener("change", stillsOnReducedMotion);
-      for (const media of [video, ...previews]) {
-        media.removeAttribute("src");
-        media.load();
-      }
+      video.removeAttribute("src");
+      video.load();
     };
   }
 

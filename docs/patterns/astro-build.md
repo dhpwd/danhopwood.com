@@ -78,7 +78,7 @@ To check the patch, build a temporary post and a temporary Markdown page in `src
 
 **Problem:** Astro types a component's `Astro.props`, and checks its callers, from the `Props` the component declares. `@astrojs/compiler` (2.13.0) doesn't find a `type Props = { … }` alias that has a key named `as`: the generated types fall back to `Record<string, any>`, so a caller's misspelt or missing prop passes `astro check`. The only sign is a hint, "'Props' is declared but never used" (ts 6196).
 
-**Solution:** declare those props as an interface, `interface Props extends HTMLAttributes<"div"> { … }`, which the compiler reads with the `as` key. `LedgerRow.astro` does this.
+**Solution:** declare those props as an interface, `interface Props extends HTMLAttributes<"div"> { … }`, which the compiler reads with the `as` key. `LedgerRow.astro` does this. Where the interface extends no other type, the destructuring names it too (`const { summary, as: Wrapper = "figure" }: Props = Astro.props` in `Diagram.astro`): without that the hint stays and a misspelt prop still passes.
 
 **When to use:** writing a component with an `as` prop, or when `astro check` reports that hint for `Props`.
 
