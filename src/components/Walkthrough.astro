@@ -51,50 +51,33 @@ const aspect = poster.width / poster.height;
     <div class="w-full group-data-[state=playing]/walkthrough:hidden">
       <LaptopShut />
     </div>
-    <p class="sr-only">{copy.summary}</p>
-    <button
-      type="button"
-      aria-label={copy.playName}
-      class="play inline-flex interactive-ink items-center gap-2.5 rounded-full px-5 py-3 font-mono text-[0.8125rem] font-medium group-data-[state=playing]/walkthrough:hidden"
-      data-walkthrough-play
-    >
-      <svg viewBox="0 0 24 24" class="size-5" aria-hidden="true">
-        <path d="M8 5.5v13l11-6.5z" fill="currentColor"></path>
-      </svg>
-      {copy.play}
-    </button>
-    <div
-      class="player hidden w-full overflow-hidden rounded-md border border-foreground/16 group-data-[state=playing]/walkthrough:block"
-      data-walkthrough-player
-    >
-      <video
-        src={video}
-        poster={posterImage.src}
-        muted
-        playsinline
-        preload="none"
-        class="block aspect-(--wt-aspect) w-full"
-        data-walkthrough-video
+    <!-- Where the chapters and the copy's links land: the play control, and
+         without the script the player, which sits under the drawing -->
+    <div id="walkthrough-video" class="flex w-full flex-col items-start gap-4">
+      <p class="sr-only">{copy.summary}</p>
+      <button
+        type="button"
+        aria-label={copy.playName}
+        class="play inline-flex interactive-ink items-center gap-2.5 rounded-full px-5 py-3 font-mono text-[0.8125rem] font-medium group-data-[state=playing]/walkthrough:hidden"
+        data-walkthrough-play
       >
-        <track
-          kind="captions"
-          srclang="en"
-          label={captions.label}
-          src={captions.src}
-        />
-      </video>
-    </div>
-    <noscript>
+        <svg viewBox="0 0 24 24" class="size-5" aria-hidden="true">
+          <path d="M8 5.5v13l11-6.5z" fill="currentColor"></path>
+        </svg>
+        {copy.play}
+      </button>
       <div
-        class="w-full overflow-hidden rounded-md border border-foreground/16"
+        class="player hidden w-full overflow-hidden rounded-md border border-foreground/16 group-data-[state=playing]/walkthrough:block"
+        data-walkthrough-player
       >
         <video
           src={video}
           poster={posterImage.src}
-          controls
+          muted
           playsinline
-          preload="metadata"
+          preload="none"
           class="block aspect-(--wt-aspect) w-full"
+          data-walkthrough-video
         >
           <track
             kind="captions"
@@ -104,7 +87,28 @@ const aspect = poster.width / poster.height;
           />
         </video>
       </div>
-    </noscript>
+      <noscript>
+        <div
+          class="w-full overflow-hidden rounded-md border border-foreground/16"
+        >
+          <video
+            src={video}
+            poster={posterImage.src}
+            controls
+            playsinline
+            preload="metadata"
+            class="block aspect-(--wt-aspect) w-full"
+          >
+            <track
+              kind="captions"
+              srclang="en"
+              label={captions.label}
+              src={captions.src}
+            />
+          </video>
+        </div>
+      </noscript>
+    </div>
   </div>
   <figcaption class="ledger">
     <p>
@@ -119,7 +123,7 @@ const aspect = poster.width / poster.height;
         chapters.map(({ label, start }) => (
           <li>
             <a
-              href="#walkthrough"
+              href="#walkthrough-video"
               class="group flex items-baseline gap-2.5 py-0.5 interactive"
               data-walkthrough-at={start}
             >
