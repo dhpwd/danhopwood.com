@@ -202,9 +202,12 @@ const aspect = poster.width / poster.height;
     const wideLayout = matchMedia("(width >= 72rem)");
 
     // Shows the player, sized for the viewport from 72rem, and plays from
-    // `at`. From 72rem the press centres the player. A chapter or a link from
-    // the copy always does, since it can sit far from the player. The smooth
-    // scroll, and its removal under reduced motion, come from `html`.
+    // `at`. From 72rem the press centres the player. Below it the press does
+    // only when the player would open out of view: the drawing it replaces is
+    // taller than the player, so a press with the drawing's top scrolled off
+    // leaves the player above the screen. A chapter or a link from the copy
+    // always does, since it can sit far from the player. The smooth scroll,
+    // and its removal under reduced motion, come from `html`.
     const start = (at: number, fromLink: boolean) => {
       const opening = root.dataset.state !== "playing";
       const column = player.parentElement!.getBoundingClientRect().width;
@@ -220,7 +223,8 @@ const aspect = poster.width / poster.height;
 
       // The player's final box, read before the resizing's first frame
       const box = player.getBoundingClientRect();
-      if ((opening && wideLayout.matches) || fromLink)
+      const outOfView = box.top < 0 || box.bottom > innerHeight;
+      if ((opening && (wideLayout.matches || outOfView)) || fromLink)
         scrollTo({
           top: Math.max(
             0,

@@ -244,7 +244,7 @@ Rejected:
 
 Motion runs only in response to something the visitor does, lasts 400ms or less, is hand-rolled rather than a library and is removed under `prefers-reduced-motion: reduce`.
 
-The one exception is the drawing the walkthrough opens on at `/cloud-box-setup`, whose story plays once on load at the full column, for about three seconds, and is removed under reduced motion.
+The one exception is the drawing the walkthrough opens on at `/cloud-box-setup`, whose story plays once on load at the full column, for about three seconds, and is removed under reduced motion. A window that crosses into the full column plays it again.
 
 ## Small details are a closed set
 

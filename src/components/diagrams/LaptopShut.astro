@@ -412,7 +412,8 @@ const AT = [0.3, 1.4, 2.2];
     white-space: nowrap;
   }
 
-  /* The session while it works: the one filled part of the drawing */
+  /* The session while it works: a working state is the only part the
+     drawing fills */
   .chip.running {
     background: var(--dg-fill);
     color: var(--dg-on-fill);
@@ -555,13 +556,10 @@ const AT = [0.3, 1.4, 2.2];
     }
   }
 
-  /* The motion, at the full column only: the story plays through once when
-     the page loads. Each state arrives in turn on the rule as it is drawn
-     across, a line drops to each open device and its screen comes on. Every
-     keyframe set holds only what its part starts from, and `backwards` holds
-     that start through the delay, so each part ends as the rules above draw
-     it and nothing of the motion is left on the picture. Stacked, or with
-     reduced motion asked for, none of it applies. */
+  /* The motion, at the full column only: each state arrives in turn on the
+     rule as it is drawn across, a line drops to each open device and its
+     screen comes on. How it is built and checked: "A diagram that plays once"
+     in docs/patterns/diagrams.md */
   @container diagram (width >= 46rem) {
     @media (prefers-reduced-motion: no-preference) {
       .picture {

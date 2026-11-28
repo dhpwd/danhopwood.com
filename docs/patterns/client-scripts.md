@@ -64,11 +64,11 @@ Where the form's spec puts focus on the submit button after every submit, call `
 Two things decide whether the warm-up has landed by the press:
 
 - The header's size. Encode with `-movflags +faststart` and keep the header small. ffmpeg writes each packet as its own chunk, so the tables grow with the packet count, and an audio track with more packets a second than the video has frames doubles its own tables: AAC at 48kHz runs 47 packets a second against 30 frames. The walkthrough's audio rate is set for this – see "Vercel Blob" in `docs/external-services.md`. Its 210KB header lands on the throttled line 3.6s after load
-- Bytes at rest. Chrome stops buffering a paused video by itself: with nothing pressed, `/cloud-box-setup` has buffered about the first 42s of the take 30s after load
+- Bytes at rest. Chrome stops buffering a paused video by itself: with nothing pressed, `/cloud-box-setup` has fetched about 4.5MB from the video host 30s after load, about the first 42s of the take (Chromium on an unthrottled line)
 
 The router builds the next page in a document with no browsing context, where Chromium refuses a video's load ("Media load rejected by URL safety check"), and the element keeps that error once swapped in. `play()` doesn't retry it, so the script calls `load()` on the video before its first `play()`.
 
-A page the router swaps out keeps loading its videos, which then take the line from the next page, so the script releases each at `astro:before-swap`: `removeAttribute("src")`, then `load()`.
+A page the router swaps out keeps loading its video, which then takes the line from the next page, so the script releases it at `astro:before-swap`: `removeAttribute("src")`, then `load()`.
 
 Without the script, a plain `<video controls preload="metadata">` in a `noscript` block stands in, and `[data-walkthrough]:has(noscript video)` hides the Play control, so the player sits under the drawing. A `noscript` block's contents are elements only when scripting is off, and the router's swapped-in page drops them, so the selector matches only a visit with no script, down to the browser floor. `@media (scripting: none)` needs Chrome 120 and Safari 17, above the floor in "Nested CSS and the CSS build target" in `docs/patterns/astro-build.md`.
 

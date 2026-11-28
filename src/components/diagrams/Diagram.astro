@@ -26,7 +26,7 @@ const caption = Astro.slots.has("caption")
 <Wrapper class="diagram not-prose">
   <p class="sr-only">{summary}</p>
   <slot />
-  {caption && <figcaption set:html={caption} />}
+  {Wrapper === "figure" && caption && <figcaption set:html={caption} />}
 </Wrapper>
 
 <style is:global>
