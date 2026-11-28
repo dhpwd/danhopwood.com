@@ -27,7 +27,7 @@ const linkedIn = SOCIALS.find(({ name }) => name === "LinkedIn")!.href;
 
 const heading = "Claude Code that keeps working when your laptop is shut";
 const opening =
-  "I'll set up an always-on server for you that runs Claude Code with your projects, skills and connectors on it. You keep working in the Claude app the way you do now, and your whole setup is there on your phone too.";
+  "I'll set up an always-on server that runs Claude Code with your projects, skills and connectors, so your agents keep going with your laptop in your bag. You keep working in the Claude app as you do now, with your whole setup on your phone too.";
 
 // One row per place. Changing a place's status is a one-line edit here: the
 // table and its chip both follow from it. The empty status marks the
@@ -96,6 +96,12 @@ const questions = [
     question: "Can my team have it?",
     answer:
       "Yes. It's one setup per person, so each of you gets your own server on your own Claude seat. The company can own the hosting account and pay for every server, which lets it keep or close one when someone leaves.",
+  },
+  {
+    question:
+      "I already use Remote Control from my phone. Isn't that the same?",
+    answer:
+      "It's still Remote Control, just not the way most people use it. Usually your phone opens a session that runs on your laptop, so the laptop has to stay on with Claude Code running. On your server, Remote Control runs all the time for each repo and vault, and your laptop and phone both open the same sessions there in the Claude app. The laptop becomes a way in like the phone, so you can shut or lock either one.",
   },
   {
     question: "Why not a Mac mini, or an app that keeps my laptop awake?",
