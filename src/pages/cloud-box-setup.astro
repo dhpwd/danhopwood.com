@@ -29,7 +29,7 @@ const linkedIn = SOCIALS.find(({ name }) => name === "LinkedIn")!.href;
 
 const heading = "Claude Code that keeps working when your laptop is shut";
 const opening =
-  "I'll set up an always-on server for you that runs Claude Code with your repos, skills and connectors on it. You keep working in the Claude app the way you do now, and your whole setup is there on your phone too.";
+  "I'll set up an always-on server for you that runs Claude Code with your projects, skills and connectors on it. You keep working in the Claude app the way you do now, and your whole setup is there on your phone too.";
 
 // One row per place. Changing a place's status is a one-line edit here: the
 // table and its chip both follow from it. The empty status marks the
@@ -81,7 +81,7 @@ const questions = [
   {
     question: "My work's in Obsidian, not GitHub. Will this work for me?",
     answer:
-      "Yes, and it's fine to have both. Each vault lives on the server, and Obsidian Sync keeps it in step with Obsidian on your laptop and phone, both ways. A note an agent writes shows up in Obsidian and your own edits reach the server, with no commit or push. You need your own Obsidian Sync plan for that. And where this page says 'repos', a vault counts as one.",
+      "Yes, and it's fine to have both. Each vault lives on the server, and Obsidian Sync keeps it in step with Obsidian on your laptop and phone, both ways. A note an agent writes shows up in Obsidian and your own edits reach the server, with no commit or push. You need your own Obsidian Sync plan for that.",
   },
   {
     question: "Can you get into my server afterwards?",
@@ -208,8 +208,12 @@ const questions = [
         <p>
           The low week right after the move is the one I spent my evenings
           setting the server up, which is the part I do for you. Some of the
-          gains since are due to the agent team I now run, which isn't part of
-          the setup. Your numbers will depend on what you run on your server.
+          gains since are due to the
+          <a
+            href="/posts/what-my-ai-agents-decide-without-me"
+            class="interactive link-underline">agent team</a
+          > I now run, which isn't part of the setup. Your numbers will depend on
+          what you run on your server.
         </p>
       </Section>
 
@@ -239,9 +243,9 @@ const questions = [
               class="w-full rounded-sm border border-foreground/16 dark-dim"
             />
             <p>
-              You start a session and choose one of your repos on the server
-              instead. Nothing else in the app changes, and the work carries on
-              whether your laptop is open or not.
+              You start a session and pick a folder on the server instead.
+              Nothing else in the app changes, and the work carries on whether
+              your laptop is open or not.
             </p>
           </Panel>
         </div>
@@ -309,18 +313,12 @@ const questions = [
       <Section id="included" title="What's included">
         <MarkedList>
           <li>
-            A server in your own account, running Claude Code all the time on
-            your own Claude subscription
+            A server in your own account, running Claude Code on your own Claude
+            subscription
           </li>
-          <li>
-            Your GitHub repos on it with their dependencies installed, and your
-            skills, agents and settings copied from your laptop
-          </li>
-          <li>
-            If your work's in Obsidian, each vault goes on the server and
-            Obsidian Sync keeps it in step with Obsidian on your laptop and
-            phone
-          </li>
+          <li>Your GitHub repos on it with their dependencies installed</li>
+          <li>Any Obsidian vaults you have too, kept in sync across devices</li>
+          <li>Your skills, agents and settings copied from your laptop</li>
           <li>Your connectors working there too</li>
           <li>
             Nothing on the server is reachable from the public internet, the
@@ -328,7 +326,7 @@ const questions = [
             install themselves
           </li>
           <li>
-            A 45-minute handover call where I move your setup across and we test
+            A 45-minute handover call where I copy your setup across and we test
             it together
           </li>
           <li>14 days of fixes after the call</li>
@@ -349,7 +347,7 @@ const questions = [
           <li>
             <strong class="font-semibold">We do one 45-minute call.</strong> You sign
             in to your own accounts (Claude, GitHub and Obsidian where you use them,
-            your connectors) and I move your setup across. By the end your sessions
+            your connectors) and I copy your setup across. By the end your sessions
             run on the server, and we prove it by carrying one on from your phone
             with the laptop shut
           </li>
@@ -443,7 +441,7 @@ const questions = [
         <MarkedList>
           <li>A paid Claude plan</li>
           <li>
-            Your work in GitHub, in Obsidian vaults on Obsidian Sync, or both
+            Your work in GitHub, in Obsidian vaults (on Obsidian Sync), or both
           </li>
           <li>The Claude app on your phone</li>
           <li>A Mac or Linux laptop</li>
