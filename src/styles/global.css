@@ -285,20 +285,36 @@ html[data-theme="dark"] {
   :is(.link-underline, .title-underline),
   .app-prose a:not(.heading-link),
   #pagefind-search a.pagefind-ui__result-link {
-    /* Where the line sits: "The line of ink" in small-details.md */
+    /* Where the line sits and how tall it is: "The line of ink" in
+       small-details.md. --ink-step is one device pixel. */
+    --ink-step: 1px;
+    --ink-h: 1px;
     --ink-y: calc(100% - (0.295em - 3px));
     padding-bottom: 2px;
     background-image: linear-gradient(currentcolor, currentcolor);
     background-repeat: no-repeat;
     background-position: 100% var(--ink-y);
-    background-size: 0 1px;
+    background-size: 0 var(--ink-h);
     /* One list for a link and a span inside one: the span inherits its
        colour, so it lists the first two properties and ignores the rest. */
     transition-property: text-decoration-color, background-size;
     transition-duration: 150ms, 300ms, 150ms;
     transition-timing-function: var(--default-transition-timing-function);
+    @media (resolution >= 1.25x) {
+      --ink-step: calc(1px / 1.25);
+      --ink-h: calc(1px + var(--ink-step));
+    }
+    @media (resolution >= 1.5x) {
+      --ink-step: calc(1px / 1.5);
+    }
+    @media (resolution >= 2x) {
+      --ink-step: calc(1px / 2);
+    }
+    @media (resolution >= 3x) {
+      --ink-step: calc(1px / 3);
+    }
     @supports (top: round(1px, 1px)) {
-      --ink-y: calc(100% - (round(0.295em, 1px) - 3px));
+      --ink-y: calc(100% - (round(0.295em, var(--ink-step)) - 3px));
     }
   }
   a:is(.link-underline, .title-underline),
@@ -311,7 +327,7 @@ html[data-theme="dark"] {
   .app-prose a:not(.heading-link):hover,
   #pagefind-search a.pagefind-ui__result-link:hover {
     background-position: 0 var(--ink-y);
-    background-size: 100% 1px;
+    background-size: 100% var(--ink-h);
     text-decoration-color: transparent;
     transition-delay: 120ms, 0s, 0s;
   }
