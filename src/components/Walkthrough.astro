@@ -267,7 +267,7 @@ const aspect = poster.width / poster.height;
     };
 
     // The warm-up – see "Starting a click-to-play video at once" in
-    // docs/patterns/client-scripts.md, which also says why each video is
+    // docs/patterns/client-scripts.md, which also says why the video is
     // loaded again before it first plays
     const saveData = (navigator as Navigator & { connection?: Connection })
       .connection?.saveData;
