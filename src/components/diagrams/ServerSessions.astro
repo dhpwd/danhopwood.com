@@ -6,7 +6,7 @@ import Diagram from "./Diagram.astro";
 import { left, right } from "./paths";
 
 const summary =
-  "Diagram: the Claude app on your laptop, the Claude app on your phone and claude.ai in any browser all open the same three sessions. The sessions run on one always-on server in your own account, which also holds your repos, vaults, skills, agents and connectors. Nothing runs on the laptop, the phone or the browser.";
+  "Diagram: one always-on server in your own account holds three jobs at once: one finished, one working and one waiting for your reply. The Claude app on your laptop, the Claude app on your phone and claude.ai in any browser all open the same three sessions. The server also holds your repos, vaults, skills, agents and connectors, and nothing runs on the laptop, the phone or the browser.";
 
 const devices = [
   { name: "Laptop", opens: "Claude app" },
@@ -15,9 +15,9 @@ const devices = [
 ];
 
 const sessions = [
-  { repo: "second-brain", state: "Finished", running: false },
-  { repo: "website", state: "Working", running: true },
-  { repo: "product-app", state: "Waiting for your reply", running: false },
+  { title: "Plan today's tasks", state: "Finished", running: false },
+  { title: "Fix signup flow", state: "Working", running: true },
+  { title: "Plan Q1 roadmap", state: "Waiting for your reply", running: false },
 ];
 
 const holds = ["Repos & vaults", "Skills & agents", "Connectors"];
@@ -74,12 +74,12 @@ const across = {
         <p class="dg-level">Your server</p>
         <p class="dg-label">Always on</p>
       </div>
-      <p class="dg-name">The work runs here</p>
+      <p class="dg-name">Every job you've started</p>
       <ul class="sessions">
         {
           sessions.map(session => (
             <li class="dg-card">
-              <span class="dg-mono">{session.repo}</span>{" "}
+              <span class="title">{session.title}</span>{" "}
               <span class:list={["state", { running: session.running }]}>
                 {session.state}
               </span>
@@ -196,6 +196,13 @@ const across = {
     gap: 0.5rem 0.75rem;
     min-height: 3rem;
     padding: 0.625rem 0.75rem;
+  }
+
+  /* A session's title, as the Claude app shows it: the text face at a
+     chip's size */
+  .title {
+    font-size: 0.8125rem;
+    color: var(--dg-text);
   }
 
   .state {

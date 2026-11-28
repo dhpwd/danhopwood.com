@@ -61,7 +61,7 @@ A ruled list of questions, each at the body size in the heading weight on the 1.
 
 Rejected:
 
-- Every answer open under its question, which takes too much of a phone's height with ten answers
+- Every answer open under its question, which takes too much of a phone's height with eleven answers
 - A scripted accordion, where the native element needs no script
 - A chevron that turns, which adds a motion to the closed set of small details
 - The `Detail` part, whose label is uppercase mono and unreadable at a question's length
@@ -224,6 +224,7 @@ Rejected:
 - A drawing wider than the text column
 - The cloud box diagram running top to bottom at the full column, which leaves the top of the drawing mostly empty
 - Labels placed on their lines
+- A project's name in mono as a session's label in `ServerSessions`, which reads as a folder rather than a job
 
 ## A chart is a diagram with one switch
 
